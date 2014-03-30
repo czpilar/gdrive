@@ -1,5 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+	<parent>
+		<groupId>net.czpilar.maven</groupId>
+		<artifactId>root-project</artifactId>
+		<version>1.3.4</version>
+	</parent>
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.czpilar.gdrive</groupId>
 	<artifactId>gdrive</artifactId>
@@ -23,6 +29,12 @@
 			<organizationUrl>http://czpilar.net</organizationUrl>
 		</developer>
 	</developers>
+
+	<scm>
+		<connection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</connection>
+		<developerConnection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</developerConnection>
+		<url>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</url>
+	</scm>
 
 	<properties>
 		<java.target>1.7</java.target>
