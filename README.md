@@ -1,4 +1,4 @@
-gDrive
+gdrive
 ======
 Simple java command line application for uploading file(s) to Google Drive.
 
