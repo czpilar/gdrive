@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
 		<groupId>net.czpilar.maven</groupId>
@@ -11,7 +10,7 @@
 	<groupId>net.czpilar.gdrive</groupId>
 	<artifactId>gdrive</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<name>gdrive</name>
 
 	<developers>
@@ -32,9 +31,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</connection>
-		<developerConnection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</developerConnection>
-		<url>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</url>
+		<connection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/tags/gdrive-1.0.1</connection>
+		<developerConnection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/tags/gdrive-1.0.1</developerConnection>
+		<url>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/tags/gdrive-1.0.1</url>
 	</scm>
 
 	<properties>
