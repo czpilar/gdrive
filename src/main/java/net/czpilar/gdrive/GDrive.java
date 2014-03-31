@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.google.api.client.auth.oauth2.Credential;
 import net.czpilar.gdrive.constant.GDriveConstants;
+import net.czpilar.gdrive.credential.impl.GDrivePropertiesCredential;
 import net.czpilar.gdrive.exception.CommandLineException;
 import net.czpilar.gdrive.service.IGDriveAuthorizationService;
 import net.czpilar.gdrive.service.IGDriveFileService;
@@ -52,7 +53,7 @@ public class GDrive {
 	}
 
 	public GDrive(String propertyFile) {
-		this.service = new GDriveService(propertyFile);
+		this.service = new GDriveService(new GDrivePropertiesCredential(propertyFile));
 	}
 
 	public IGDriveAuthorizationService getAuthorizationService() {

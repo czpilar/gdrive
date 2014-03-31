@@ -1,10 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-	<parent>
-		<groupId>net.czpilar.maven</groupId>
-		<artifactId>root-project</artifactId>
-		<version>1.3.4</version>
-	</parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.czpilar.gdrive</groupId>
@@ -30,12 +25,6 @@
 		</developer>
 	</developers>
 
-	<scm>
-		<connection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</connection>
-		<developerConnection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</developerConnection>
-		<url>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</url>
-	</scm>
-
 	<properties>
 		<java.target>1.7</java.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,10 +35,11 @@
 		<version.commons-cli>1.2</version.commons-cli>
 		<version.commons-io>2.4</version.commons-io>
 		<version.commons-lang>2.6</version.commons-lang>
-		<version.logback>1.1.1</version.logback>
-		<version.slf4j>1.7.6</version.slf4j>
 		<version.google-http-client>1.18.0-rc</version.google-http-client>
 		<version.google-apis>v2-rev119-1.17.0-rc</version.google-apis>
+		<version.logback>1.1.1</version.logback>
+		<version.mockito>1.9.5</version.mockito>
+		<version.slf4j>1.7.6</version.slf4j>
 	</properties>
 
 	<build>
@@ -103,6 +93,12 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${version.junit}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>${version.mockito}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

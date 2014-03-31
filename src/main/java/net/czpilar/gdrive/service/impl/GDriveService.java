@@ -1,5 +1,7 @@
 package net.czpilar.gdrive.service.impl;
 
+import static net.czpilar.gdrive.constant.GDriveConstants.*;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,9 +15,9 @@ import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
-import net.czpilar.gdrive.constant.GDriveConstants;
+import net.czpilar.gdrive.credential.IGDriveCredential;
 import net.czpilar.gdrive.exception.AuthorizationFailedException;
-import net.czpilar.gdrive.exception.FileSaveException;
+import net.czpilar.gdrive.exception.FileUploadException;
 import net.czpilar.gdrive.listener.FileUploadProgressListener;
 import net.czpilar.gdrive.service.IGDriveAuthorizationService;
 import net.czpilar.gdrive.service.IGDriveFileService;
@@ -29,21 +31,21 @@ public class GDriveService extends AbstractGDriveService implements IGDriveAutho
 
 	private static final Logger LOG = LoggerFactory.getLogger(GDriveService.class);
 
-	public GDriveService(String propertyFile) {
-		super(propertyFile);
+	public GDriveService(IGDriveCredential gdriveCredential) {
+		super(gdriveCredential);
 	}
 
 	@Override
 	public String getAuthorizationURL() {
-		return getFlow().newAuthorizationUrl().setRedirectUri(GDriveConstants.REDIRECT_URI).build();
+		return getFlow().newAuthorizationUrl().setRedirectUri(REDIRECT_URI).build();
 	}
 
 	@Override
 	public Credential authorize(String authorizationCode) {
 		try {
-			GoogleTokenResponse response = getFlow().newTokenRequest(authorizationCode).setRedirectUri(GDriveConstants.REDIRECT_URI).execute();
+			GoogleTokenResponse response = getFlow().newTokenRequest(authorizationCode).setRedirectUri(REDIRECT_URI).execute();
 			Credential credential = getFlow().createAndStoreCredential(response, null);
-			storeCredential(credential);
+			getGdriveCredential().saveCredential(credential);
 			return credential;
 		} catch (IOException e) {
 			throw new AuthorizationFailedException("Error occures during authorization process.", e);
@@ -108,7 +110,7 @@ public class GDriveService extends AbstractGDriveService implements IGDriveAutho
 			return file;
 		} catch (IOException e) {
 			LOG.error("File {} was not uploaded.", filename);
-			throw new FileSaveException("File was not uploaded.", e);
+			throw new FileUploadException("File was not uploaded.", e);
 		}
 	}
 
@@ -133,7 +135,7 @@ public class GDriveService extends AbstractGDriveService implements IGDriveAutho
 		for (String filename : filenames) {
 			try {
 				uploadFile(filename, parent);
-			} catch (FileSaveException e) {
+			} catch (FileUploadException e) {
 				LOG.error("Error during uploading file.", e);
 			}
 		}

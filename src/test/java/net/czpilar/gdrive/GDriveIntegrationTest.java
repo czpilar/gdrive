@@ -29,7 +29,7 @@ public class GDriveIntegrationTest {
 
 	@Test
 	public void testAuthorize() {
-		GDrive.main(new String[] { "-a", "4/D6K_PhjXs2ZAhkLRWyZwNnanZKh0.4mDoY-XrQ08YOl05ti8ZT3bffTsQigI", "-p", "gdrive.properties" });
+		GDrive.main(new String[] { "-a", "4/crxO268xE-UOK_KpEhlD6UzbjW2j.IgfsVnopatQTOl05ti8ZT3Z1WnUuigI", "-p", "gdrive.properties" });
 	}
 
 	@Test
