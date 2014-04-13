@@ -1,9 +1,13 @@
-gdrive
+gDrive
 ======
-Simple java command line application for uploading file(s) to Google Drive.
 
-Usage
------
+- `gdrive-cmd` is simple java command line application for uploading file(s) to Google Drive.
+- `gdrive-core` is core library which provide function for uploading file(s) to Google Drive.
+
+gDrive as command line application
+----------------------------------
+
+### Usage
 usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] -p <props>`
 
  `-a <code>` - process authorization<br/>
@@ -11,18 +15,16 @@ usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] -p <props>`
  `-f <file>` - upload files<br/>
  `-h` - show this help<br/>
  `-l` - display authorization link<br/>
- `-p <props>` - path to gdrive properties file
+ `-p <props>` - path to gDrive properties file
 
-How to authorize application
-----------------------------
+### How to authorize application
 1. generate authorization URL:<br/>
    `gdrive -p gdrive.properties -l`
 2. copy and paste URL to your browser to receive authorization code
 3. authorize application with received authorization code:<br/>
    `gdrive -p gdrive.properties -a <code>`
 
-How to upload files
--------------------
+### How to upload files
 Upload file(s) to google drive:<br/>
    `gdrive -p gdrive.properties -f <file1> <file2> <file3>`
 
@@ -35,3 +37,16 @@ If you want to change upload directory:
    `gdrive -p gdrive.properties -f <file> -d <dir>`
 
 Only direct subdirectory of root directory is supported.
+
+gDrive as core library
+----------------------
+gDrive core can be used in any other application to provide function for uploading file(s) to Google Drive.
+
+### Usage
+1. add implementation of `IGDriveCredential` interface to spring context
+   or use `SimpleGDriveCredential` or extend `AbstractGDriveCredential`
+2. provide client ID as `gdrive.core.drive.clientId` property in spring context
+3. provide client secret as `gdrive.core.drive.clientSecret` property in spring context
+4. provide redirect URI as `gdrive.core.drive.redirectUri` property in spring context
+5. import gDrive spring context with `<import resource="classpath:gdrive-core-context.xml" />`
+6. autowire `IFileService` and use file uploading methods
