@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<configuration threshold="error">
+
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<param name="target" value="System.out" />
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%d [%thread] %-5p [%C{1}:%L] - %m %n</pattern>
+		</layout>
+	</appender>
+
+	<logger name="net.czpilar" additivity="false" level="INFO">
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<logger name="org.springframework" additivity="false" level="INFO">
+		<appender-ref ref="CONSOLE" />
+	</logger>
+
+	<root level="ERROR" additivity="false">
+		<appender-ref ref="CONSOLE" />
+	</root>
+
+</configuration>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<bean id="gdrive-cmd-propertyPlaceholder"
+		  class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="gdrive-core.properties" />
+		<property name="ignoreUnresolvablePlaceholders" value="false" />
+		<property name="systemPropertiesModeName">
+			<value>SYSTEM_PROPERTIES_MODE_OVERRIDE</value>
+		</property>
+	</bean>
+
+	<bean id="gdrive-cmd-propertiesGDriveCredential"
+		  class="net.czpilar.gdrive.cmd.credential.PropertiesGDriveCredential">
+		<property name="uploadDirPropertyKey" value="gdrive.uploadDir" />
+		<property name="accessTokenPropertyKey" value="gdrive.accessToken" />
+		<property name="refreshTokenPropertyKey" value="gdrive.refreshToken" />
+		<property name="defaultUploadDir" value="gdrive-uploads" />
+	</bean>
+
+</beans>
