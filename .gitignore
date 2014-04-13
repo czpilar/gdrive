@@ -3,3 +3,5 @@
 /.idea
 /.svn
 /target
+/gdrive-cmd/target
+/gdrive-core/target
