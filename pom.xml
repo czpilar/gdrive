@@ -10,7 +10,7 @@
 	<groupId>net.czpilar.gdrive</groupId>
 	<artifactId>gdrive-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.1.0</version>
+	<version>1.1.1-SNAPSHOT</version>
 	<name>gdrive-parent</name>
 
 	<developers>
@@ -31,9 +31,9 @@
 	</developers>
 
 	<scm>
-		<connection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/tags/gdrive-parent-1.1.0</connection>
-		<developerConnection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/tags/gdrive-parent-1.1.0</developerConnection>
-		<url>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/tags/gdrive-parent-1.1.0</url>
+		<connection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</connection>
+		<developerConnection>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</developerConnection>
+		<url>scm:svn:http://dev.czpilar.net/svn/dev/java/gdrive/trunk</url>
 	</scm>
 
 	<properties>
