@@ -37,7 +37,8 @@
 	<scm>
 		<connection>scm:git:git@github.com:czpilar/gdrive.git</connection>
 		<developerConnection>scm:git:git@github.com:czpilar/gdrive.git</developerConnection>
-		<url>scm:git:git@github.com:czpilar/gdrive.git</url>
+		<url>https://github.com/czpilar/gdrive</url>
+		<tag>HEAD</tag>
 	</scm>
 
 	<properties>
