@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Listener used for printing progress of uploading file.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class FileUploadProgressListener implements MediaHttpUploaderProgressListener {
 

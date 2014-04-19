@@ -3,7 +3,7 @@ package net.czpilar.gdrive.core.exception;
 /**
  * Exception used when authorization fails.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class AuthorizationFailedException extends GDriveException {
 

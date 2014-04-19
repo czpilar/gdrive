@@ -2,7 +2,7 @@ gDrive
 ======
 
 - `gdrive-cmd` is simple java command line application for uploading file(s) to Google Drive.
-- `gdrive-core` is core library which provide function for uploading file(s) to Google Drive.
+- `gdrive-core` is core library which provide ability for uploading file(s) to Google Drive.
 
 gDrive as command line application
 ----------------------------------
@@ -40,7 +40,7 @@ Only direct subdirectory of root directory is supported.
 
 gDrive as core library
 ----------------------
-gDrive core can be used in any other application to provide function for uploading file(s) to Google Drive.
+gDrive core can be used in any other application to provide ability for uploading file(s) to Google Drive.
 
 ### Usage
 1. add implementation of `IGDriveCredential` interface to spring context
@@ -50,3 +50,20 @@ gDrive core can be used in any other application to provide function for uploadi
 4. provide redirect URI as `gdrive.core.drive.redirectUri` property in spring context
 5. import gDrive spring context with `<import resource="classpath:gdrive-core-context.xml" />`
 6. autowire `IFileService` and use file uploading methods
+
+License
+=======
+
+    Copyright 2014 David Pilar
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.

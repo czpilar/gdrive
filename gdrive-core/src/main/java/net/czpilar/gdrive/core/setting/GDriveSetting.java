@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Holder for gDrive secrets, scopes and other info.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class GDriveSetting {
 

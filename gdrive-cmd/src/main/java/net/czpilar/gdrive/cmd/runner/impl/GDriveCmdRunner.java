@@ -1,8 +1,10 @@
 package net.czpilar.gdrive.cmd.runner.impl;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.services.drive.model.File;
 import net.czpilar.gdrive.cmd.credential.PropertiesGDriveCredential;
 import net.czpilar.gdrive.cmd.exception.CommandLineException;
 import net.czpilar.gdrive.cmd.runner.IGDriveCmdRunner;
@@ -15,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Command line runner implementation.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class GDriveCmdRunner implements IGDriveCmdRunner {
 
@@ -104,7 +106,11 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
 	private void doFileOption(CommandLine cmd) {
 		if (cmd.hasOption(OPTION_FILE)) {
 			String dir = cmd.hasOption(OPTION_DIRECTORY) ? cmd.getOptionValue(OPTION_DIRECTORY) : null;
-			fileService.uploadFiles(Arrays.asList(cmd.getOptionValues(OPTION_FILE)), dir);
+			List<File> files = fileService.uploadFiles(Arrays.asList(cmd.getOptionValues(OPTION_FILE)), dir);
+			System.out.println("Uploaded " + files.size() + " file(s)...");
+			for (File file : files) {
+				System.out.println("- " + file.getOriginalFilename() + " (remote ID: " + file.getId() + ")");
+			}
 		}
 	}
 

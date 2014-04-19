@@ -3,26 +3,35 @@
 	<parent>
 		<groupId>net.czpilar.gdrive</groupId>
 		<artifactId>gdrive-parent</artifactId>
-		<version>1.1.2-SNAPSHOT</version>
+		<version>1.2.0-SNAPSHOT</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.czpilar.gdrive</groupId>
 	<artifactId>gdrive-cmd</artifactId>
 	<packaging>jar</packaging>
-	<version>1.1.2-SNAPSHOT</version>
+	<version>1.2.0-SNAPSHOT</version>
 	<name>gdrive-cmd</name>
+	<description>Simple java command line application for uploading file(s) to Google Drive.</description>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/bin</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>gdrive.bat</include>
+					<include>gdrive.sh</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>net.czpilar.gdrive.cmd.GDrive</mainClass>
-						</manifest>
-					</archive>
 					<descriptors>
 						<descriptor>src/main/assembly/assembly-bin.xml</descriptor>
 					</descriptors>
@@ -39,35 +48,18 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/lib</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
-							<overWriteIfNewer>true</overWriteIfNewer>
-							<includeScope>runtime</includeScope>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
 							<mainClass>net.czpilar.gdrive.cmd.GDrive</mainClass>
 						</manifest>
 					</archive>
+					<excludes>
+						<exclude>gdrive.bat</exclude>
+						<exclude>gdrive.sh</exclude>
+					</excludes>
 					<outputDirectory>${project.build.directory}</outputDirectory>
 				</configuration>
 			</plugin>

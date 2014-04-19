@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Auto loader of gDrive credential from Spring context.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class CredentialLoader {
 

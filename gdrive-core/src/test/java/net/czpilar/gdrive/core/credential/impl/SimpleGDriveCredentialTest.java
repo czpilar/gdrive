@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 /**
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class SimpleGDriveCredentialTest {
 

@@ -5,7 +5,7 @@ import com.google.api.client.auth.oauth2.Credential;
 /**
  * gDrive credential interface.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public interface IGDriveCredential {
 

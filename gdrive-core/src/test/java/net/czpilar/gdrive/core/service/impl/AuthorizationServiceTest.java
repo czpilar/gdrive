@@ -22,7 +22,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 /**
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(GoogleAuthorizationCodeRequestUrl.class)

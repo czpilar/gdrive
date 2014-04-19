@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Listener used for saving credential.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class CredentialSaverListener implements AuthorizationCodeFlow.CredentialCreatedListener {
 

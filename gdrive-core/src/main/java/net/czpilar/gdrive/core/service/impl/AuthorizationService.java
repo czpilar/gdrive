@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Authorization service with methods for authorization to Google Drive.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class AuthorizationService extends AbstractService implements IAuthorizationService {
 

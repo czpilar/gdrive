@@ -5,7 +5,7 @@ import net.czpilar.gdrive.core.exception.GDriveException;
 /**
  * Exception used for error during work with properties file.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class PropertiesFileException extends GDriveException {
 

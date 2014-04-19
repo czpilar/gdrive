@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class GDriveSettingTest {
 

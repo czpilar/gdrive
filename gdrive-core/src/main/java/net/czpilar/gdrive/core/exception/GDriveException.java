@@ -3,7 +3,7 @@ package net.czpilar.gdrive.core.exception;
 /**
  * Base exception for all gDrive exceptions.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class GDriveException extends RuntimeException {
 
