@@ -16,7 +16,8 @@ import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import com.google.api.services.drive.model.ParentReference;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
-import net.czpilar.gdrive.core.exception.FileUploadException;
+import net.czpilar.gdrive.core.exception.FileHandleException;
+import net.czpilar.gdrive.core.service.IDirectoryService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationContext;
 
 /**
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ FileList.class, File.class, ParentReference.class, MediaHttpUploader.class, Drive.Files.Insert.class })
@@ -38,6 +39,9 @@ public class FileServiceTest {
 
 	@Mock
 	private FileService serviceMock;
+
+	@Mock
+	private IDirectoryService directoryService;
 
 	@Mock
 	private ApplicationContext applicationContext;
@@ -53,23 +57,18 @@ public class FileServiceTest {
 		MockitoAnnotations.initMocks(this);
 		service.setApplicationContext(applicationContext);
 		service.setGDriveCredential(gDriveCredential);
+		service.setDirectoryService(directoryService);
 
-		when(serviceMock.getDrive()).thenReturn(drive);
-		when(serviceMock.getGDriveCredential()).thenReturn(gDriveCredential);
-
+		when(serviceMock.getDirectoryService()).thenReturn(directoryService);
 		when(applicationContext.getBean(Drive.class)).thenReturn(drive);
 	}
 
 	@Test
-	public void testGetDrive() {
-		Drive result = service.getDrive();
+	public void testGetDirectoryService() {
+		IDirectoryService result = service.getDirectoryService();
 
 		assertNotNull(result);
-		assertEquals(drive, result);
-
-		verify(applicationContext).getBean(Drive.class);
-
-		verifyNoMoreInteractions(applicationContext);
+		assertEquals(directoryService, result);
 	}
 
 	@Test
@@ -101,310 +100,7 @@ public class FileServiceTest {
 	}
 
 	@Test
-	public void testFindParentWhereParentNameIsNull() throws IOException {
-		File result = service.findParent(null, drive);
-
-		assertNull(result);
-
-		verifyZeroInteractions(drive);
-	}
-
-	@Test
-	public void testFindParentWhereNoItemsFound() throws IOException {
-		String parentName = "test-parent-name-dir";
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.List list = mock(Drive.Files.List.class);
-		FileList fileList = mock(FileList.class);
-
-		when(drive.files()).thenReturn(files);
-		when(files.list()).thenReturn(list);
-		when(list.setQ(anyString())).thenReturn(list);
-		when(list.execute()).thenReturn(fileList);
-		when(fileList.getItems()).thenReturn(null);
-
-		File result = service.findParent(parentName, drive);
-
-		assertNull(result);
-
-		verify(drive).files();
-		verify(files).list();
-		verify(list).setQ("title='" + parentName + "' and mimeType = 'application/vnd.google-apps.folder'");
-		verify(list).execute();
-		verify(fileList).getItems();
-
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(files);
-		verifyNoMoreInteractions(list);
-		verifyNoMoreInteractions(fileList);
-	}
-
-	@Test
-	public void testFindParentWhereEmptyItemsFound() throws IOException {
-		String parentName = "test-parent-name-dir";
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.List list = mock(Drive.Files.List.class);
-		FileList fileList = mock(FileList.class);
-
-		when(drive.files()).thenReturn(files);
-		when(files.list()).thenReturn(list);
-		when(list.setQ(anyString())).thenReturn(list);
-		when(list.execute()).thenReturn(fileList);
-		when(fileList.getItems()).thenReturn(new ArrayList<File>());
-
-		File result = service.findParent(parentName, drive);
-
-		assertNull(result);
-
-		verify(drive).files();
-		verify(files).list();
-		verify(list).setQ("title='" + parentName + "' and mimeType = 'application/vnd.google-apps.folder'");
-		verify(list).execute();
-		verify(fileList).getItems();
-
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(files);
-		verifyNoMoreInteractions(list);
-		verifyNoMoreInteractions(fileList);
-	}
-
-	@Test
-	public void testFindParentWhereAreOnlyTrashedItems() throws IOException {
-		String parentName = "test-parent-name-dir";
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.List list = mock(Drive.Files.List.class);
-		FileList fileList = mock(FileList.class);
-		File file = mock(File.class);
-
-		when(drive.files()).thenReturn(files);
-		when(files.list()).thenReturn(list);
-		when(list.setQ(anyString())).thenReturn(list);
-		when(list.execute()).thenReturn(fileList);
-		when(fileList.getItems()).thenReturn(Arrays.asList(file));
-		when(file.getExplicitlyTrashed()).thenReturn(true);
-
-		File result = service.findParent(parentName, drive);
-
-		assertNull(result);
-
-		verify(drive).files();
-		verify(files).list();
-		verify(list).setQ("title='" + parentName + "' and mimeType = 'application/vnd.google-apps.folder'");
-		verify(list).execute();
-		verify(fileList).getItems();
-		verify(file).getExplicitlyTrashed();
-
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(files);
-		verifyNoMoreInteractions(list);
-		verifyNoMoreInteractions(fileList);
-		verifyNoMoreInteractions(file);
-	}
-
-	@Test
-	public void testFindParentWhereAreNotTrashedItemsAndHaveNoParents() throws IOException {
-		String parentName = "test-parent-name-dir";
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.List list = mock(Drive.Files.List.class);
-		FileList fileList = mock(FileList.class);
-		File file1 = mock(File.class);
-		File file2 = mock(File.class);
-
-		when(drive.files()).thenReturn(files);
-		when(files.list()).thenReturn(list);
-		when(list.setQ(anyString())).thenReturn(list);
-		when(list.execute()).thenReturn(fileList);
-		when(fileList.getItems()).thenReturn(Arrays.asList(file1, file2));
-		when(file1.getExplicitlyTrashed()).thenReturn(false);
-		when(file2.getExplicitlyTrashed()).thenReturn(null);
-		when(file1.getParents()).thenReturn(null);
-		when(file2.getParents()).thenReturn(new ArrayList<ParentReference>());
-
-		File result = service.findParent(parentName, drive);
-
-		assertNull(result);
-
-		verify(drive).files();
-		verify(files).list();
-		verify(list).setQ("title='" + parentName + "' and mimeType = 'application/vnd.google-apps.folder'");
-		verify(list).execute();
-		verify(fileList).getItems();
-		verify(file1).getExplicitlyTrashed();
-		verify(file2).getExplicitlyTrashed();
-		verify(file1).getParents();
-		verify(file2).getParents();
-
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(files);
-		verifyNoMoreInteractions(list);
-		verifyNoMoreInteractions(fileList);
-		verifyNoMoreInteractions(file1);
-		verifyNoMoreInteractions(file2);
-	}
-
-	@Test
-	public void testFindParentWhereAreNotTrashedItemsAndHaveNonRootParents() throws IOException {
-		String parentName = "test-parent-name-dir";
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.List list = mock(Drive.Files.List.class);
-		FileList fileList = mock(FileList.class);
-		File file = mock(File.class);
-		ParentReference parent1 = mock(ParentReference.class);
-		ParentReference parent2 = mock(ParentReference.class);
-
-		when(drive.files()).thenReturn(files);
-		when(files.list()).thenReturn(list);
-		when(list.setQ(anyString())).thenReturn(list);
-		when(list.execute()).thenReturn(fileList);
-		when(fileList.getItems()).thenReturn(Arrays.asList(file));
-		when(file.getExplicitlyTrashed()).thenReturn(false);
-		when(file.getParents()).thenReturn(Arrays.asList(parent1, parent2));
-		when(parent1.getIsRoot()).thenReturn(null);
-		when(parent2.getIsRoot()).thenReturn(false);
-
-		File result = service.findParent(parentName, drive);
-
-		assertNull(result);
-
-		verify(drive).files();
-		verify(files).list();
-		verify(list).setQ("title='" + parentName + "' and mimeType = 'application/vnd.google-apps.folder'");
-		verify(list).execute();
-		verify(fileList).getItems();
-		verify(file).getExplicitlyTrashed();
-		verify(file).getParents();
-		verify(parent1).getIsRoot();
-		verify(parent2).getIsRoot();
-
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(files);
-		verifyNoMoreInteractions(list);
-		verifyNoMoreInteractions(fileList);
-		verifyNoMoreInteractions(file);
-		verifyNoMoreInteractions(parent1);
-		verifyNoMoreInteractions(parent2);
-	}
-
-	@Test
-	public void testFindParentWhereAreNotTrashedItemsAndHaveRootParents() throws IOException {
-		String parentName = "test-parent-name-dir";
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.List list = mock(Drive.Files.List.class);
-		FileList fileList = mock(FileList.class);
-		File file = mock(File.class);
-		ParentReference parent = mock(ParentReference.class);
-
-		when(drive.files()).thenReturn(files);
-		when(files.list()).thenReturn(list);
-		when(list.setQ(anyString())).thenReturn(list);
-		when(list.execute()).thenReturn(fileList);
-		when(fileList.getItems()).thenReturn(Arrays.asList(file));
-		when(file.getExplicitlyTrashed()).thenReturn(false);
-		when(file.getParents()).thenReturn(Arrays.asList(parent));
-		when(parent.getIsRoot()).thenReturn(true);
-
-		File result = service.findParent(parentName, drive);
-
-		assertNotNull(result);
-		assertEquals(file, result);
-
-		verify(drive).files();
-		verify(files).list();
-		verify(list).setQ("title='" + parentName + "' and mimeType = 'application/vnd.google-apps.folder'");
-		verify(list).execute();
-		verify(fileList).getItems();
-		verify(file).getExplicitlyTrashed();
-		verify(file).getParents();
-		verify(parent).getIsRoot();
-
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(files);
-		verifyNoMoreInteractions(list);
-		verifyNoMoreInteractions(fileList);
-		verifyNoMoreInteractions(file);
-		verifyNoMoreInteractions(parent);
-	}
-
-	@Test
-	public void testFindOrCreateParentWhereParentDirIsNull() throws IOException {
-		File result = service.findOrCreateParent(null, drive);
-
-		assertNull(result);
-
-		verifyZeroInteractions(drive);
-	}
-
-	@Test
-	public void testFindOrCreateParentWhereFindParentThrowsException() throws IOException {
-		String parentName = "test-parent-name-dir";
-
-		when(serviceMock.findOrCreateParent(anyString(), any(Drive.class))).thenCallRealMethod();
-		when(serviceMock.findParent(anyString(), any(Drive.class))).thenThrow(IOException.class);
-
-		File result = serviceMock.findOrCreateParent(parentName, drive);
-
-		assertNull(result);
-
-		verify(serviceMock).findOrCreateParent(anyString(), any(Drive.class));
-		verify(serviceMock).findParent(anyString(), any(Drive.class));
-
-		verifyZeroInteractions(drive);
-		verifyNoMoreInteractions(serviceMock);
-	}
-
-	@Test
-	public void testFindOrCreateParentWhereFindParentReturnsParent() throws IOException {
-		String parentName = "test-parent-name-dir";
-		File parent = mock(File.class);
-
-		when(serviceMock.findOrCreateParent(anyString(), any(Drive.class))).thenCallRealMethod();
-		when(serviceMock.findParent(anyString(), any(Drive.class))).thenReturn(parent);
-
-		File result = serviceMock.findOrCreateParent(parentName, drive);
-
-		assertNotNull(result);
-		assertEquals(parent, result);
-
-		verify(serviceMock).findOrCreateParent(anyString(), any(Drive.class));
-		verify(serviceMock).findParent(anyString(), any(Drive.class));
-
-		verifyZeroInteractions(drive);
-		verifyNoMoreInteractions(serviceMock);
-		verifyZeroInteractions(parent);
-	}
-
-	@Test
-	public void testFindOrCreateParentWhereFindParentReturnsNull() throws IOException {
-		String parentName = "test-parent-name-dir";
-		File parent = mock(File.class);
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.Insert insert = mock(Drive.Files.Insert.class);
-
-		when(serviceMock.findOrCreateParent(anyString(), any(Drive.class))).thenCallRealMethod();
-		when(serviceMock.findParent(anyString(), any(Drive.class))).thenReturn(null);
-		when(drive.files()).thenReturn(files);
-		when(files.insert(any(File.class))).thenReturn(insert);
-		when(insert.execute()).thenReturn(parent);
-
-		File result = serviceMock.findOrCreateParent(parentName, drive);
-
-		assertNotNull(result);
-		assertEquals(parent, result);
-
-		verify(serviceMock).findOrCreateParent(anyString(), any(Drive.class));
-		verify(serviceMock).findParent(anyString(), any(Drive.class));
-		verify(drive).files();
-		verify(files).insert(any(File.class));
-		verify(insert).execute();
-
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(serviceMock);
-		verifyZeroInteractions(parent);
-		verifyNoMoreInteractions(files);
-		verifyNoMoreInteractions(insert);
-	}
-
-	@Test
-	public void testUploadFileWithStringFilenameAndNullParentAndDrive() throws IOException {
+	public void testUploadFileWithStringFilenameAndNullParent() throws IOException {
 		File file = mock(File.class);
 		Drive.Files files = mock(Drive.Files.class);
 		Drive.Files.Insert insert = PowerMockito.mock(Drive.Files.Insert.class);
@@ -416,7 +112,7 @@ public class FileServiceTest {
 		when(insert.getMediaHttpUploader()).thenReturn(mediaHttpUploader);
 		when(file.getId()).thenReturn("some-test-file-id");
 
-		File result = service.uploadFile("test-filename", null, drive);
+		File result = service.uploadFile("test-filename", (File) null);
 
 		assertNotNull(result);
 		assertEquals(file, result);
@@ -437,7 +133,7 @@ public class FileServiceTest {
 	}
 
 	@Test
-	public void testUploadFileWithStringFilenameAndFileParentAndDrive() throws IOException {
+	public void testUploadFileWithStringFilenameAndFileParent() throws IOException {
 		File parent = mock(File.class);
 		File file = mock(File.class);
 		Drive.Files files = mock(Drive.Files.class);
@@ -451,7 +147,7 @@ public class FileServiceTest {
 		when(file.getId()).thenReturn("some-test-file-id");
 		when(parent.getId()).thenReturn("some-test-parent-id");
 
-		File result = service.uploadFile("test-filename", parent, drive);
+		File result = service.uploadFile("test-filename", parent);
 
 		assertNotNull(result);
 		assertEquals(file, result);
@@ -473,16 +169,16 @@ public class FileServiceTest {
 		verifyNoMoreInteractions(parent);
 	}
 
-	@Test(expected = FileUploadException.class)
-	public void testUploadFileWithStringFilenameAndNullParentAndDriveAndThrownException() throws IOException {
+	@Test(expected = FileHandleException.class)
+	public void testUploadFileWithStringFilenameAndNullParentAndThrownException() throws IOException {
 		Drive.Files files = mock(Drive.Files.class);
 
 		when(drive.files()).thenReturn(files);
 		when(files.insert(any(File.class), any(FileContent.class))).thenThrow(IOException.class);
 
 		try {
-			service.uploadFile("test-filename", null, drive);
-		} catch (FileUploadException e) {
+			service.uploadFile("test-filename", (File) null);
+		} catch (FileHandleException e) {
 			verify(drive).files();
 			verify(files).insert(any(File.class), any(FileContent.class));
 
@@ -497,40 +193,37 @@ public class FileServiceTest {
 	public void testUploadFilesWithNullFilenames() {
 		File parent = mock(File.class);
 
-		doCallRealMethod().when(serviceMock).uploadFiles(anyListOf(String.class), any(File.class), any(Drive.class));
+		List<File> result = service.uploadFiles(null, parent);
 
-		serviceMock.uploadFiles(null, parent, drive);
-
-		verify(serviceMock).uploadFiles(anyListOf(String.class), any(File.class), any(Drive.class));
-
-		verifyNoMoreInteractions(serviceMock);
+		assertNotNull(result);
+		assertTrue(result.isEmpty());
 	}
 
 	@Test
 	public void testUploadFilesWithEmptyListOfFilenames() {
 		File parent = mock(File.class);
 
-		doCallRealMethod().when(serviceMock).uploadFiles(anyListOf(String.class), any(File.class), any(Drive.class));
+		List<File> result = service.uploadFiles(new ArrayList<String>(), parent);
 
-		serviceMock.uploadFiles(new ArrayList<String>(), parent, drive);
-
-		verify(serviceMock).uploadFiles(anyListOf(String.class), any(File.class), any(Drive.class));
-
-		verifyNoMoreInteractions(serviceMock);
+		assertNotNull(result);
+		assertTrue(result.isEmpty());
 	}
 
 	@Test
 	public void testUploadFilesWhereUploadFileThrowsException() {
 		File parent = mock(File.class);
 
-		doCallRealMethod().when(serviceMock).uploadFiles(anyListOf(String.class), any(File.class), any(Drive.class));
-		when(serviceMock.uploadFile(anyString(), any(File.class), any(Drive.class))).thenThrow(FileUploadException.class);
+		when(serviceMock.uploadFiles(anyListOf(String.class), any(File.class))).thenCallRealMethod();
+		when(serviceMock.uploadFile(anyString(), any(File.class))).thenThrow(FileHandleException.class);
 
-		serviceMock.uploadFiles(Arrays.asList("filename1", "filename2"), parent, drive);
+		List<File> result = serviceMock.uploadFiles(Arrays.asList("filename1", "filename2"), parent);
 
-		verify(serviceMock).uploadFiles(anyListOf(String.class), any(File.class), any(Drive.class));
-		verify(serviceMock).uploadFile("filename1", parent, drive);
-		verify(serviceMock).uploadFile("filename2", parent, drive);
+		assertNotNull(result);
+		assertTrue(result.isEmpty());
+
+		verify(serviceMock).uploadFiles(anyListOf(String.class), any(File.class));
+		verify(serviceMock).uploadFile("filename1", parent);
+		verify(serviceMock).uploadFile("filename2", parent);
 
 		verifyNoMoreInteractions(serviceMock);
 	}
@@ -539,65 +232,50 @@ public class FileServiceTest {
 	public void testUploadFilesWithListOfFilenames() {
 		File parent = mock(File.class);
 
-		doCallRealMethod().when(serviceMock).uploadFiles(anyListOf(String.class), any(File.class), any(Drive.class));
-		when(serviceMock.uploadFile(anyString(), any(File.class), any(Drive.class))).thenReturn(mock(File.class));
+		when(serviceMock.uploadFiles(anyListOf(String.class), any(File.class))).thenCallRealMethod();
+		File file1 = mock(File.class);
+		File file2 = mock(File.class);
+		when(serviceMock.uploadFile(anyString(), any(File.class))).thenReturn(file1, file2);
 
-		serviceMock.uploadFiles(Arrays.asList("filename1", "filename2"), parent, drive);
+		List<File> result = serviceMock.uploadFiles(Arrays.asList("filename1", "filename2"), parent);
 
-		verify(serviceMock).uploadFiles(anyListOf(String.class), any(File.class), any(Drive.class));
-		verify(serviceMock).uploadFile("filename1", parent, drive);
-		verify(serviceMock).uploadFile("filename2", parent, drive);
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertEquals(file1, result.get(0));
+		assertEquals(file2, result.get(1));
+
+		verify(serviceMock).uploadFiles(anyListOf(String.class), any(File.class));
+		verify(serviceMock).uploadFile("filename1", parent);
+		verify(serviceMock).uploadFile("filename2", parent);
 
 		verifyNoMoreInteractions(serviceMock);
 	}
 
 	@Test
 	public void testUploadFileWithStringFilenameAndStringParentDir() {
-		String parentDir = "test-parent-dir";
+		String pathname = "test-parent-dir";
 		String filename = "test-filename";
 		File file = mock(File.class);
 		File parent = mock(File.class);
 
 		when(serviceMock.uploadFile(anyString(), anyString())).thenCallRealMethod();
-		when(serviceMock.uploadFile(anyString(), any(File.class), any(Drive.class))).thenReturn(file);
-		when(serviceMock.getUploadDir(anyString())).thenReturn(parentDir);
-		when(serviceMock.findOrCreateParent(anyString(), any(Drive.class))).thenReturn(parent);
+		when(serviceMock.uploadFile(anyString(), any(File.class))).thenReturn(file);
+		when(serviceMock.getUploadDir(anyString())).thenReturn(pathname);
+		when(directoryService.findOrCreateDirectory(anyString())).thenReturn(parent);
 
-		File result = serviceMock.uploadFile(filename, parentDir);
-
-		assertNotNull(result);
-		assertEquals(file, result);
-
-		verify(serviceMock).uploadFile(filename, parentDir);
-		verify(serviceMock).uploadFile(filename, parent, drive);
-		verify(serviceMock).getUploadDir(parentDir);
-		verify(serviceMock).getDrive();
-		verify(serviceMock).findOrCreateParent(parentDir, drive);
-
-		verifyNoMoreInteractions(serviceMock);
-		verifyZeroInteractions(file);
-		verifyZeroInteractions(parent);
-	}
-
-	@Test
-	public void testUploadFileWithStringFilenameAndFileParent() {
-		String filename = "test-filename";
-		File file = mock(File.class);
-		File parent = mock(File.class);
-
-		when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
-		when(serviceMock.uploadFile(anyString(), any(File.class), any(Drive.class))).thenReturn(file);
-
-		File result = serviceMock.uploadFile(filename, parent);
+		File result = serviceMock.uploadFile(filename, pathname);
 
 		assertNotNull(result);
 		assertEquals(file, result);
 
+		verify(serviceMock).uploadFile(filename, pathname);
 		verify(serviceMock).uploadFile(filename, parent);
-		verify(serviceMock).uploadFile(filename, parent, drive);
-		verify(serviceMock).getDrive();
+		verify(serviceMock).getUploadDir(pathname);
+		verify(serviceMock).getDirectoryService();
+		verify(directoryService).findOrCreateDirectory(anyString());
 
 		verifyNoMoreInteractions(serviceMock);
+		verifyNoMoreInteractions(directoryService);
 		verifyZeroInteractions(file);
 		verifyZeroInteractions(parent);
 	}
@@ -625,62 +303,58 @@ public class FileServiceTest {
 	@Test
 	public void testUploadFilesWithStringFilenames() {
 		List<String> filenames = Arrays.asList("test-filename1", "test-filename2");
-		File file = mock(File.class);
+		File file1 = mock(File.class);
+		File file2 = mock(File.class);
+		List<File> files = Arrays.asList(file1, file2);
 
-		doCallRealMethod().when(serviceMock).uploadFiles(anyListOf(String.class));
-		doNothing().when(serviceMock).uploadFiles(anyListOf(String.class), any(File.class));
+		when(serviceMock.uploadFiles(anyListOf(String.class))).thenCallRealMethod();
+		when(serviceMock.uploadFiles(anyListOf(String.class), any(File.class))).thenReturn(files);
 
-		serviceMock.uploadFiles(filenames);
+		List<File> result = serviceMock.uploadFiles(filenames);
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertEquals(files, result);
 
 		verify(serviceMock).uploadFiles(filenames);
 		verify(serviceMock).uploadFiles(filenames, (File) null);
 
 		verifyNoMoreInteractions(serviceMock);
-		verifyZeroInteractions(file);
+		verifyZeroInteractions(file1);
+		verifyZeroInteractions(file2);
 	}
 
 	@Test
 	public void testUploadFilesWithStringFilenamesAndStringParentDir() {
 		String parentDir = "test-parent-dir";
 		List<String> filenames = Arrays.asList("test-filename1", "test-filename2");
-		File file = mock(File.class);
+		File file1 = mock(File.class);
+		File file2 = mock(File.class);
+		List<File> files = Arrays.asList(file1, file2);
 		File parent = mock(File.class);
 
-		doCallRealMethod().when(serviceMock).uploadFiles(anyListOf(String.class), anyString());
-		doNothing().when(serviceMock).uploadFiles(anyListOf(String.class), any(File.class), any(Drive.class));
+		when(serviceMock.uploadFiles(anyListOf(String.class), anyString())).thenCallRealMethod();
+		when(serviceMock.uploadFiles(anyListOf(String.class), any(File.class))).thenReturn(files);
 		when(serviceMock.getUploadDir(anyString())).thenReturn(parentDir);
-		when(serviceMock.findOrCreateParent(anyString(), any(Drive.class))).thenReturn(parent);
+		when(directoryService.findOrCreateDirectory(anyString())).thenReturn(parent);
 
-		serviceMock.uploadFiles(filenames, parentDir);
+		List<File> result = serviceMock.uploadFiles(filenames, parentDir);
+
+		assertNotNull(result);
+		assertEquals(2, result.size());
+		assertEquals(files, result);
 
 		verify(serviceMock).uploadFiles(filenames, parentDir);
-		verify(serviceMock).uploadFiles(filenames, parent, drive);
-		verify(serviceMock).getUploadDir(parentDir);
-		verify(serviceMock).getDrive();
-		verify(serviceMock).findOrCreateParent(parentDir, drive);
-
-		verifyNoMoreInteractions(serviceMock);
-		verifyZeroInteractions(file);
-		verifyZeroInteractions(parent);
-	}
-
-	@Test
-	public void testUploadFilesWithStringFilenamesAndFileParent() {
-		List<String> filenames = Arrays.asList("test-filename1", "test-filename2");
-		File file = mock(File.class);
-		File parent = mock(File.class);
-
-		doCallRealMethod().when(serviceMock).uploadFiles(anyListOf(String.class), any(File.class));
-		doNothing().when(serviceMock).uploadFiles(anyListOf(String.class), any(File.class), any(Drive.class));
-
-		serviceMock.uploadFiles(filenames, parent);
-
 		verify(serviceMock).uploadFiles(filenames, parent);
-		verify(serviceMock).uploadFiles(filenames, parent, drive);
-		verify(serviceMock).getDrive();
+		verify(serviceMock).getUploadDir(parentDir);
+		verify(serviceMock).getDirectoryService();
+		verify(directoryService).findOrCreateDirectory(anyString());
 
 		verifyNoMoreInteractions(serviceMock);
-		verifyZeroInteractions(file);
+		verifyNoMoreInteractions(directoryService);
+		verifyZeroInteractions(file1);
+		verifyZeroInteractions(file2);
 		verifyZeroInteractions(parent);
 	}
+
 }

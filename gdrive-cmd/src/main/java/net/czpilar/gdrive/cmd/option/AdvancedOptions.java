@@ -7,7 +7,7 @@ import org.apache.commons.cli.Option;
 /**
  * Extension of {@link org.apache.commons.cli.Options}.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class AdvancedOptions extends org.apache.commons.cli.Options {
 

@@ -14,7 +14,7 @@ import org.springframework.util.Assert;
  * Implementation of gDrive credential using
  * properties file to store tokens and upload dir name.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class PropertiesGDriveCredential extends AbstractGDriveCredential {
 

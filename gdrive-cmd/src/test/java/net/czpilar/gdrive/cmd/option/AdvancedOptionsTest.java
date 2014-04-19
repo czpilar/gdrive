@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.mockito.MockitoAnnotations;
 
 /**
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class AdvancedOptionsTest {
 

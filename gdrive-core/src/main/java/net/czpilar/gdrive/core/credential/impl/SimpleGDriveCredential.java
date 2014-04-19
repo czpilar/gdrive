@@ -4,7 +4,7 @@ package net.czpilar.gdrive.core.credential.impl;
  * Simple implementation of {@link net.czpilar.gdrive.core.credential.IGDriveCredential} interface
  * for gDrive credential.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public class SimpleGDriveCredential extends AbstractGDriveCredential {
 

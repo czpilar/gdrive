@@ -15,22 +15,20 @@
 				<include>NOTICE*</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>${project.basedir}/target/classes</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>gdrive.bat</include>
+				<include>gdrive.sh</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 	<dependencySets>
-		<dependencySet>
-			<outputDirectory>/</outputDirectory>
-			<useProjectArtifact>true</useProjectArtifact>
-			<includes>
-				<include>net.czpilar.gdrive:gdrive-cmd</include>
-			</includes>
-		</dependencySet>
 		<dependencySet>
 			<outputDirectory>/lib</outputDirectory>
 			<useProjectArtifact>true</useProjectArtifact>
 			<scope>runtime</scope>
-			<excludes>
-				<exclude>net.czpilar.gdrive:gdrive-cmd</exclude>
-			</excludes>
 		</dependencySet>
 	</dependencySets>
 </assembly>

@@ -3,7 +3,7 @@ package net.czpilar.gdrive.cmd.runner;
 /**
  * Command line runner interface.
  *
- * @author David Pilař (david@czpilar.net)
+ * @author David Pilar (david@czpilar.net)
  */
 public interface IGDriveCmdRunner {
 
