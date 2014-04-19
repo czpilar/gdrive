@@ -5,3 +5,9 @@
 /target
 /gdrive-cmd/target
 /gdrive-core/target
+/gdrive-cmd/gdrive-cmd.iml
+/gdrive-core/gdrive-core.iml
+/gdrive-parent.iml
+/test1.txt
+/test2.txt
+/test3.txt
