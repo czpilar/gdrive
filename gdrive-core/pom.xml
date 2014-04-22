@@ -14,6 +14,27 @@
 	<name>gdrive-core</name>
 	<description>Core library which provide ability for uploading file(s) to Google Drive.</description>
 
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<excludes>
+					<exclude>gdrive.properties</exclude>
+				</excludes>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>gdrive.properties</include>
+				</includes>
+			</resource>
+		</resources>
+	</build>
+
 	<dependencies>
 		<!-- Commons -->
 		<dependency>

@@ -10,13 +10,15 @@ import java.util.List;
 public class GDriveSetting {
 
 	private final String applicationName;
+	private final String applicationVersion;
 	private final String clientId;
 	private final String clientSecret;
 	private final String redirectUri;
 	private final List<String> scopes;
 
-	public GDriveSetting(String applicationName, String clientId, String clientSecret, String redirectUri, List<String> scopes) {
+	public GDriveSetting(String applicationName, String applicationVersion, String clientId, String clientSecret, String redirectUri, List<String> scopes) {
 		this.applicationName = applicationName;
+		this.applicationVersion = applicationVersion;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
 		this.redirectUri = redirectUri;
@@ -25,6 +27,10 @@ public class GDriveSetting {
 
 	public String getApplicationName() {
 		return applicationName;
+	}
+
+	public String getApplicationVersion() {
+		return applicationVersion;
 	}
 
 	public String getClientId() {

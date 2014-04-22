@@ -8,7 +8,7 @@
 	<context:annotation-config />
 
 	<import resource="classpath*:applicationContext.xml" />
-	<import resource="gdrive-cmd-coreContext.xml" />
+	<import resource="gdrive-cmd-setttingContext.xml" />
 	<import resource="gdrive-cmd-runnerContext.xml" />
 	<import resource="gdrive-cmd-optionsContext.xml" />
 

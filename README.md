@@ -8,7 +8,7 @@ gDrive as command line application
 ----------------------------------
 
 ### Usage
-usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] -p <props>`
+usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] [-p <props>] [-v]`
 
  `-a <code>` - process authorization<br/>
  `-d <dir>` - directory for upload; creates new one if no directory exists; default is gdrive-uploads<br/>
@@ -16,6 +16,7 @@ usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] -p <props>`
  `-h` - show this help<br/>
  `-l` - display authorization link<br/>
  `-p <props>` - path to gDrive properties file
+ `-v` -show gdrive version
 
 ### How to authorize application
 1. generate authorization URL:<br/>

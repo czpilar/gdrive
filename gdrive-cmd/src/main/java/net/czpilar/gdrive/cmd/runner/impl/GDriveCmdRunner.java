@@ -27,6 +27,7 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
 	public static final String OPTION_DIRECTORY = "d";
 	public static final String OPTION_PROPERTIES = "p";
 	public static final String OPTION_HELP = "h";
+	public static final String OPTION_VERSION = "v";
 
 	private CommandLineParser commandLineParser;
 
@@ -78,7 +79,15 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
 	}
 
 	private void doPropertiesOption(CommandLine cmd) {
-		propertiesGDriveCredential.setPropertyFile(cmd.getOptionValue(OPTION_PROPERTIES));
+		if (cmd.hasOption(OPTION_PROPERTIES)) {
+			propertiesGDriveCredential.setPropertyFile(cmd.getOptionValue(OPTION_PROPERTIES));
+		}
+	}
+
+	private void doVersionOption(CommandLine cmd) {
+		if (cmd.hasOption(OPTION_VERSION)) {
+			System.out.println("gDrive version: " + gDriveSetting.getApplicationVersion());
+		}
 	}
 
 	private void doHelpOption(CommandLine cmd) {
@@ -116,12 +125,14 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
 
 	private CommandLine parseCommandLine(String[] args) {
 		try {
-			CommandLine commandLine = commandLineParser.parse(options, args);
-			int length = commandLine.getOptions().length;
-			if (length == 0 || length == 1 && commandLine.hasOption(OPTION_PROPERTIES)) {
+			CommandLine cmd = commandLineParser.parse(options, args);
+			int length = cmd.getOptions().length;
+			if (length == 0) {
 				throw new CommandLineException("No arguments passed!");
+			} else if (length == 1 && cmd.hasOption(OPTION_PROPERTIES)) {
+				throw new CommandLineException("Provide at least one more argument!");
 			}
-			return commandLine;
+			return cmd;
 		} catch (ParseException e) {
 			throw new CommandLineException("Invalid arguments passed!", e);
 		}
@@ -136,6 +147,7 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
 		try {
 			CommandLine cmd = parseCommandLine(args);
 			doPropertiesOption(cmd);
+			doVersionOption(cmd);
 			doHelpOption(cmd);
 			doLinkOption(cmd);
 			doAuthrizationOption(cmd);

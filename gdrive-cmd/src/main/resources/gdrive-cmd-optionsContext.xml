@@ -6,6 +6,7 @@
 	<bean id="gdrive-cmd-options" class="net.czpilar.gdrive.cmd.option.AdvancedOptions">
 		<property name="options">
 			<list>
+				<ref bean="gdrive-cmd-versionOption" />
 				<ref bean="gdrive-cmd-helpOption" />
 				<ref bean="gdrive-cmd-linkOption" />
 				<ref bean="gdrive-cmd-authorizationOption" />
@@ -14,6 +15,13 @@
 				<ref bean="gdrive-cmd-propertiesOption" />
 			</list>
 		</property>
+	</bean>
+
+	<bean id="gdrive-cmd-versionOption" class="org.apache.commons.cli.Option">
+		<constructor-arg name="opt">
+			<utils:constant static-field="net.czpilar.gdrive.cmd.runner.impl.GDriveCmdRunner.OPTION_VERSION" />
+		</constructor-arg>
+		<constructor-arg name="description" value="show gdrive version" />
 	</bean>
 
 	<bean id="gdrive-cmd-helpOption" class="org.apache.commons.cli.Option">
@@ -68,7 +76,7 @@
 		<constructor-arg name="hasArg" value="true" />
 		<constructor-arg name="description" value="path to gDrive properties file" />
 		<property name="argName" value="props" />
-		<property name="required" value="true" />
+		<!--<property name="required" value="true" />-->
 	</bean>
 
 </beans>

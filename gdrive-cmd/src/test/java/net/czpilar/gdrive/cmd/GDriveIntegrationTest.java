@@ -18,7 +18,12 @@ public class GDriveIntegrationTest {
 
 	@Test
 	public void testHelp() {
-		GDrive.main(new String[] { "-p", "gdrive.properties", "-h" });
+		GDrive.main(new String[] { "-h" });
+	}
+
+	@Test
+	public void testVersion() {
+		GDrive.main(new String[] { "-v" });
 	}
 
 	@Test

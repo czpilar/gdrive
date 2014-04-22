@@ -1,9 +1,10 @@
 package net.czpilar.gdrive.core.setting;
 
+import static org.junit.Assert.*;
+
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -14,16 +15,18 @@ public class GDriveSettingTest {
 	@Test
 	public void testGDriveSetting() {
 		String applicationName = "test-application-name";
+		String applicationVersion = "test-application-version";
 		String clientId = "test-client-id";
 		String clientSecret = "test-client-secret";
 		String redirectUri = "test-redirect-uri";
 		List<String> scopes = Arrays.asList("test-scope-1", "test-scope-2");
-		GDriveSetting setting = new GDriveSetting(applicationName, clientId, clientSecret, redirectUri, scopes);
+		GDriveSetting setting = new GDriveSetting(applicationName, applicationVersion, clientId, clientSecret, redirectUri, scopes);
 
-		Assert.assertEquals(applicationName, setting.getApplicationName());
-		Assert.assertEquals(clientId, setting.getClientId());
-		Assert.assertEquals(clientSecret, setting.getClientSecret());
-		Assert.assertEquals(redirectUri, setting.getRedirectUri());
-		Assert.assertEquals(scopes, setting.getScopes());
+		assertEquals(applicationName, setting.getApplicationName());
+		assertEquals(applicationVersion, setting.getApplicationVersion());
+		assertEquals(clientId, setting.getClientId());
+		assertEquals(clientSecret, setting.getClientSecret());
+		assertEquals(redirectUri, setting.getRedirectUri());
+		assertEquals(scopes, setting.getScopes());
 	}
 }
