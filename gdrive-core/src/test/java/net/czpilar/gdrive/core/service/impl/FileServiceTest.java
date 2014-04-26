@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +19,7 @@ import com.google.api.services.drive.model.ParentReference;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import net.czpilar.gdrive.core.exception.FileHandleException;
 import net.czpilar.gdrive.core.service.IDirectoryService;
+import net.czpilar.gdrive.core.util.EqualUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +34,7 @@ import org.springframework.context.ApplicationContext;
  * @author David Pilar (david@czpilar.net)
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ FileList.class, File.class, ParentReference.class, MediaHttpUploader.class, Drive.Files.Insert.class })
+@PrepareForTest({ FileList.class, File.class, ParentReference.class, MediaHttpUploader.class, Drive.Files.Insert.class, EqualUtils.class })
 public class FileServiceTest {
 
 	private FileService service = new FileService();
@@ -61,6 +63,8 @@ public class FileServiceTest {
 
 		when(serviceMock.getDirectoryService()).thenReturn(directoryService);
 		when(applicationContext.getBean(Drive.class)).thenReturn(drive);
+
+		PowerMockito.mockStatic(EqualUtils.class);
 	}
 
 	@Test
@@ -101,30 +105,41 @@ public class FileServiceTest {
 
 	@Test
 	public void testUploadFileWithStringFilenameAndNullParent() throws IOException {
+		String filename = "test-filename";
+		File parentDir = null;
 		File file = mock(File.class);
 		Drive.Files files = mock(Drive.Files.class);
 		Drive.Files.Insert insert = PowerMockito.mock(Drive.Files.Insert.class);
 		MediaHttpUploader mediaHttpUploader = mock(MediaHttpUploader.class);
 
+		when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
+		when(serviceMock.getDrive()).thenReturn(drive);
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(null);
 		when(drive.files()).thenReturn(files);
 		when(files.insert(any(File.class), any(FileContent.class))).thenReturn(insert);
 		when(insert.execute()).thenReturn(file);
 		when(insert.getMediaHttpUploader()).thenReturn(mediaHttpUploader);
+		when(mediaHttpUploader.setDirectUploadEnabled(anyBoolean())).thenReturn(mediaHttpUploader);
+		when(mediaHttpUploader.setProgressListener(any(MediaHttpUploaderProgressListener.class))).thenReturn(mediaHttpUploader);
 		when(file.getId()).thenReturn("some-test-file-id");
 
-		File result = service.uploadFile("test-filename", (File) null);
+		File result = serviceMock.uploadFile(filename, parentDir);
 
 		assertNotNull(result);
 		assertEquals(file, result);
 
+		verify(serviceMock).uploadFile(filename, parentDir);
+		verify(serviceMock).getDrive();
+		verify(serviceMock).findFile(filename, parentDir, false);
 		verify(drive).files();
 		verify(files).insert(any(File.class), any(FileContent.class));
 		verify(insert).execute();
-		verify(insert, times(2)).getMediaHttpUploader();
+		verify(insert).getMediaHttpUploader();
 		verify(mediaHttpUploader).setDirectUploadEnabled(false);
 		verify(mediaHttpUploader).setProgressListener(any(MediaHttpUploaderProgressListener.class));
 		verify(file).getId();
 
+		verifyNoMoreInteractions(serviceMock);
 		verifyNoMoreInteractions(drive);
 		verifyNoMoreInteractions(files);
 		verifyNoMoreInteractions(insert);
@@ -134,59 +149,152 @@ public class FileServiceTest {
 
 	@Test
 	public void testUploadFileWithStringFilenameAndFileParent() throws IOException {
-		File parent = mock(File.class);
+		String filename = "test-filename";
+		File parentDir = mock(File.class);
 		File file = mock(File.class);
 		Drive.Files files = mock(Drive.Files.class);
 		Drive.Files.Insert insert = PowerMockito.mock(Drive.Files.Insert.class);
 		MediaHttpUploader mediaHttpUploader = mock(MediaHttpUploader.class);
 
+		when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
+		when(serviceMock.getDrive()).thenReturn(drive);
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(null);
 		when(drive.files()).thenReturn(files);
 		when(files.insert(any(File.class), any(FileContent.class))).thenReturn(insert);
 		when(insert.execute()).thenReturn(file);
 		when(insert.getMediaHttpUploader()).thenReturn(mediaHttpUploader);
+		when(mediaHttpUploader.setDirectUploadEnabled(anyBoolean())).thenReturn(mediaHttpUploader);
+		when(mediaHttpUploader.setProgressListener(any(MediaHttpUploaderProgressListener.class))).thenReturn(mediaHttpUploader);
 		when(file.getId()).thenReturn("some-test-file-id");
-		when(parent.getId()).thenReturn("some-test-parent-id");
+		when(parentDir.getId()).thenReturn("some-test-parent-id");
 
-		File result = service.uploadFile("test-filename", parent);
+		File result = serviceMock.uploadFile(filename, parentDir);
 
 		assertNotNull(result);
 		assertEquals(file, result);
 
+		verify(serviceMock).uploadFile(filename, parentDir);
+		verify(serviceMock).getDrive();
+		verify(serviceMock).findFile(filename, parentDir, false);
 		verify(drive).files();
 		verify(files).insert(any(File.class), any(FileContent.class));
 		verify(insert).execute();
-		verify(insert, times(2)).getMediaHttpUploader();
+		verify(insert).getMediaHttpUploader();
 		verify(mediaHttpUploader).setDirectUploadEnabled(false);
 		verify(mediaHttpUploader).setProgressListener(any(MediaHttpUploaderProgressListener.class));
 		verify(file).getId();
-		verify(parent).getId();
+		verify(parentDir).getId();
 
+		verifyNoMoreInteractions(serviceMock);
 		verifyNoMoreInteractions(drive);
 		verifyNoMoreInteractions(files);
 		verifyNoMoreInteractions(insert);
 		verifyNoMoreInteractions(mediaHttpUploader);
 		verifyNoMoreInteractions(file);
-		verifyNoMoreInteractions(parent);
+		verifyNoMoreInteractions(parentDir);
 	}
 
 	@Test(expected = FileHandleException.class)
 	public void testUploadFileWithStringFilenameAndNullParentAndThrownException() throws IOException {
+		String filename = "test-filename";
+		File parentDir = null;
 		Drive.Files files = mock(Drive.Files.class);
 
+		when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
+		when(serviceMock.getDrive()).thenReturn(drive);
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(null);
 		when(drive.files()).thenReturn(files);
 		when(files.insert(any(File.class), any(FileContent.class))).thenThrow(IOException.class);
 
 		try {
-			service.uploadFile("test-filename", (File) null);
+			serviceMock.uploadFile(filename, parentDir);
 		} catch (FileHandleException e) {
+			verify(serviceMock).uploadFile(filename, parentDir);
+			verify(serviceMock).getDrive();
+			verify(serviceMock).findFile(filename, parentDir, false);
 			verify(drive).files();
 			verify(files).insert(any(File.class), any(FileContent.class));
 
+			verifyNoMoreInteractions(serviceMock);
 			verifyNoMoreInteractions(drive);
 			verifyNoMoreInteractions(files);
 
 			throw e;
 		}
+	}
+
+	@Test
+	public void testUploadFileWithStringFilenameAndFileParentWhereUpdateOnlyContent() throws IOException {
+		String filename = "test-filename";
+		File parentDir = mock(File.class);
+		String fileId = "some-test-file-id";
+		File file = mock(File.class);
+		Drive.Files files = mock(Drive.Files.class);
+		Drive.Files.Update update = PowerMockito.mock(Drive.Files.Update.class);
+		MediaHttpUploader mediaHttpUploader = mock(MediaHttpUploader.class);
+
+		when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
+		when(serviceMock.getDrive()).thenReturn(drive);
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(file);
+		when(EqualUtils.notEquals(any(File.class), any(Path.class))).thenReturn(true);
+		when(drive.files()).thenReturn(files);
+		when(files.update(anyString(), any(File.class), any(FileContent.class))).thenReturn(update);
+		when(update.execute()).thenReturn(file);
+		when(update.getMediaHttpUploader()).thenReturn(mediaHttpUploader);
+		when(mediaHttpUploader.setDirectUploadEnabled(anyBoolean())).thenReturn(mediaHttpUploader);
+		when(mediaHttpUploader.setProgressListener(any(MediaHttpUploaderProgressListener.class))).thenReturn(mediaHttpUploader);
+		when(file.getId()).thenReturn(fileId);
+
+		File result = serviceMock.uploadFile(filename, parentDir);
+
+		assertNotNull(result);
+		assertEquals(file, result);
+
+		verify(serviceMock).uploadFile(filename, parentDir);
+		verify(serviceMock).getDrive();
+		verify(serviceMock).findFile(filename, parentDir, false);
+		verify(drive).files();
+		verify(files).update(eq(fileId), eq(file), any(FileContent.class));
+		verify(update).execute();
+		verify(update).getMediaHttpUploader();
+		verify(mediaHttpUploader).setDirectUploadEnabled(false);
+		verify(mediaHttpUploader).setProgressListener(any(MediaHttpUploaderProgressListener.class));
+		verify(file, times(2)).getId();
+		verify(file).getMimeType();
+
+		verifyNoMoreInteractions(serviceMock);
+		verifyNoMoreInteractions(drive);
+		verifyNoMoreInteractions(files);
+		verifyNoMoreInteractions(update);
+		verifyNoMoreInteractions(mediaHttpUploader);
+		verifyNoMoreInteractions(file);
+		verifyNoMoreInteractions(parentDir);
+	}
+
+	@Test
+	public void testUploadFileWithStringFilenameAndFileParentWhereNothingToUpdate() throws IOException {
+		String filename = "test-filename";
+		String fileId = "some-test-file-id";
+		File parentDir = mock(File.class);
+		File file = mock(File.class);
+
+		when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(file);
+		when(EqualUtils.notEquals(any(File.class), any(Path.class))).thenReturn(false);
+		when(file.getId()).thenReturn(fileId);
+
+		File result = serviceMock.uploadFile(filename, parentDir);
+
+		assertNotNull(result);
+		assertEquals(file, result);
+
+		verify(serviceMock).uploadFile(filename, parentDir);
+		verify(serviceMock).findFile(filename, parentDir, false);
+		verify(file).getId();
+
+		verifyNoMoreInteractions(serviceMock);
+		verifyNoMoreInteractions(file);
+		verifyNoMoreInteractions(parentDir);
 	}
 
 	@Test

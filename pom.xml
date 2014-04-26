@@ -54,6 +54,7 @@
 		<version.junit>4.11</version.junit>
 		<version.commons-cli>1.2</version.commons-cli>
 		<version.commons-collections>3.2.1</version.commons-collections>
+		<version.commons-codec>1.9</version.commons-codec>
 		<version.commons-io>2.4</version.commons-io>
 		<version.commons-lang>2.6</version.commons-lang>
 		<version.google.http-client>1.18.0-rc</version.google.http-client>
@@ -254,6 +255,11 @@
 				<groupId>commons-collections</groupId>
 				<artifactId>commons-collections</artifactId>
 				<version>${version.commons-collections}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>${version.commons-codec}</version>
 			</dependency>
 
 			<!-- Google -->

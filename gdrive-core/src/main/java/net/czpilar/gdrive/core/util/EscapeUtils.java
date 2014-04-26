@@ -1,10 +1,18 @@
 package net.czpilar.gdrive.core.util;
 
 /**
+ * Strings escaping utility class.
+ *
  * @author David Pilar (david@czpilar.net)
  */
 public class EscapeUtils {
 
+	/**
+	 * Escapes only single quotes in given string.
+	 *
+	 * @param value
+	 * @return
+	 */
 	public static String escapeSingleQuote(String value) {
 		return value == null ? null : escapeSingleQuoteInternal(value);
 	}

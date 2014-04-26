@@ -23,14 +23,16 @@ public interface IFileService {
 	 * Upload file to directory specified by pathname starting on root level.
 	 * If no directory is found the whole directory path is created.
 	 *
-	 * @param filename
+	 * @param pathToFile
 	 * @param pathname
 	 * @return uploaded file
 	 */
-	File uploadFile(String filename, String pathname);
+	File uploadFile(String pathToFile, String pathname);
 
 	/**
-	 * Upload file to directory.
+	 * Upload file to directory specified by given filename.
+	 * Inserts new file if remote file does not exist or updates remote file if content
+	 * was changed or do nothing if remote file has the same content as local file.
 	 *
 	 * @param filename
 	 * @param parentDir

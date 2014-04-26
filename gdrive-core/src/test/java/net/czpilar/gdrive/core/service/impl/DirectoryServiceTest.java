@@ -4,8 +4,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
@@ -39,257 +37,6 @@ public class DirectoryServiceTest {
 		MockitoAnnotations.initMocks(this);
 
 		when(serviceMock.getDrive()).thenReturn(drive);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testBuildQueryWhereDirnameIsNullAndParentIsNull() {
-		service.buildQuery(null, null);
-	}
-
-	@Test
-	public void testBuildQueryWhereParentIsNull() {
-		String result = service.buildQuery("test-dirname", null);
-
-		assertNotNull(result);
-		assertEquals("title='test-dirname' and 'root' in parents and trashed = false and mimeType = 'application/vnd.google-apps.folder'", result);
-	}
-
-	@Test
-	public void testBuildQueryWhereParentExists() {
-		File parentDir = mock(File.class);
-		when(parentDir.getId()).thenReturn("test-id-parent-dir");
-
-		String result = service.buildQuery("test-dirname", parentDir);
-
-		assertNotNull(result);
-		assertEquals("title='test-dirname' and 'test-id-parent-dir' in parents and trashed = false and mimeType = 'application/vnd.google-apps.folder'", result);
-
-		verify(parentDir).getId();
-		verifyNoMoreInteractions(parentDir);
-	}
-
-	@Test
-	public void testBuildQueryWhereDirnameNeedsEscaping() {
-		String result = service.buildQuery("test ' test \\' test \\\\' test \\\\\\' test \\\\\\\\' test \\\\\\\\\\' test", null);
-
-		assertNotNull(result);
-		assertEquals("title='test \\' test \\' test \\\\\\' test \\\\\\' test \\\\\\\\\\' test \\\\\\\\\\' test' and 'root' in parents and trashed = false and mimeType = 'application/vnd.google-apps.folder'", result);
-	}
-
-	@Test
-	public void testBuildQueryWhereDirnameDontNeedEscaping() {
-		String result = service.buildQuery("test \" test \" test", null);
-
-		assertNotNull(result);
-		assertEquals("title='test \" test \" test' and 'root' in parents and trashed = false and mimeType = 'application/vnd.google-apps.folder'", result);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testFindOneDirectoryWhereDirnameIsNull() {
-		File parentDir = mock(File.class);
-		service.findOneDirectory(null, parentDir);
-	}
-
-	@Test
-	public void testFindOneDirectoryWhereNoItemsFound() throws IOException {
-		File parentDir = mock(File.class);
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.List list = mock(Drive.Files.List.class);
-		FileList fileList = mock(FileList.class);
-		String query = "test-query-string";
-		String dirname = "test-dirname";
-
-		when(serviceMock.findOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
-		when(serviceMock.buildQuery(anyString(), any(File.class))).thenReturn(query);
-		when(drive.files()).thenReturn(files);
-		when(files.list()).thenReturn(list);
-		when(list.setQ(anyString())).thenReturn(list);
-		when(list.execute()).thenReturn(fileList);
-		when(fileList.getItems()).thenReturn(null);
-
-		File result = serviceMock.findOneDirectory(dirname, parentDir);
-
-		assertNull(result);
-
-		verify(serviceMock).findOneDirectory(dirname, parentDir);
-		verify(serviceMock).getDrive();
-		verify(serviceMock).buildQuery(dirname, parentDir);
-		verify(drive).files();
-		verify(files).list();
-		verify(list).setQ(query);
-		verify(list).execute();
-		verify(fileList).getItems();
-
-		verifyNoMoreInteractions(serviceMock);
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(files);
-		verifyNoMoreInteractions(list);
-		verifyNoMoreInteractions(fileList);
-		verifyZeroInteractions(parentDir);
-	}
-
-	@Test
-	public void testFindOneDirectoryWhereEmptyItemsFound() throws IOException {
-		File parentDir = mock(File.class);
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.List list = mock(Drive.Files.List.class);
-		FileList fileList = mock(FileList.class);
-		String query = "test-query-string";
-		String dirname = "test-dirname";
-
-		when(serviceMock.findOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
-		when(serviceMock.buildQuery(anyString(), any(File.class))).thenReturn(query);
-		when(drive.files()).thenReturn(files);
-		when(files.list()).thenReturn(list);
-		when(list.setQ(anyString())).thenReturn(list);
-		when(list.execute()).thenReturn(fileList);
-		when(fileList.getItems()).thenReturn(new ArrayList<File>());
-
-		File result = serviceMock.findOneDirectory(dirname, parentDir);
-
-		assertNull(result);
-
-		verify(serviceMock).findOneDirectory(dirname, parentDir);
-		verify(serviceMock).getDrive();
-		verify(serviceMock).buildQuery(dirname, parentDir);
-		verify(drive).files();
-		verify(files).list();
-		verify(list).setQ(query);
-		verify(list).execute();
-		verify(fileList).getItems();
-
-		verifyNoMoreInteractions(serviceMock);
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(files);
-		verifyNoMoreInteractions(list);
-		verifyNoMoreInteractions(fileList);
-		verifyZeroInteractions(parentDir);
-	}
-
-	@Test(expected = DirectoryHandleException.class)
-	public void testFindOneDirectoryWhereMoreThanOneItemsFound() throws IOException {
-		File parentDir = mock(File.class);
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.List list = mock(Drive.Files.List.class);
-		FileList fileList = mock(FileList.class);
-		String query = "test-query-string";
-		String dirname = "test-dirname";
-		File dir1 = mock(File.class);
-		File dir2 = mock(File.class);
-
-		when(serviceMock.findOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
-		when(serviceMock.buildQuery(anyString(), any(File.class))).thenReturn(query);
-		when(drive.files()).thenReturn(files);
-		when(files.list()).thenReturn(list);
-		when(list.setQ(anyString())).thenReturn(list);
-		when(list.execute()).thenReturn(fileList);
-		when(fileList.getItems()).thenReturn(Arrays.asList(dir1, dir2));
-
-		try {
-			serviceMock.findOneDirectory(dirname, parentDir);
-		} catch (DirectoryHandleException e) {
-			verify(serviceMock).findOneDirectory(dirname, parentDir);
-			verify(serviceMock).getDrive();
-			verify(serviceMock).buildQuery(dirname, parentDir);
-			verify(drive).files();
-			verify(files).list();
-			verify(list).setQ(query);
-			verify(list).execute();
-			verify(fileList).getItems();
-
-			verifyNoMoreInteractions(serviceMock);
-			verifyNoMoreInteractions(drive);
-			verifyNoMoreInteractions(drive);
-			verifyNoMoreInteractions(files);
-			verifyNoMoreInteractions(list);
-			verifyNoMoreInteractions(fileList);
-			verifyZeroInteractions(parentDir);
-			verifyZeroInteractions(dir1);
-			verifyZeroInteractions(dir2);
-
-			throw e;
-		}
-	}
-
-	@Test(expected = DirectoryHandleException.class)
-	public void testFindOneDirectoryWhereIOExceptionWasThrown() throws IOException {
-		File parentDir = mock(File.class);
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.List list = mock(Drive.Files.List.class);
-		String query = "test-query-string";
-		String dirname = "test-dirname";
-
-		when(serviceMock.findOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
-		when(serviceMock.buildQuery(anyString(), any(File.class))).thenReturn(query);
-		when(drive.files()).thenReturn(files);
-		when(files.list()).thenReturn(list);
-		when(list.setQ(anyString())).thenReturn(list);
-		when(list.execute()).thenThrow(IOException.class);
-
-		try {
-			serviceMock.findOneDirectory(dirname, parentDir);
-		} catch (DirectoryHandleException e) {
-			verify(serviceMock).findOneDirectory(dirname, parentDir);
-			verify(serviceMock).getDrive();
-			verify(serviceMock).buildQuery(dirname, parentDir);
-			verify(drive).files();
-			verify(files).list();
-			verify(list).setQ(query);
-			verify(list).execute();
-
-			verifyNoMoreInteractions(serviceMock);
-			verifyNoMoreInteractions(drive);
-			verifyNoMoreInteractions(drive);
-			verifyNoMoreInteractions(files);
-			verifyNoMoreInteractions(list);
-			verifyZeroInteractions(parentDir);
-
-			throw e;
-		}
-	}
-
-	@Test
-	public void testFindOneDirectory() throws IOException {
-		File parentDir = mock(File.class);
-		Drive.Files files = mock(Drive.Files.class);
-		Drive.Files.List list = mock(Drive.Files.List.class);
-		FileList fileList = mock(FileList.class);
-		File directory = mock(File.class);
-		String query = "test-query-string";
-		String dirname = "test-dirname";
-
-		when(serviceMock.findOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
-		when(serviceMock.buildQuery(anyString(), any(File.class))).thenReturn(query);
-		when(drive.files()).thenReturn(files);
-		when(files.list()).thenReturn(list);
-		when(list.setQ(anyString())).thenReturn(list);
-		when(list.execute()).thenReturn(fileList);
-		when(fileList.getItems()).thenReturn(Arrays.asList(directory));
-
-		File result = serviceMock.findOneDirectory(dirname, parentDir);
-
-		assertNotNull(result);
-		assertEquals(directory, result);
-
-		verify(serviceMock).findOneDirectory(dirname, parentDir);
-		verify(serviceMock).getDrive();
-		verify(serviceMock).buildQuery(dirname, parentDir);
-		verify(drive).files();
-		verify(files).list();
-		verify(list).setQ(query);
-		verify(list).execute();
-		verify(fileList).getItems();
-
-		verifyNoMoreInteractions(serviceMock);
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(drive);
-		verifyNoMoreInteractions(files);
-		verifyNoMoreInteractions(list);
-		verifyNoMoreInteractions(fileList);
-		verifyZeroInteractions(parentDir);
-		verifyZeroInteractions(directory);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -399,7 +146,7 @@ public class DirectoryServiceTest {
 		String dirname = "test-dirname";
 
 		when(serviceMock.findOrCreateOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
-		when(serviceMock.findOneDirectory(anyString(), any(File.class))).thenReturn(directory);
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(directory);
 
 		File result = serviceMock.findOrCreateOneDirectory(dirname, parentDir);
 
@@ -407,7 +154,7 @@ public class DirectoryServiceTest {
 		assertEquals(directory, result);
 
 		verify(serviceMock).findOrCreateOneDirectory(dirname, parentDir);
-		verify(serviceMock).findOneDirectory(dirname, parentDir);
+		verify(serviceMock).findFile(dirname, parentDir, true);
 
 		verifyNoMoreInteractions(serviceMock);
 
@@ -422,7 +169,7 @@ public class DirectoryServiceTest {
 		String dirname = "test-dirname";
 
 		when(serviceMock.findOrCreateOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
-		when(serviceMock.findOneDirectory(anyString(), any(File.class))).thenReturn(null);
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(null);
 		when(serviceMock.createOneDirectory(anyString(), any(File.class))).thenReturn(directory);
 
 		File result = serviceMock.findOrCreateOneDirectory(dirname, parentDir);
@@ -431,7 +178,7 @@ public class DirectoryServiceTest {
 		assertEquals(directory, result);
 
 		verify(serviceMock).findOrCreateOneDirectory(dirname, parentDir);
-		verify(serviceMock).findOneDirectory(dirname, parentDir);
+		verify(serviceMock).findFile(dirname, parentDir, true);
 		verify(serviceMock).createOneDirectory(dirname, parentDir);
 
 		verifyNoMoreInteractions(serviceMock);
@@ -480,14 +227,14 @@ public class DirectoryServiceTest {
 		File parentDir = mock(File.class);
 
 		when(serviceMock.findDirectory(anyString(), any(File.class))).thenCallRealMethod();
-		when(serviceMock.findOneDirectory(anyString(), any(File.class))).thenReturn(null);
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(null);
 
 		File result = serviceMock.findDirectory(pathname, parentDir);
 
 		assertNull(result);
 
 		verify(serviceMock).findDirectory(pathname, parentDir);
-		verify(serviceMock).findOneDirectory(dirname1, parentDir);
+		verify(serviceMock).findFile(dirname1, parentDir, true);
 
 		verifyNoMoreInteractions(serviceMock);
 
@@ -501,7 +248,7 @@ public class DirectoryServiceTest {
 		File directory = mock(File.class);
 
 		when(serviceMock.findDirectory(anyString(), any(File.class))).thenCallRealMethod();
-		when(serviceMock.findOneDirectory(anyString(), any(File.class))).thenReturn(directory);
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(directory);
 
 		File result = serviceMock.findDirectory(pathname, parentDir);
 
@@ -509,7 +256,7 @@ public class DirectoryServiceTest {
 		assertEquals(directory, result);
 
 		verify(serviceMock).findDirectory(pathname, parentDir);
-		verify(serviceMock).findOneDirectory(pathname, parentDir);
+		verify(serviceMock).findFile(pathname, parentDir, true);
 
 		verifyNoMoreInteractions(serviceMock);
 
@@ -529,7 +276,7 @@ public class DirectoryServiceTest {
 		File directory3 = mock(File.class);
 
 		when(serviceMock.findDirectory(anyString(), any(File.class))).thenCallRealMethod();
-		when(serviceMock.findOneDirectory(anyString(), any(File.class))).thenReturn(directory1, directory2, directory3);
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(directory1, directory2, directory3);
 
 		File result = serviceMock.findDirectory(pathname, parentDir);
 
@@ -539,9 +286,9 @@ public class DirectoryServiceTest {
 		verify(serviceMock).findDirectory(pathname, parentDir);
 		verify(serviceMock).findDirectory(dirname2 + "/" + dirname3, directory1);
 		verify(serviceMock).findDirectory(dirname3, directory2);
-		verify(serviceMock).findOneDirectory(dirname1, parentDir);
-		verify(serviceMock).findOneDirectory(dirname2, directory1);
-		verify(serviceMock).findOneDirectory(dirname3, directory2);
+		verify(serviceMock).findFile(dirname1, parentDir, true);
+		verify(serviceMock).findFile(dirname2, directory1, true);
+		verify(serviceMock).findFile(dirname3, directory2, true);
 
 		verifyNoMoreInteractions(serviceMock);
 

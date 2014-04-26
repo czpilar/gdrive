@@ -16,6 +16,7 @@ import net.czpilar.gdrive.core.exception.FileHandleException;
 import net.czpilar.gdrive.core.listener.FileUploadProgressListener;
 import net.czpilar.gdrive.core.service.IDirectoryService;
 import net.czpilar.gdrive.core.service.IFileService;
+import net.czpilar.gdrive.core.util.EqualUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author David Pilar (david@czpilar.net)
  */
-public class FileService extends AbstractService implements IFileService {
+public class FileService extends AbstractFileService implements IFileService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FileService.class);
 
@@ -53,25 +54,53 @@ public class FileService extends AbstractService implements IFileService {
 		return uploadFile(filename, parentDir);
 	}
 
+	private File insertFile(Path pathToFile, File parentDir) throws IOException {
+		String filename = pathToFile.getFileName().toString();
+
+		LOG.info("Uploading new file {}", filename);
+
+		File file = new File();
+		file.setTitle(filename);
+		file.setMimeType(Files.probeContentType(pathToFile));
+		if (parentDir != null) {
+			file.setParents(Arrays.asList(new ParentReference().setId(parentDir.getId())));
+		}
+
+		Drive.Files.Insert insert = getDrive().files().insert(file,
+				new FileContent(file.getMimeType(), pathToFile.toFile()));
+		insert.getMediaHttpUploader().setDirectUploadEnabled(false)
+				.setProgressListener(new FileUploadProgressListener(filename));
+
+		return insert.execute();
+	}
+
+	private File updateFile(File currentFile, Path pathToFile) throws IOException {
+		String filename = pathToFile.getFileName().toString();
+
+		LOG.info("Uploading updated file {}", filename);
+
+		Drive.Files.Update update = getDrive().files().update(currentFile.getId(), currentFile,
+				new FileContent(currentFile.getMimeType(), pathToFile.toFile()));
+		update.getMediaHttpUploader().setDirectUploadEnabled(false)
+				.setProgressListener(new FileUploadProgressListener(filename));
+		return update.execute();
+	}
+
 	@Override
 	public File uploadFile(String filename, File parentDir) {
-		LOG.info("Uploading file {}", filename);
 		try {
-			Path path = Paths.get(filename);
+			Path pathToFile = Paths.get(filename);
+			File currentFile = findFile(pathToFile.getFileName().toString(), parentDir, false);
 
-			File file = new File();
-			file.setTitle(path.getFileName().toString());
-			file.setMimeType(Files.probeContentType(path));
-			if (parentDir != null) {
-				file.setParents(Arrays.asList(new ParentReference().setId(parentDir.getId())));
+			if (currentFile == null) {
+				currentFile = insertFile(pathToFile, parentDir);
+			} else if (EqualUtils.notEquals(currentFile, pathToFile)) {
+				currentFile = updateFile(currentFile, pathToFile);
+			} else {
+				LOG.info("There is nothing to upload.");
 			}
-
-			Drive.Files.Insert insert = getDrive().files().insert(file, new FileContent(file.getMimeType(), path.toFile()));
-			insert.getMediaHttpUploader().setDirectUploadEnabled(false);
-			insert.getMediaHttpUploader().setProgressListener(new FileUploadProgressListener(filename));
-			file = insert.execute();
-			LOG.info("Finished uploading file {} - remote file ID is {}", filename, file.getId());
-			return file;
+			LOG.info("Finished uploading file {} - remote file ID is {}", filename, currentFile.getId());
+			return currentFile;
 		} catch (IOException e) {
 			LOG.error("Unable to upload file {}.", filename);
 			throw new FileHandleException("Unable to upload file.", e);
