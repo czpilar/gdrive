@@ -15,7 +15,7 @@ usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] [-p <props>] [-v]`
  `-f <file>` - upload files<br/>
  `-h` - show this help<br/>
  `-l` - display authorization link<br/>
- `-p <props>` - path to gDrive properties file
+ `-p <props>` - path to gDrive properties file<br/>
  `-v` -show gdrive version
 
 ### How to authorize application
