@@ -4,7 +4,9 @@
 
 	<bean id="gdrive-core-authorizationService" class="net.czpilar.gdrive.core.service.impl.AuthorizationService" />
 
-	<bean id="gdrive-core-fileService" class="net.czpilar.gdrive.core.service.impl.FileService" />
+	<bean id="gdrive-core-fileService" class="net.czpilar.gdrive.core.service.impl.FileService">
+		<constructor-arg value="${gdrive.file.upload.retries}" />
+	</bean>
 
 	<bean id="gdrive-core-directoryService" class="net.czpilar.gdrive.core.service.impl.DirectoryService" />
 

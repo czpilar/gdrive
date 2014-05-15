@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveRequest;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.ParentReference;
 import net.czpilar.gdrive.core.exception.FileHandleException;
@@ -30,7 +32,17 @@ public class FileService extends AbstractFileService implements IFileService {
 
 	private static final Logger LOG = LoggerFactory.getLogger(FileService.class);
 
+	private final int retries;
+
 	private IDirectoryService directoryService;
+
+	public FileService(int retries) {
+		this.retries = retries;
+	}
+
+	public int getRetries() {
+		return retries;
+	}
 
 	@Autowired
 	public void setDirectoryService(IDirectoryService directoryService) {
@@ -71,7 +83,7 @@ public class FileService extends AbstractFileService implements IFileService {
 		insert.getMediaHttpUploader().setDirectUploadEnabled(false)
 				.setProgressListener(new FileUploadProgressListener(filename));
 
-		return insert.execute();
+		return execute(insert);
 	}
 
 	private File updateFile(File currentFile, Path pathToFile) throws IOException {
@@ -83,7 +95,22 @@ public class FileService extends AbstractFileService implements IFileService {
 				new FileContent(currentFile.getMimeType(), pathToFile.toFile()));
 		update.getMediaHttpUploader().setDirectUploadEnabled(false)
 				.setProgressListener(new FileUploadProgressListener(filename));
-		return update.execute();
+		return execute(update);
+	}
+
+	private File execute(DriveRequest<File> driveRequest) throws IOException {
+		int retry = 0;
+		while (true) {
+			try {
+				return driveRequest.execute();
+			} catch (GoogleJsonResponseException e) {
+				retry++;
+				if (retry > getRetries()) {
+					throw e;
+				}
+				LOG.warn("Error during executing drive request, retrying for {} time(s), status message: {}, error response: {}", retry, e.getStatusMessage(), e.getDetails());
+			}
+		}
 	}
 
 	@Override

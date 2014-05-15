@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
 import com.google.api.client.http.FileContent;
@@ -25,6 +26,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -37,7 +40,7 @@ import org.springframework.context.ApplicationContext;
 @PrepareForTest({ FileList.class, File.class, ParentReference.class, MediaHttpUploader.class, Drive.Files.Insert.class, EqualUtils.class })
 public class FileServiceTest {
 
-	private FileService service = new FileService();
+	private FileService service = new FileService(3);
 
 	@Mock
 	private FileService serviceMock;
@@ -295,6 +298,119 @@ public class FileServiceTest {
 		verifyNoMoreInteractions(serviceMock);
 		verifyNoMoreInteractions(file);
 		verifyNoMoreInteractions(parentDir);
+	}
+
+	@Test
+	public void testUploadFileWithStringFilenameAndFileParentAndRetryApplied() throws IOException {
+		String filename = "test-filename";
+		File parentDir = mock(File.class);
+		final File file = mock(File.class);
+		Drive.Files files = mock(Drive.Files.class);
+		Drive.Files.Insert insert = PowerMockito.mock(Drive.Files.Insert.class);
+		MediaHttpUploader mediaHttpUploader = mock(MediaHttpUploader.class);
+
+		when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
+		when(serviceMock.getDrive()).thenReturn(drive);
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(null);
+		when(serviceMock.getRetries()).thenReturn(3);
+		when(drive.files()).thenReturn(files);
+		when(files.insert(any(File.class), any(FileContent.class))).thenReturn(insert);
+		Answer<File> answer = new Answer<File>() {
+			private int retry = 0;
+
+			@Override
+			public File answer(InvocationOnMock invocation) throws Throwable {
+				if (retry == 0) {
+					retry++;
+					throw mock(GoogleJsonResponseException.class);
+				}
+				return file;
+			}
+		};
+		when(insert.execute()).thenAnswer(answer);
+		when(insert.getMediaHttpUploader()).thenReturn(mediaHttpUploader);
+		when(mediaHttpUploader.setDirectUploadEnabled(anyBoolean())).thenReturn(mediaHttpUploader);
+		when(mediaHttpUploader.setProgressListener(any(MediaHttpUploaderProgressListener.class))).thenReturn(mediaHttpUploader);
+		when(file.getId()).thenReturn("some-test-file-id");
+		when(parentDir.getId()).thenReturn("some-test-parent-id");
+
+		File result = serviceMock.uploadFile(filename, parentDir);
+
+		assertNotNull(result);
+		assertEquals(file, result);
+
+		verify(serviceMock).uploadFile(filename, parentDir);
+		verify(serviceMock).getDrive();
+		verify(serviceMock).findFile(filename, parentDir, false);
+		verify(serviceMock).getRetries();
+		verify(drive).files();
+		verify(files).insert(any(File.class), any(FileContent.class));
+		verify(insert, times(2)).execute();
+		verify(insert).getMediaHttpUploader();
+		verify(mediaHttpUploader).setDirectUploadEnabled(false);
+		verify(mediaHttpUploader).setProgressListener(any(MediaHttpUploaderProgressListener.class));
+		verify(file).getId();
+		verify(parentDir).getId();
+
+		verifyNoMoreInteractions(serviceMock);
+		verifyNoMoreInteractions(drive);
+		verifyNoMoreInteractions(files);
+		verifyNoMoreInteractions(insert);
+		verifyNoMoreInteractions(mediaHttpUploader);
+		verifyNoMoreInteractions(file);
+		verifyNoMoreInteractions(parentDir);
+	}
+
+	@Test(expected = FileHandleException.class)
+	public void testUploadFileWithStringFilenameAndFileParentAndRetryExceeded() throws IOException {
+		String filename = "test-filename";
+		File parentDir = mock(File.class);
+		final File file = mock(File.class);
+		Drive.Files files = mock(Drive.Files.class);
+		Drive.Files.Insert insert = PowerMockito.mock(Drive.Files.Insert.class);
+		MediaHttpUploader mediaHttpUploader = mock(MediaHttpUploader.class);
+
+		when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
+		when(serviceMock.getDrive()).thenReturn(drive);
+		when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(null);
+		when(serviceMock.getRetries()).thenReturn(3);
+		when(drive.files()).thenReturn(files);
+		when(files.insert(any(File.class), any(FileContent.class))).thenReturn(insert);
+		when(insert.execute()).thenThrow(mock(GoogleJsonResponseException.class));
+		when(insert.getMediaHttpUploader()).thenReturn(mediaHttpUploader);
+		when(mediaHttpUploader.setDirectUploadEnabled(anyBoolean())).thenReturn(mediaHttpUploader);
+		when(mediaHttpUploader.setProgressListener(any(MediaHttpUploaderProgressListener.class))).thenReturn(mediaHttpUploader);
+		when(file.getId()).thenReturn("some-test-file-id");
+		when(parentDir.getId()).thenReturn("some-test-parent-id");
+
+		try {
+			serviceMock.uploadFile(filename, parentDir);
+		} catch (FileHandleException e) {
+
+			assertTrue(e.getCause() instanceof GoogleJsonResponseException);
+
+			verify(serviceMock).uploadFile(filename, parentDir);
+			verify(serviceMock).getDrive();
+			verify(serviceMock).findFile(filename, parentDir, false);
+			verify(serviceMock, times(4)).getRetries();
+			verify(drive).files();
+			verify(files).insert(any(File.class), any(FileContent.class));
+			verify(insert, times(4)).execute();
+			verify(insert).getMediaHttpUploader();
+			verify(mediaHttpUploader).setDirectUploadEnabled(false);
+			verify(mediaHttpUploader).setProgressListener(any(MediaHttpUploaderProgressListener.class));
+			verify(parentDir).getId();
+
+			verifyNoMoreInteractions(serviceMock);
+			verifyNoMoreInteractions(drive);
+			verifyNoMoreInteractions(files);
+			verifyNoMoreInteractions(insert);
+			verifyNoMoreInteractions(mediaHttpUploader);
+			verifyNoMoreInteractions(file);
+			verifyNoMoreInteractions(parentDir);
+
+			throw e;
+		}
 	}
 
 	@Test
