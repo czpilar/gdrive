@@ -9,15 +9,15 @@ import net.czpilar.gdrive.core.exception.GDriveException;
  */
 public class PropertiesFileException extends GDriveException {
 
-	public PropertiesFileException(String message) {
-		super(message);
-	}
+    public PropertiesFileException(String message) {
+        super(message);
+    }
 
-	public PropertiesFileException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public PropertiesFileException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public PropertiesFileException(Throwable cause) {
-		super(cause);
-	}
+    public PropertiesFileException(Throwable cause) {
+        super(cause);
+    }
 }

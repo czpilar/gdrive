@@ -9,25 +9,25 @@ import com.google.api.client.auth.oauth2.Credential;
  */
 public interface IGDriveCredential {
 
-	/**
-	 * Returns credential.
-	 *
-	 * @return
-	 */
-	Credential getCredential();
+    /**
+     * Returns credential.
+     *
+     * @return
+     */
+    Credential getCredential();
 
-	/**
-	 * Saves credential.
-	 *
-	 * @param credential
-	 */
-	void saveCredential(Credential credential);
+    /**
+     * Saves credential.
+     *
+     * @param credential
+     */
+    void saveCredential(Credential credential);
 
-	/**
-	 * Returns upload dir.
-	 *
-	 * @return
-	 */
-	String getUploadDir();
+    /**
+     * Returns upload dir.
+     *
+     * @return
+     */
+    String getUploadDir();
 
 }

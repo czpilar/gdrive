@@ -8,40 +8,40 @@ package net.czpilar.gdrive.core.credential.impl;
  */
 public class SimpleGDriveCredential extends AbstractGDriveCredential {
 
-	private String accessToken;
-	private String refreshToken;
-	private String uploadDir;
+    private String accessToken;
+    private String refreshToken;
+    private String uploadDir;
 
-	@Override
-	protected String getAccessToken() {
-		return accessToken;
-	}
+    @Override
+    protected String getAccessToken() {
+        return accessToken;
+    }
 
-	public void setAccessToken(String accessToken) {
-		this.accessToken = accessToken;
-	}
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
-	@Override
-	protected String getRefreshToken() {
-		return refreshToken;
-	}
+    @Override
+    protected String getRefreshToken() {
+        return refreshToken;
+    }
 
-	public void setRefreshToken(String refreshToken) {
-		this.refreshToken = refreshToken;
-	}
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
-	@Override
-	protected void saveTokens(String accessToken, String refreshToken) {
-		setAccessToken(accessToken);
-		setRefreshToken(refreshToken);
-	}
+    @Override
+    protected void saveTokens(String accessToken, String refreshToken) {
+        setAccessToken(accessToken);
+        setRefreshToken(refreshToken);
+    }
 
-	@Override
-	public String getUploadDir() {
-		return uploadDir;
-	}
+    @Override
+    public String getUploadDir() {
+        return uploadDir;
+    }
 
-	public void setUploadDir(String uploadDir) {
-		this.uploadDir = uploadDir;
-	}
+    public void setUploadDir(String uploadDir) {
+        this.uploadDir = uploadDir;
+    }
 }

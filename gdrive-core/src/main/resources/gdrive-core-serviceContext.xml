@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
-	<bean id="gdrive-core-authorizationService" class="net.czpilar.gdrive.core.service.impl.AuthorizationService" />
+    <bean id="gdrive-core-authorizationService" class="net.czpilar.gdrive.core.service.impl.AuthorizationService" />
 
-	<bean id="gdrive-core-fileService" class="net.czpilar.gdrive.core.service.impl.FileService">
-		<constructor-arg value="${gdrive.file.upload.retries}" />
-	</bean>
+    <bean id="gdrive-core-fileService" class="net.czpilar.gdrive.core.service.impl.FileService">
+        <constructor-arg value="${gdrive.file.upload.retries}" />
+    </bean>
 
-	<bean id="gdrive-core-directoryService" class="net.czpilar.gdrive.core.service.impl.DirectoryService" />
+    <bean id="gdrive-core-directoryService" class="net.czpilar.gdrive.core.service.impl.DirectoryService" />
 
 </beans>

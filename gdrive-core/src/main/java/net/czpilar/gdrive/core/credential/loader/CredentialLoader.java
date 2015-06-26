@@ -12,17 +12,17 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CredentialLoader {
 
-	private IGDriveCredential gDriveCredential;
+    private IGDriveCredential gDriveCredential;
 
-	@Autowired
-	public void setGDriveCredential(IGDriveCredential gDriveCredential) {
-		this.gDriveCredential = gDriveCredential;
-	}
+    @Autowired
+    public void setGDriveCredential(IGDriveCredential gDriveCredential) {
+        this.gDriveCredential = gDriveCredential;
+    }
 
-	public Credential getCredential() {
-		if (gDriveCredential == null) {
-			throw new NoCredentialFoundException("No credential found.");
-		}
-		return gDriveCredential.getCredential();
-	}
+    public Credential getCredential() {
+        if (gDriveCredential == null) {
+            throw new NoCredentialFoundException("No credential found.");
+        }
+        return gDriveCredential.getCredential();
+    }
 }

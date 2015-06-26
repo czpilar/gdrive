@@ -10,9 +10,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class GDrive {
 
-	public static void main(String[] args) {
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:gdrive-cmd-applicationContext.xml");
-		IGDriveCmdRunner runner = context.getBean(IGDriveCmdRunner.class);
-		runner.run(args);
-	}
+    public static void main(String[] args) {
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:gdrive-cmd-applicationContext.xml");
+        IGDriveCmdRunner runner = context.getBean(IGDriveCmdRunner.class);
+        runner.run(args);
+    }
 }

@@ -15,29 +15,29 @@ import org.slf4j.LoggerFactory;
  */
 public class FileUploadProgressListener implements MediaHttpUploaderProgressListener {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FileUploadProgressListener.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileUploadProgressListener.class);
 
-	private final String filename;
+    private final String filename;
 
-	public FileUploadProgressListener(String filename) {
-		this.filename = filename;
-	}
+    public FileUploadProgressListener(String filename) {
+        this.filename = filename;
+    }
 
-	@Override
-	public void progressChanged(MediaHttpUploader uploader) throws IOException {
-		switch (uploader.getUploadState()) {
-			case INITIATION_STARTED:
-				LOG.info("Started initiation uploading file {}", filename);
-				break;
-			case INITIATION_COMPLETE:
-				LOG.info("Finished initiation uploading file {}", filename);
-				break;
-			case MEDIA_IN_PROGRESS:
-				LOG.info("Uploaded {} of file {}", NumberFormat.getPercentInstance().format(uploader.getProgress()), filename);
-				break;
-			case MEDIA_COMPLETE:
-				LOG.info("Finished uploading file {}", filename);
-				break;
-		}
-	}
+    @Override
+    public void progressChanged(MediaHttpUploader uploader) throws IOException {
+        switch (uploader.getUploadState()) {
+            case INITIATION_STARTED:
+                LOG.info("Started initiation uploading file {}", filename);
+                break;
+            case INITIATION_COMPLETE:
+                LOG.info("Finished initiation uploading file {}", filename);
+                break;
+            case MEDIA_IN_PROGRESS:
+                LOG.info("Uploaded {} of file {}", NumberFormat.getPercentInstance().format(uploader.getProgress()), filename);
+                break;
+            case MEDIA_COMPLETE:
+                LOG.info("Finished uploading file {}", filename);
+                break;
+        }
+    }
 }

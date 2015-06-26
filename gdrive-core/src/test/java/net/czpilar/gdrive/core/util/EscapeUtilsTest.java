@@ -9,20 +9,20 @@ import org.junit.Test;
  */
 public class EscapeUtilsTest {
 
-	@Test
-	public void testEscapeSingleQuoteWhereInputIsNull() {
-		String result = EscapeUtils.escapeSingleQuote(null);
+    @Test
+    public void testEscapeSingleQuoteWhereInputIsNull() {
+        String result = EscapeUtils.escapeSingleQuote(null);
 
-		assertNull(result);
-	}
+        assertNull(result);
+    }
 
-	@Test
-	public void testEscapeSingleQuote() {
-		String value = "test ' test \\' test \\\\' test \\\\\\' test \\\\\\\\' test \\\\\\\\\\' test";
+    @Test
+    public void testEscapeSingleQuote() {
+        String value = "test ' test \\' test \\\\' test \\\\\\' test \\\\\\\\' test \\\\\\\\\\' test";
 
-		String result = EscapeUtils.escapeSingleQuote(value);
+        String result = EscapeUtils.escapeSingleQuote(value);
 
-		assertNotNull(result);
-		assertEquals("test \\' test \\' test \\\\\\' test \\\\\\' test \\\\\\\\\\' test \\\\\\\\\\' test", result);
-	}
+        assertNotNull(result);
+        assertEquals("test \\' test \\' test \\\\\\' test \\\\\\' test \\\\\\\\\\' test \\\\\\\\\\' test", result);
+    }
 }

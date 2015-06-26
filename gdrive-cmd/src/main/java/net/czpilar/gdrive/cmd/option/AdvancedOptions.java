@@ -11,11 +11,11 @@ import org.apache.commons.cli.Option;
  */
 public class AdvancedOptions extends org.apache.commons.cli.Options {
 
-	public void setOptions(List<Option> options) {
-		if (options != null) {
-			for (Option option : options) {
-				addOption(option);
-			}
-		}
-	}
+    public void setOptions(List<Option> options) {
+        if (options != null) {
+            for (Option option : options) {
+                addOption(option);
+            }
+        }
+    }
 }

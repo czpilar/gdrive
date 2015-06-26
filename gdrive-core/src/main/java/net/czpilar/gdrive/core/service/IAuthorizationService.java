@@ -9,19 +9,19 @@ import com.google.api.client.auth.oauth2.Credential;
  */
 public interface IAuthorizationService {
 
-	/**
-	 * Returns authorization URL to authorize application.
-	 *
-	 * @return
-	 */
-	String getAuthorizationURL();
+    /**
+     * Returns authorization URL to authorize application.
+     *
+     * @return
+     */
+    String getAuthorizationURL();
 
-	/**
-	 * Authorize application and returns credential.
-	 *
-	 * @param authorizationCode
-	 * @return
-	 */
-	Credential authorize(String authorizationCode);
+    /**
+     * Authorize application and returns credential.
+     *
+     * @param authorizationCode
+     * @return
+     */
+    Credential authorize(String authorizationCode);
 
 }

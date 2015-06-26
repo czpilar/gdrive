@@ -7,16 +7,16 @@ package net.czpilar.gdrive.core.exception;
  */
 public class GDriveException extends RuntimeException {
 
-	public GDriveException(String message) {
-		super(message);
-	}
+    public GDriveException(String message) {
+        super(message);
+    }
 
-	public GDriveException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public GDriveException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public GDriveException(Throwable cause) {
-		super(cause);
-	}
+    public GDriveException(Throwable cause) {
+        super(cause);
+    }
 
 }

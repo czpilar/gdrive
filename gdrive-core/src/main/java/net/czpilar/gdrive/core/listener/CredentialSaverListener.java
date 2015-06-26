@@ -15,15 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class CredentialSaverListener implements AuthorizationCodeFlow.CredentialCreatedListener {
 
-	private IGDriveCredential gDriveCredential;
+    private IGDriveCredential gDriveCredential;
 
-	@Autowired
-	public void setGDriveCredential(IGDriveCredential gDriveCredential) {
-		this.gDriveCredential = gDriveCredential;
-	}
+    @Autowired
+    public void setGDriveCredential(IGDriveCredential gDriveCredential) {
+        this.gDriveCredential = gDriveCredential;
+    }
 
-	@Override
-	public void onCredentialCreated(Credential credential, TokenResponse tokenResponse) throws IOException {
-		gDriveCredential.saveCredential(credential);
-	}
+    @Override
+    public void onCredentialCreated(Credential credential, TokenResponse tokenResponse) throws IOException {
+        gDriveCredential.saveCredential(credential);
+    }
 }

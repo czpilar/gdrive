@@ -7,15 +7,15 @@ package net.czpilar.gdrive.core.exception;
  */
 public class DirectoryHandleException extends GDriveException {
 
-	public DirectoryHandleException(String message) {
-		super(message);
-	}
+    public DirectoryHandleException(String message) {
+        super(message);
+    }
 
-	public DirectoryHandleException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public DirectoryHandleException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public DirectoryHandleException(Throwable cause) {
-		super(cause);
-	}
+    public DirectoryHandleException(Throwable cause) {
+        super(cause);
+    }
 }

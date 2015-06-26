@@ -12,64 +12,64 @@ import org.mockito.Mock;
  */
 public class SimpleGDriveCredentialTest {
 
-	private SimpleGDriveCredential credential;
+    private SimpleGDriveCredential credential;
 
-	@Mock
-	private GoogleCredential.Builder credentialBuilder;
+    @Mock
+    private GoogleCredential.Builder credentialBuilder;
 
-	@Before
-	public void before() {
-		credential = new SimpleGDriveCredential();
-		credential.setCredentialBuilder(credentialBuilder);
-	}
+    @Before
+    public void before() {
+        credential = new SimpleGDriveCredential();
+        credential.setCredentialBuilder(credentialBuilder);
+    }
 
-	@Test
-	public void testGetCredentialBuilder() {
-		assertEquals(credentialBuilder, credential.getCredentialBuilder());
-	}
+    @Test
+    public void testGetCredentialBuilder() {
+        assertEquals(credentialBuilder, credential.getCredentialBuilder());
+    }
 
-	@Test
-	public void testSetAndGetAccessToken() {
-		assertNull(credential.getAccessToken());
+    @Test
+    public void testSetAndGetAccessToken() {
+        assertNull(credential.getAccessToken());
 
-		String accessToken = "test-access-token";
-		credential.setAccessToken(accessToken);
+        String accessToken = "test-access-token";
+        credential.setAccessToken(accessToken);
 
-		assertEquals(accessToken, credential.getAccessToken());
-	}
+        assertEquals(accessToken, credential.getAccessToken());
+    }
 
-	@Test
-	public void testSetAndGetRefreshToken() {
-		assertNull(credential.getRefreshToken());
+    @Test
+    public void testSetAndGetRefreshToken() {
+        assertNull(credential.getRefreshToken());
 
-		String refreshToken = "test-refresh-token";
-		credential.setRefreshToken(refreshToken);
+        String refreshToken = "test-refresh-token";
+        credential.setRefreshToken(refreshToken);
 
-		assertEquals(refreshToken, credential.getRefreshToken());
-	}
+        assertEquals(refreshToken, credential.getRefreshToken());
+    }
 
-	@Test
-	public void testSaveTokens() {
-		assertNull(credential.getAccessToken());
-		assertNull(credential.getRefreshToken());
+    @Test
+    public void testSaveTokens() {
+        assertNull(credential.getAccessToken());
+        assertNull(credential.getRefreshToken());
 
-		String accessToken = "test-access-token";
-		String refreshToken = "test-refresh-token";
+        String accessToken = "test-access-token";
+        String refreshToken = "test-refresh-token";
 
-		credential.saveTokens(accessToken, refreshToken);
+        credential.saveTokens(accessToken, refreshToken);
 
-		assertEquals(accessToken, credential.getAccessToken());
-		assertEquals(refreshToken, credential.getRefreshToken());
-	}
+        assertEquals(accessToken, credential.getAccessToken());
+        assertEquals(refreshToken, credential.getRefreshToken());
+    }
 
-	@Test
-	public void testSetAndGetUploadDir() {
-		assertNull(credential.getUploadDir());
+    @Test
+    public void testSetAndGetUploadDir() {
+        assertNull(credential.getUploadDir());
 
-		String uploadDir = "test-upload-dir";
-		credential.setUploadDir(uploadDir);
+        String uploadDir = "test-upload-dir";
+        credential.setUploadDir(uploadDir);
 
-		assertEquals(uploadDir, credential.getUploadDir());
-	}
+        assertEquals(uploadDir, credential.getUploadDir());
+    }
 
 }

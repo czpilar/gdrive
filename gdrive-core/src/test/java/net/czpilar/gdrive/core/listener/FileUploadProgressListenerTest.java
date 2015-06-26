@@ -21,70 +21,70 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(MediaHttpUploader.class)
 public class FileUploadProgressListenerTest {
 
-	private FileUploadProgressListener listener = new FileUploadProgressListener("test-file-name");
+    private FileUploadProgressListener listener = new FileUploadProgressListener("test-file-name");
 
-	@Mock
-	private MediaHttpUploader uploader;
+    @Mock
+    private MediaHttpUploader uploader;
 
-	@Before
-	public void before() {
-		MockitoAnnotations.initMocks(this);
-	}
+    @Before
+    public void before() {
+        MockitoAnnotations.initMocks(this);
+    }
 
-	@Test
-	public void testProgressChangedInitiationStarted() throws IOException {
-		when(uploader.getUploadState()).thenReturn(INITIATION_STARTED);
+    @Test
+    public void testProgressChangedInitiationStarted() throws IOException {
+        when(uploader.getUploadState()).thenReturn(INITIATION_STARTED);
 
-		listener.progressChanged(uploader);
+        listener.progressChanged(uploader);
 
-		verify(uploader).getUploadState();
+        verify(uploader).getUploadState();
 
-		verifyNoMoreInteractions(uploader);
-	}
+        verifyNoMoreInteractions(uploader);
+    }
 
-	@Test
-	public void testProgressChangedInitiationComplete() throws IOException {
-		when(uploader.getUploadState()).thenReturn(INITIATION_COMPLETE);
+    @Test
+    public void testProgressChangedInitiationComplete() throws IOException {
+        when(uploader.getUploadState()).thenReturn(INITIATION_COMPLETE);
 
-		listener.progressChanged(uploader);
+        listener.progressChanged(uploader);
 
-		verify(uploader).getUploadState();
+        verify(uploader).getUploadState();
 
-		verifyNoMoreInteractions(uploader);
-	}
+        verifyNoMoreInteractions(uploader);
+    }
 
-	@Test
-	public void testProgressChangedMediaInComplete() throws IOException {
-		when(uploader.getUploadState()).thenReturn(MEDIA_IN_PROGRESS);
-		when(uploader.getProgress()).thenReturn(0.23);
+    @Test
+    public void testProgressChangedMediaInComplete() throws IOException {
+        when(uploader.getUploadState()).thenReturn(MEDIA_IN_PROGRESS);
+        when(uploader.getProgress()).thenReturn(0.23);
 
-		listener.progressChanged(uploader);
+        listener.progressChanged(uploader);
 
-		verify(uploader).getUploadState();
-		verify(uploader).getProgress();
+        verify(uploader).getUploadState();
+        verify(uploader).getProgress();
 
-		verifyNoMoreInteractions(uploader);
-	}
+        verifyNoMoreInteractions(uploader);
+    }
 
-	@Test
-	public void testProgressChangedMediaComplete() throws IOException {
-		when(uploader.getUploadState()).thenReturn(MEDIA_COMPLETE);
+    @Test
+    public void testProgressChangedMediaComplete() throws IOException {
+        when(uploader.getUploadState()).thenReturn(MEDIA_COMPLETE);
 
-		listener.progressChanged(uploader);
+        listener.progressChanged(uploader);
 
-		verify(uploader).getUploadState();
+        verify(uploader).getUploadState();
 
-		verifyNoMoreInteractions(uploader);
-	}
+        verifyNoMoreInteractions(uploader);
+    }
 
-	@Test
-	public void testProgressChangedNotStarted() throws IOException {
-		when(uploader.getUploadState()).thenReturn(NOT_STARTED);
+    @Test
+    public void testProgressChangedNotStarted() throws IOException {
+        when(uploader.getUploadState()).thenReturn(NOT_STARTED);
 
-		listener.progressChanged(uploader);
+        listener.progressChanged(uploader);
 
-		verify(uploader).getUploadState();
+        verify(uploader).getUploadState();
 
-		verifyNoMoreInteractions(uploader);
-	}
+        verifyNoMoreInteractions(uploader);
+    }
 }

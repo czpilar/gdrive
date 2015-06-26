@@ -9,16 +9,16 @@ import net.czpilar.gdrive.core.exception.GDriveException;
  */
 public class CommandLineException extends GDriveException {
 
-	public CommandLineException(String message) {
-		super(message);
-	}
+    public CommandLineException(String message) {
+        super(message);
+    }
 
-	public CommandLineException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public CommandLineException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public CommandLineException(Throwable cause) {
-		super(cause);
-	}
+    public CommandLineException(Throwable cause) {
+        super(cause);
+    }
 
 }

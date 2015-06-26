@@ -18,60 +18,60 @@ import org.springframework.context.ApplicationContext;
  */
 public class AbstractServiceTest {
 
-	private AbstractService service;
+    private AbstractService service;
 
-	@Mock
-	private IGDriveCredential gDriveCredential;
+    @Mock
+    private IGDriveCredential gDriveCredential;
 
-	@Mock
-	private GDriveSetting gDriveSetting;
+    @Mock
+    private GDriveSetting gDriveSetting;
 
-	@Mock
-	private Credential credential;
+    @Mock
+    private Credential credential;
 
-	@Mock
-	private ApplicationContext applicationContext;
+    @Mock
+    private ApplicationContext applicationContext;
 
-	@Mock
-	private Drive drive;
+    @Mock
+    private Drive drive;
 
-	@Before
-	public void before() {
-		MockitoAnnotations.initMocks(this);
-		service = new AbstractService() {
-		};
-		service.setApplicationContext(applicationContext);
+    @Before
+    public void before() {
+        MockitoAnnotations.initMocks(this);
+        service = new AbstractService() {
+        };
+        service.setApplicationContext(applicationContext);
 
-		when(applicationContext.getBean(Drive.class)).thenReturn(drive);
-	}
+        when(applicationContext.getBean(Drive.class)).thenReturn(drive);
+    }
 
-	@Test
-	public void testSetAndGetGDriveSetting() {
-		assertNull(service.getGDriveSetting());
+    @Test
+    public void testSetAndGetGDriveSetting() {
+        assertNull(service.getGDriveSetting());
 
-		service.setGDriveSetting(gDriveSetting);
+        service.setGDriveSetting(gDriveSetting);
 
-		assertEquals(gDriveSetting, service.getGDriveSetting());
-	}
+        assertEquals(gDriveSetting, service.getGDriveSetting());
+    }
 
-	@Test
-	public void testSetAndGetGDriveCredential() {
-		assertNull(service.getGDriveCredential());
+    @Test
+    public void testSetAndGetGDriveCredential() {
+        assertNull(service.getGDriveCredential());
 
-		service.setGDriveCredential(gDriveCredential);
+        service.setGDriveCredential(gDriveCredential);
 
-		assertEquals(gDriveCredential, service.getGDriveCredential());
-	}
+        assertEquals(gDriveCredential, service.getGDriveCredential());
+    }
 
-	@Test
-	public void testGetDrive() {
-		Drive result = service.getDrive();
+    @Test
+    public void testGetDrive() {
+        Drive result = service.getDrive();
 
-		assertNotNull(result);
-		assertEquals(drive, result);
+        assertNotNull(result);
+        assertEquals(drive, result);
 
-		verify(applicationContext).getBean(Drive.class);
+        verify(applicationContext).getBean(Drive.class);
 
-		verifyNoMoreInteractions(applicationContext);
-	}
+        verifyNoMoreInteractions(applicationContext);
+    }
 }

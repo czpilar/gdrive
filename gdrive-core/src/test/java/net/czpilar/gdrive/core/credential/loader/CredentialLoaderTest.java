@@ -16,39 +16,39 @@ import org.mockito.MockitoAnnotations;
  */
 public class CredentialLoaderTest {
 
-	private CredentialLoader loader;
+    private CredentialLoader loader;
 
-	@Mock
-	private IGDriveCredential gDriveCredential;
+    @Mock
+    private IGDriveCredential gDriveCredential;
 
-	@Mock
-	private Credential credential;
+    @Mock
+    private Credential credential;
 
-	@Before
-	public void before() {
-		MockitoAnnotations.initMocks(this);
-		loader = new CredentialLoader();
-		loader.setGDriveCredential(gDriveCredential);
-	}
+    @Before
+    public void before() {
+        MockitoAnnotations.initMocks(this);
+        loader = new CredentialLoader();
+        loader.setGDriveCredential(gDriveCredential);
+    }
 
-	@Test(expected = NoCredentialFoundException.class)
-	public void testGetCredentialWhereNoCredentialLoaded() {
-		loader.setGDriveCredential(null);
-		loader.getCredential();
-	}
+    @Test(expected = NoCredentialFoundException.class)
+    public void testGetCredentialWhereNoCredentialLoaded() {
+        loader.setGDriveCredential(null);
+        loader.getCredential();
+    }
 
-	@Test
-	public void testGetCredential() {
-		when(gDriveCredential.getCredential()).thenReturn(credential);
+    @Test
+    public void testGetCredential() {
+        when(gDriveCredential.getCredential()).thenReturn(credential);
 
-		Credential result = loader.getCredential();
+        Credential result = loader.getCredential();
 
-		assertNotNull(result);
-		assertEquals(credential, result);
+        assertNotNull(result);
+        assertEquals(credential, result);
 
-		verify(gDriveCredential).getCredential();
+        verify(gDriveCredential).getCredential();
 
-		verifyNoMoreInteractions(gDriveCredential);
-		verifyZeroInteractions(credential);
-	}
+        verifyNoMoreInteractions(gDriveCredential);
+        verifyZeroInteractions(credential);
+    }
 }

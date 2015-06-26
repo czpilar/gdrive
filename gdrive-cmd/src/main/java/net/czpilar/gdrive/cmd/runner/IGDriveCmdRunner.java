@@ -7,10 +7,10 @@ package net.czpilar.gdrive.cmd.runner;
  */
 public interface IGDriveCmdRunner {
 
-	/**
-	 * Runs comman line gDrive.
-	 *
-	 * @param args
-	 */
-	void run(String[] args);
+    /**
+     * Runs comman line gDrive.
+     *
+     * @param args
+     */
+    void run(String[] args);
 }

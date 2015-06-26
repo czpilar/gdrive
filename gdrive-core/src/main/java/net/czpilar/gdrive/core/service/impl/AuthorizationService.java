@@ -16,29 +16,29 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class AuthorizationService extends AbstractService implements IAuthorizationService {
 
-	private GoogleAuthorizationCodeFlow authorizationCodeFlow;
+    private GoogleAuthorizationCodeFlow authorizationCodeFlow;
 
-	@Autowired
-	public void setAuthorizationCodeFlow(GoogleAuthorizationCodeFlow authorizationCodeFlow) {
-		this.authorizationCodeFlow = authorizationCodeFlow;
-	}
+    @Autowired
+    public void setAuthorizationCodeFlow(GoogleAuthorizationCodeFlow authorizationCodeFlow) {
+        this.authorizationCodeFlow = authorizationCodeFlow;
+    }
 
-	@Override
-	public String getAuthorizationURL() {
-		return authorizationCodeFlow.newAuthorizationUrl()
-				.setRedirectUri(getGDriveSetting().getRedirectUri()).build();
-	}
+    @Override
+    public String getAuthorizationURL() {
+        return authorizationCodeFlow.newAuthorizationUrl()
+                .setRedirectUri(getGDriveSetting().getRedirectUri()).build();
+    }
 
-	@Override
-	public Credential authorize(String authorizationCode) {
-		try {
-			GoogleTokenResponse response = authorizationCodeFlow
-					.newTokenRequest(authorizationCode)
-					.setRedirectUri(getGDriveSetting().getRedirectUri()).execute();
-			return authorizationCodeFlow.createAndStoreCredential(response, null);
-		} catch (IOException e) {
-			throw new AuthorizationFailedException("Error occures during authorization process.", e);
-		}
-	}
+    @Override
+    public Credential authorize(String authorizationCode) {
+        try {
+            GoogleTokenResponse response = authorizationCodeFlow
+                    .newTokenRequest(authorizationCode)
+                    .setRedirectUri(getGDriveSetting().getRedirectUri()).execute();
+            return authorizationCodeFlow.createAndStoreCredential(response, null);
+        } catch (IOException e) {
+            throw new AuthorizationFailedException("Error occures during authorization process.", e);
+        }
+    }
 
 }

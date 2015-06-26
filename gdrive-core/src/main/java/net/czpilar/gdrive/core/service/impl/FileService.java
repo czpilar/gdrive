@@ -30,138 +30,138 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class FileService extends AbstractFileService implements IFileService {
 
-	private static final Logger LOG = LoggerFactory.getLogger(FileService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FileService.class);
 
-	private final int retries;
+    private final int retries;
 
-	private IDirectoryService directoryService;
+    private IDirectoryService directoryService;
 
-	public FileService(int retries) {
-		this.retries = retries;
-	}
+    public FileService(int retries) {
+        this.retries = retries;
+    }
 
-	public int getRetries() {
-		return retries;
-	}
+    public int getRetries() {
+        return retries;
+    }
 
-	@Autowired
-	public void setDirectoryService(IDirectoryService directoryService) {
-		this.directoryService = directoryService;
-	}
+    @Autowired
+    public void setDirectoryService(IDirectoryService directoryService) {
+        this.directoryService = directoryService;
+    }
 
-	protected IDirectoryService getDirectoryService() {
-		return directoryService;
-	}
+    protected IDirectoryService getDirectoryService() {
+        return directoryService;
+    }
 
-	protected String getUploadDir(String uploadDirname) {
-		if (uploadDirname == null) {
-			uploadDirname = getGDriveCredential().getUploadDir();
-		}
-		return uploadDirname;
-	}
+    protected String getUploadDir(String uploadDirname) {
+        if (uploadDirname == null) {
+            uploadDirname = getGDriveCredential().getUploadDir();
+        }
+        return uploadDirname;
+    }
 
-	@Override
-	public File uploadFile(String filename, String pathname) {
-		File parentDir = getDirectoryService().findOrCreateDirectory(getUploadDir(pathname));
-		return uploadFile(filename, parentDir);
-	}
+    @Override
+    public File uploadFile(String filename, String pathname) {
+        File parentDir = getDirectoryService().findOrCreateDirectory(getUploadDir(pathname));
+        return uploadFile(filename, parentDir);
+    }
 
-	private File insertFile(Path pathToFile, File parentDir) throws IOException {
-		String filename = pathToFile.getFileName().toString();
+    private File insertFile(Path pathToFile, File parentDir) throws IOException {
+        String filename = pathToFile.getFileName().toString();
 
-		LOG.info("Uploading new file {}", filename);
+        LOG.info("Uploading new file {}", filename);
 
-		File file = new File();
-		file.setTitle(filename);
-		file.setMimeType(Files.probeContentType(pathToFile));
-		if (parentDir != null) {
-			file.setParents(Arrays.asList(new ParentReference().setId(parentDir.getId())));
-		}
+        File file = new File();
+        file.setTitle(filename);
+        file.setMimeType(Files.probeContentType(pathToFile));
+        if (parentDir != null) {
+            file.setParents(Arrays.asList(new ParentReference().setId(parentDir.getId())));
+        }
 
-		Drive.Files.Insert insert = getDrive().files().insert(file,
-				new FileContent(file.getMimeType(), pathToFile.toFile()));
-		insert.getMediaHttpUploader().setDirectUploadEnabled(false)
-				.setProgressListener(new FileUploadProgressListener(filename));
+        Drive.Files.Insert insert = getDrive().files().insert(file,
+                new FileContent(file.getMimeType(), pathToFile.toFile()));
+        insert.getMediaHttpUploader().setDirectUploadEnabled(false)
+                .setProgressListener(new FileUploadProgressListener(filename));
 
-		return execute(insert);
-	}
+        return execute(insert);
+    }
 
-	private File updateFile(File currentFile, Path pathToFile) throws IOException {
-		String filename = pathToFile.getFileName().toString();
+    private File updateFile(File currentFile, Path pathToFile) throws IOException {
+        String filename = pathToFile.getFileName().toString();
 
-		LOG.info("Uploading updated file {}", filename);
+        LOG.info("Uploading updated file {}", filename);
 
-		Drive.Files.Update update = getDrive().files().update(currentFile.getId(), currentFile,
-				new FileContent(currentFile.getMimeType(), pathToFile.toFile()));
-		update.getMediaHttpUploader().setDirectUploadEnabled(false)
-				.setProgressListener(new FileUploadProgressListener(filename));
-		return execute(update);
-	}
+        Drive.Files.Update update = getDrive().files().update(currentFile.getId(), currentFile,
+                new FileContent(currentFile.getMimeType(), pathToFile.toFile()));
+        update.getMediaHttpUploader().setDirectUploadEnabled(false)
+                .setProgressListener(new FileUploadProgressListener(filename));
+        return execute(update);
+    }
 
-	private File execute(DriveRequest<File> driveRequest) throws IOException {
-		int retry = 0;
-		while (true) {
-			try {
-				return driveRequest.execute();
-			} catch (GoogleJsonResponseException e) {
-				retry++;
-				if (retry > getRetries()) {
-					throw e;
-				}
-				LOG.warn("Error during executing drive request, retrying for {} time(s), status message: {}, error response: {}", retry, e.getStatusMessage(), e.getDetails());
-			}
-		}
-	}
+    private File execute(DriveRequest<File> driveRequest) throws IOException {
+        int retry = 0;
+        while (true) {
+            try {
+                return driveRequest.execute();
+            } catch (GoogleJsonResponseException e) {
+                retry++;
+                if (retry > getRetries()) {
+                    throw e;
+                }
+                LOG.warn("Error during executing drive request, retrying for {} time(s), status message: {}, error response: {}", retry, e.getStatusMessage(), e.getDetails());
+            }
+        }
+    }
 
-	@Override
-	public File uploadFile(String filename, File parentDir) {
-		try {
-			Path pathToFile = Paths.get(filename);
-			File currentFile = findFile(pathToFile.getFileName().toString(), parentDir, false);
+    @Override
+    public File uploadFile(String filename, File parentDir) {
+        try {
+            Path pathToFile = Paths.get(filename);
+            File currentFile = findFile(pathToFile.getFileName().toString(), parentDir, false);
 
-			if (currentFile == null) {
-				currentFile = insertFile(pathToFile, parentDir);
-			} else if (EqualUtils.notEquals(currentFile, pathToFile)) {
-				currentFile = updateFile(currentFile, pathToFile);
-			} else {
-				LOG.info("There is nothing to upload.");
-			}
-			LOG.info("Finished uploading file {} - remote file ID is {}", filename, currentFile.getId());
-			return currentFile;
-		} catch (IOException e) {
-			LOG.error("Unable to upload file {}.", filename);
-			throw new FileHandleException("Unable to upload file.", e);
-		}
-	}
+            if (currentFile == null) {
+                currentFile = insertFile(pathToFile, parentDir);
+            } else if (EqualUtils.notEquals(currentFile, pathToFile)) {
+                currentFile = updateFile(currentFile, pathToFile);
+            } else {
+                LOG.info("There is nothing to upload.");
+            }
+            LOG.info("Finished uploading file {} - remote file ID is {}", filename, currentFile.getId());
+            return currentFile;
+        } catch (IOException e) {
+            LOG.error("Unable to upload file {}.", filename);
+            throw new FileHandleException("Unable to upload file.", e);
+        }
+    }
 
-	@Override
-	public File uploadFile(String filename) {
-		return uploadFile(filename, (File) null);
-	}
+    @Override
+    public File uploadFile(String filename) {
+        return uploadFile(filename, (File) null);
+    }
 
-	@Override
-	public List<File> uploadFiles(List<String> filenames) {
-		return uploadFiles(filenames, (File) null);
-	}
+    @Override
+    public List<File> uploadFiles(List<String> filenames) {
+        return uploadFiles(filenames, (File) null);
+    }
 
-	@Override
-	public List<File> uploadFiles(List<String> filenames, String pathname) {
-		File parentDir = getDirectoryService().findOrCreateDirectory(getUploadDir(pathname));
-		return uploadFiles(filenames, parentDir);
-	}
+    @Override
+    public List<File> uploadFiles(List<String> filenames, String pathname) {
+        File parentDir = getDirectoryService().findOrCreateDirectory(getUploadDir(pathname));
+        return uploadFiles(filenames, parentDir);
+    }
 
-	@Override
-	public List<File> uploadFiles(List<String> filenames, File parentDir) {
-		List<File> files = new ArrayList<File>();
-		if (filenames != null) {
-			for (String filename : filenames) {
-				try {
-					files.add(uploadFile(filename, parentDir));
-				} catch (FileHandleException e) {
-					LOG.error("Error during uploading file.", e);
-				}
-			}
-		}
-		return files;
-	}
+    @Override
+    public List<File> uploadFiles(List<String> filenames, File parentDir) {
+        List<File> files = new ArrayList<File>();
+        if (filenames != null) {
+            for (String filename : filenames) {
+                try {
+                    files.add(uploadFile(filename, parentDir));
+                } catch (FileHandleException e) {
+                    LOG.error("Error during uploading file.", e);
+                }
+            }
+        }
+        return files;
+    }
 }

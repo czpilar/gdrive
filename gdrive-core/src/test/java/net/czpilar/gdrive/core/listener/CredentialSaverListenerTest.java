@@ -17,30 +17,30 @@ import org.mockito.MockitoAnnotations;
  */
 public class CredentialSaverListenerTest {
 
-	private CredentialSaverListener listener;
+    private CredentialSaverListener listener;
 
-	@Mock
-	private IGDriveCredential gDriveCredential;
+    @Mock
+    private IGDriveCredential gDriveCredential;
 
-	@Mock
-	private Credential credential;
+    @Mock
+    private Credential credential;
 
-	@Mock
-	private TokenResponse tokenResponse;
+    @Mock
+    private TokenResponse tokenResponse;
 
-	@Before
-	public void before() {
-		MockitoAnnotations.initMocks(this);
-		listener = new CredentialSaverListener();
-		listener.setGDriveCredential(gDriveCredential);
-	}
+    @Before
+    public void before() {
+        MockitoAnnotations.initMocks(this);
+        listener = new CredentialSaverListener();
+        listener.setGDriveCredential(gDriveCredential);
+    }
 
-	@Test
-	public void testOnCredentialCreated() throws IOException {
-		listener.onCredentialCreated(credential, tokenResponse);
+    @Test
+    public void testOnCredentialCreated() throws IOException {
+        listener.onCredentialCreated(credential, tokenResponse);
 
-		verify(gDriveCredential).saveCredential(credential);
+        verify(gDriveCredential).saveCredential(credential);
 
-		verifyNoMoreInteractions(gDriveCredential);
-	}
+        verifyNoMoreInteractions(gDriveCredential);
+    }
 }

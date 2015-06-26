@@ -13,48 +13,48 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public abstract class AbstractGDriveCredential implements IGDriveCredential {
 
-	private GoogleCredential.Builder credentialBuilder;
+    private GoogleCredential.Builder credentialBuilder;
 
-	protected GoogleCredential.Builder getCredentialBuilder() {
-		return credentialBuilder;
-	}
+    protected GoogleCredential.Builder getCredentialBuilder() {
+        return credentialBuilder;
+    }
 
-	@Autowired
-	public void setCredentialBuilder(GoogleCredential.Builder credentialBuilder) {
-		this.credentialBuilder = credentialBuilder;
-	}
+    @Autowired
+    public void setCredentialBuilder(GoogleCredential.Builder credentialBuilder) {
+        this.credentialBuilder = credentialBuilder;
+    }
 
-	/**
-	 * Returns access token.
-	 *
-	 * @return
-	 */
-	protected abstract String getAccessToken();
+    /**
+     * Returns access token.
+     *
+     * @return
+     */
+    protected abstract String getAccessToken();
 
-	/**
-	 * Returns refresh token.
-	 *
-	 * @return
-	 */
-	protected abstract String getRefreshToken();
+    /**
+     * Returns refresh token.
+     *
+     * @return
+     */
+    protected abstract String getRefreshToken();
 
-	/**
-	 * Saves access and refresh tokens.
-	 *
-	 * @param accessToken
-	 * @param refreshToken
-	 */
-	protected abstract void saveTokens(String accessToken, String refreshToken);
+    /**
+     * Saves access and refresh tokens.
+     *
+     * @param accessToken
+     * @param refreshToken
+     */
+    protected abstract void saveTokens(String accessToken, String refreshToken);
 
-	@Override
-	public Credential getCredential() {
-		return getCredentialBuilder().build()
-				.setAccessToken(getAccessToken())
-				.setRefreshToken(getRefreshToken());
-	}
+    @Override
+    public Credential getCredential() {
+        return getCredentialBuilder().build()
+                .setAccessToken(getAccessToken())
+                .setRefreshToken(getRefreshToken());
+    }
 
-	@Override
-	public void saveCredential(Credential credential) {
-		saveTokens(credential.getAccessToken(), credential.getRefreshToken());
-	}
+    @Override
+    public void saveCredential(Credential credential) {
+        saveTokens(credential.getAccessToken(), credential.getRefreshToken());
+    }
 }

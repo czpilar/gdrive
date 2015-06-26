@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations = { "classpath:/test-applicationContext.xml" })
 public class ApplicationContextTest {
 
-	@Test
-	public void test() {
-	}
+    @Test
+    public void test() {
+    }
 }

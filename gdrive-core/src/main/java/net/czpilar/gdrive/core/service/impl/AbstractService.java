@@ -13,35 +13,35 @@ import org.springframework.context.ApplicationContext;
  */
 public abstract class AbstractService {
 
-	private ApplicationContext applicationContext;
-	private GDriveSetting gDriveSetting;
-	private IGDriveCredential gDriveCredential;
+    private ApplicationContext applicationContext;
+    private GDriveSetting gDriveSetting;
+    private IGDriveCredential gDriveCredential;
 
-	@Autowired
-	public void setApplicationContext(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
-	}
+    @Autowired
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
-	protected GDriveSetting getGDriveSetting() {
-		return gDriveSetting;
-	}
+    protected GDriveSetting getGDriveSetting() {
+        return gDriveSetting;
+    }
 
-	@Autowired
-	public void setGDriveSetting(GDriveSetting gDriveSetting) {
-		this.gDriveSetting = gDriveSetting;
-	}
+    @Autowired
+    public void setGDriveSetting(GDriveSetting gDriveSetting) {
+        this.gDriveSetting = gDriveSetting;
+    }
 
-	protected IGDriveCredential getGDriveCredential() {
-		return gDriveCredential;
-	}
+    protected IGDriveCredential getGDriveCredential() {
+        return gDriveCredential;
+    }
 
-	@Autowired
-	public void setGDriveCredential(IGDriveCredential gDriveCredential) {
-		this.gDriveCredential = gDriveCredential;
-	}
+    @Autowired
+    public void setGDriveCredential(IGDriveCredential gDriveCredential) {
+        this.gDriveCredential = gDriveCredential;
+    }
 
-	protected Drive getDrive() {
-		return applicationContext.getBean(Drive.class);
-	}
+    protected Drive getDrive() {
+        return applicationContext.getBean(Drive.class);
+    }
 
 }
