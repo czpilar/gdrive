@@ -11,6 +11,8 @@ import org.junit.Test;
  */
 public class GDriveIntegrationTest {
 
+    private static final String PROPERTIES = "gdrive.properties";
+
     @Test
     public void testNoArgs() {
         GDrive.main(new String[] {});
@@ -28,17 +30,17 @@ public class GDriveIntegrationTest {
 
     @Test
     public void testProperties() {
-        GDrive.main(new String[] { "-p", "gdrive.properties" });
+        GDrive.main(new String[] { "-p", PROPERTIES });
     }
 
     @Test
     public void testShowAuthLink() {
-        GDrive.main(new String[] { "-l", "-p", "gdrive.properties" });
+        GDrive.main(new String[] { "-l", "-p", PROPERTIES });
     }
 
     @Test
     public void testAuthorize() {
-        GDrive.main(new String[] { "-a", "4/vAgd4EX2rQ6D64tMKsjsq1ffd8LG.QuX1tlk-VdgcOl05ti8ZT3YRrZljigI", "-p", "gdrive.properties" });
+        GDrive.main(new String[] { "-a", "4/KepIiwIVGcm8glUZJbGHEEWPViBTB9ONMse1vU4Wnbg", "-p", PROPERTIES });
     }
 
     private void createFileIfNotExist(String filename) throws IOException {
@@ -56,13 +58,18 @@ public class GDriveIntegrationTest {
         createFileIfNotExist(filename1);
         createFileIfNotExist(filename2);
         createFileIfNotExist(filename3);
-        GDrive.main(new String[] { "-f", filename1, filename2, filename3, "-d", "gdrive-test-backup", "-p", "gdrive.properties" });
+        GDrive.main(new String[] { "-f", filename1, filename2, filename3, "-d", "gdrive-test-backup", "-p", PROPERTIES });
     }
 
     @Test
     public void testUploadFileToSubdirectory() throws IOException {
         String filename = "test1.txt";
         createFileIfNotExist(filename);
-        GDrive.main(new String[] { "-f", filename, "-d", "gdrive-test-backup/gdrive-subdir/gdrive-lastdir", "-p", "gdrive.properties" });
+        GDrive.main(new String[] { "-f", filename, "-d", "gdrive-test-backup/gdrive-subdir/gdrive-lastdir", "-p", PROPERTIES });
+    }
+
+    @Test
+    public void testEmtpyTrash() {
+        GDrive.main(new String[] { "-t", "-p", PROPERTIES });
     }
 }

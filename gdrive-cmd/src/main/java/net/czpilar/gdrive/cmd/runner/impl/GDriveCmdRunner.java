@@ -10,8 +10,13 @@ import net.czpilar.gdrive.cmd.exception.CommandLineException;
 import net.czpilar.gdrive.cmd.runner.IGDriveCmdRunner;
 import net.czpilar.gdrive.core.service.IAuthorizationService;
 import net.czpilar.gdrive.core.service.IFileService;
+import net.czpilar.gdrive.core.service.ITrashService;
 import net.czpilar.gdrive.core.setting.GDriveSetting;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -28,6 +33,7 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
     public static final String OPTION_PROPERTIES = "p";
     public static final String OPTION_HELP = "h";
     public static final String OPTION_VERSION = "v";
+    public static final String OPTION_TRASH = "t";
 
     private CommandLineParser commandLineParser;
 
@@ -38,6 +44,8 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
     private IAuthorizationService authorizationService;
 
     private IFileService fileService;
+
+    private ITrashService trashService;
 
     private GDriveSetting gDriveSetting;
 
@@ -66,6 +74,11 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
     @Autowired
     public void setFileService(IFileService fileService) {
         this.fileService = fileService;
+    }
+
+    @Autowired
+    public void setTrashService(ITrashService trashService) {
+        this.trashService = trashService;
     }
 
     @Autowired
@@ -123,6 +136,13 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
         }
     }
 
+    private void doTrashOption(CommandLine cmd) {
+        if (cmd.hasOption(OPTION_TRASH)) {
+            trashService.empty();
+            System.out.println("Emptied trash...");
+        }
+    }
+
     private CommandLine parseCommandLine(String[] args) {
         try {
             CommandLine cmd = commandLineParser.parse(options, args);
@@ -152,6 +172,7 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
             doLinkOption(cmd);
             doAuthrizationOption(cmd);
             doFileOption(cmd);
+            doTrashOption(cmd);
         } catch (CommandLineException e) {
             System.out.println(e.getMessage() + "\n");
             printCommandLine();

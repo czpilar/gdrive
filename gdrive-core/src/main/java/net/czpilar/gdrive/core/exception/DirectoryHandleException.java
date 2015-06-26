@@ -1,7 +1,7 @@
 package net.czpilar.gdrive.core.exception;
 
 /**
- * Exception used directory file handling fails.
+ * Exception used when directory handling fails.
  *
  * @author David Pilar (david@czpilar.net)
  */

@@ -10,4 +10,6 @@
 
     <bean id="gdrive-core-directoryService" class="net.czpilar.gdrive.core.service.impl.DirectoryService" />
 
+    <bean id="gdrive-core-trashService" class="net.czpilar.gdrive.core.service.impl.TrashService" />
+
 </beans>

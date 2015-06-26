@@ -13,6 +13,7 @@
                 <ref bean="gdrive-cmd-fileOption" />
                 <ref bean="gdrive-cmd-dirOption" />
                 <ref bean="gdrive-cmd-propertiesOption" />
+                <ref bean="gdrive-cmd-trashOption" />
             </list>
         </property>
     </bean>
@@ -76,7 +77,13 @@
         <constructor-arg name="hasArg" value="true" />
         <constructor-arg name="description" value="path to gDrive properties file" />
         <property name="argName" value="props" />
-        <!--<property name="required" value="true" />-->
+    </bean>
+
+    <bean id="gdrive-cmd-trashOption" class="org.apache.commons.cli.Option">
+        <constructor-arg name="opt">
+            <utils:constant static-field="net.czpilar.gdrive.cmd.runner.impl.GDriveCmdRunner.OPTION_TRASH" />
+        </constructor-arg>
+        <constructor-arg name="description" value="empty trash" />
     </bean>
 
 </beans>

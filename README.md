@@ -8,7 +8,7 @@ gDrive as command line application
 ----------------------------------
 
 ### Usage
-usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] [-p <props>] [-v]`
+usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] [-p <props>] [-t] [-v]`
 
  `-a <code>` - process authorization<br/>
  `-d <dir>` - directory for upload; creates new one if no directory exists; default is gdrive-uploads<br/>
@@ -16,6 +16,7 @@ usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] [-p <props>] [-v]`
  `-h` - show this help<br/>
  `-l` - display authorization link<br/>
  `-p <props>` - path to gDrive properties file<br/>
+ `-t` - empty trash<br/>
  `-v` -show gdrive version
 
 ### How to authorize application
@@ -58,7 +59,7 @@ gDrive core can be used in any other application to provide ability for uploadin
 License
 =======
 
-    Copyright 2014 David Pilar
+    Copyright 2014-2015 David Pilar
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
