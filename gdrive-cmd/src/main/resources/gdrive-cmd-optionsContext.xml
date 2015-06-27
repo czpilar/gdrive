@@ -22,7 +22,7 @@
         <constructor-arg name="opt">
             <utils:constant static-field="net.czpilar.gdrive.cmd.runner.impl.GDriveCmdRunner.OPTION_VERSION" />
         </constructor-arg>
-        <constructor-arg name="description" value="show gdrive version" />
+        <constructor-arg name="description" value="show gDrive version" />
     </bean>
 
     <bean id="gdrive-cmd-helpOption" class="org.apache.commons.cli.Option">

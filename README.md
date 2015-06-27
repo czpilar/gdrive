@@ -17,7 +17,7 @@ usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] [-p <props>] [-t] [-
  `-l` - display authorization link<br/>
  `-p <props>` - path to gDrive properties file<br/>
  `-t` - empty trash<br/>
- `-v` -show gdrive version
+ `-v` -show gDrive version
 
 ### How to authorize application
 1. generate authorization URL:<br/>
