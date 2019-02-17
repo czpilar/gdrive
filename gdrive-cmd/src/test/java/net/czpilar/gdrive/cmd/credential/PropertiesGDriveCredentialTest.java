@@ -48,7 +48,7 @@ public class PropertiesGDriveCredentialTest {
     }
 
     @After
-    public void after() throws IOException {
+    public void after() {
         deleteIfExist(propertiesNotExist);
         deleteIfExist(propertiesExist);
     }
@@ -63,7 +63,7 @@ public class PropertiesGDriveCredentialTest {
         return gDriveCredential;
     }
 
-    private void deleteIfExist(File file) throws IOException {
+    private void deleteIfExist(File file) {
         if (file.exists()) {
             file.delete();
         }
