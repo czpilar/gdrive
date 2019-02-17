@@ -1,11 +1,11 @@
 package net.czpilar.gdrive.core.service.impl;
 
-import java.io.IOException;
-
 import net.czpilar.gdrive.core.exception.TrashHandleException;
 import net.czpilar.gdrive.core.service.ITrashService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Service containing methods for work with trash.

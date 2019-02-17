@@ -1,13 +1,5 @@
 package net.czpilar.gdrive.core.service.impl;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
@@ -21,8 +13,16 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ File.class, Files.class, FileList.class })
+@PrepareForTest({File.class, Files.class, FileList.class})
 public class AbstractFileServiceTest {
 
     @Mock
@@ -61,7 +61,7 @@ public class AbstractFileServiceTest {
         String result = service.buildQuery(filename, null, false);
 
         assertNotNull(result);
-        assertEquals("title='" + filename + "' and 'root' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'", result);
+        assertEquals("name = '" + filename + "' and 'root' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'", result);
 
         verify(service).buildQuery(filename, null, false);
         verifyNoMoreInteractions(service);
@@ -75,7 +75,7 @@ public class AbstractFileServiceTest {
         String result = service.buildQuery(filename, null, true);
 
         assertNotNull(result);
-        assertEquals("title='" + filename + "' and 'root' in parents and trashed = false and mimeType = 'application/vnd.google-apps.folder'", result);
+        assertEquals("name = '" + filename + "' and 'root' in parents and trashed = false and mimeType = 'application/vnd.google-apps.folder'", result);
 
         verify(service).buildQuery(filename, null, true);
         verifyNoMoreInteractions(service);
@@ -92,7 +92,7 @@ public class AbstractFileServiceTest {
         String result = service.buildQuery(filename, parent, false);
 
         assertNotNull(result);
-        assertEquals("title='" + filename + "' and '" + parentId + "' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'", result);
+        assertEquals("name = '" + filename + "' and '" + parentId + "' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'", result);
 
         verify(parent).getId();
         verify(service).buildQuery(filename, parent, false);
@@ -112,7 +112,7 @@ public class AbstractFileServiceTest {
         String result = service.buildQuery(filename, parent, true);
 
         assertNotNull(result);
-        assertEquals("title='" + filename + "' and '" + parentId + "' in parents and trashed = false and mimeType = 'application/vnd.google-apps.folder'", result);
+        assertEquals("name = '" + filename + "' and '" + parentId + "' in parents and trashed = false and mimeType = 'application/vnd.google-apps.folder'", result);
 
         verify(parent).getId();
         verify(service).buildQuery(filename, parent, true);
@@ -129,7 +129,7 @@ public class AbstractFileServiceTest {
         String result = service.buildQuery(filename, null, false);
 
         assertNotNull(result);
-        assertEquals("title='test \\' test \\' test \\\\\\' test \\\\\\' test \\\\\\\\\\' test \\\\\\\\\\' test' and 'root' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'", result);
+        assertEquals("name = 'test \\' test \\' test \\\\\\' test \\\\\\' test \\\\\\\\\\' test \\\\\\\\\\' test' and 'root' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'", result);
 
         verify(service).buildQuery(filename, null, false);
 
@@ -144,7 +144,7 @@ public class AbstractFileServiceTest {
         String result = service.buildQuery(filename, null, false);
 
         assertNotNull(result);
-        assertEquals("title='test \" test \" test' and 'root' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'", result);
+        assertEquals("name = 'test \" test \" test' and 'root' in parents and trashed = false and mimeType != 'application/vnd.google-apps.folder'", result);
 
         verify(service).buildQuery(filename, null, false);
 
@@ -182,7 +182,7 @@ public class AbstractFileServiceTest {
         when(files.list()).thenReturn(list);
         when(list.setQ(anyString())).thenReturn(list);
         when(list.execute()).thenReturn(fileList);
-        when(fileList.getItems()).thenReturn(null);
+        when(fileList.getFiles()).thenReturn(null);
 
         File result = service.findFile(filename, parent, false);
 
@@ -195,7 +195,7 @@ public class AbstractFileServiceTest {
         verify(files).list();
         verify(list).setQ(query);
         verify(list).execute();
-        verify(fileList).getItems();
+        verify(fileList).getFiles();
 
         verifyNoMoreInteractions(service);
         verifyNoMoreInteractions(drive);
@@ -221,7 +221,7 @@ public class AbstractFileServiceTest {
         when(files.list()).thenReturn(list);
         when(list.setQ(anyString())).thenReturn(list);
         when(list.execute()).thenReturn(fileList);
-        when(fileList.getItems()).thenReturn(new ArrayList<File>());
+        when(fileList.getFiles()).thenReturn(new ArrayList<File>());
 
         File result = service.findFile(filename, parent, false);
 
@@ -234,7 +234,7 @@ public class AbstractFileServiceTest {
         verify(files).list();
         verify(list).setQ(query);
         verify(list).execute();
-        verify(fileList).getItems();
+        verify(fileList).getFiles();
 
         verifyNoMoreInteractions(service);
         verifyNoMoreInteractions(drive);
@@ -262,7 +262,7 @@ public class AbstractFileServiceTest {
         when(files.list()).thenReturn(list);
         when(list.setQ(anyString())).thenReturn(list);
         when(list.execute()).thenReturn(fileList);
-        when(fileList.getItems()).thenReturn(Arrays.asList(dir1, dir2));
+        when(fileList.getFiles()).thenReturn(Arrays.asList(dir1, dir2));
 
         try {
             service.findFile(filename, parent, false);
@@ -274,7 +274,7 @@ public class AbstractFileServiceTest {
             verify(files).list();
             verify(list).setQ(query);
             verify(list).execute();
-            verify(fileList).getItems();
+            verify(fileList).getFiles();
 
             verifyNoMoreInteractions(service);
             verifyNoMoreInteractions(drive);
@@ -343,7 +343,7 @@ public class AbstractFileServiceTest {
         when(files.list()).thenReturn(list);
         when(list.setQ(anyString())).thenReturn(list);
         when(list.execute()).thenReturn(fileList);
-        when(fileList.getItems()).thenReturn(Arrays.asList(directory));
+        when(fileList.getFiles()).thenReturn(Arrays.asList(directory));
 
         File result = service.findFile(filename, parent, false);
 
@@ -357,7 +357,7 @@ public class AbstractFileServiceTest {
         verify(files).list();
         verify(list).setQ(query);
         verify(list).execute();
-        verify(fileList).getItems();
+        verify(fileList).getFiles();
 
         verifyNoMoreInteractions(service);
         verifyNoMoreInteractions(drive);

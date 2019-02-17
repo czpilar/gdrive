@@ -1,12 +1,12 @@
 package net.czpilar.gdrive.core.listener;
 
-import java.io.IOException;
-import java.text.NumberFormat;
-
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.text.NumberFormat;
 
 /**
  * Listener used for printing progress of uploading file.

@@ -1,13 +1,5 @@
 package net.czpilar.gdrive.core.util;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 import com.google.api.services.drive.model.File;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -18,8 +10,19 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ EqualUtils.class, File.class })
+@PrepareForTest({EqualUtils.class, File.class})
 public class EqualUtilsTest {
 
     private java.io.File testFile;
@@ -28,7 +31,7 @@ public class EqualUtilsTest {
     public void before() throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
         testFile = new java.io.File(tempDir + "some-test-file-for-md5-" + System.currentTimeMillis() + ".properties");
-        FileUtils.writeStringToFile(testFile, "Some test file data to store.");
+        FileUtils.writeStringToFile(testFile, "Some test file data to store.", Charset.defaultCharset(), false);
     }
 
     @After

@@ -1,8 +1,8 @@
 package net.czpilar.gdrive.cmd.option;
 
-import java.util.List;
-
 import org.apache.commons.cli.Option;
+
+import java.util.List;
 
 /**
  * Extension of {@link org.apache.commons.cli.Options}.

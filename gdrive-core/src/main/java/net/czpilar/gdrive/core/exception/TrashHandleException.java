@@ -7,16 +7,7 @@ package net.czpilar.gdrive.core.exception;
  */
 public class TrashHandleException extends GDriveException {
 
-    public TrashHandleException(String message) {
-        super(message);
-    }
-
     public TrashHandleException(String message, Throwable cause) {
         super(message, cause);
     }
-
-    public TrashHandleException(Throwable cause) {
-        super(cause);
-    }
-
 }

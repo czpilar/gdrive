@@ -1,10 +1,5 @@
 package net.czpilar.gdrive.core.service.impl;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import java.io.IOException;
-
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
@@ -17,11 +12,16 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.IOException;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 /**
  * @author David Pilar (david@czpilar.net)
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ File.class, FileList.class })
+@PrepareForTest({File.class, FileList.class})
 public class DirectoryServiceTest {
 
     private DirectoryService service = new DirectoryService();
@@ -49,11 +49,11 @@ public class DirectoryServiceTest {
         String dirname = "test-dirname";
         File directory = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
-        Drive.Files.Insert insert = mock(Drive.Files.Insert.class);
+        Drive.Files.Create insert = mock(Drive.Files.Create.class);
 
         when(serviceMock.createOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
         when(drive.files()).thenReturn(files);
-        when(files.insert(any(File.class))).thenReturn(insert);
+        when(files.create(any(File.class))).thenReturn(insert);
         when(insert.execute()).thenReturn(directory);
 
         File result = serviceMock.createOneDirectory(dirname, null);
@@ -64,7 +64,7 @@ public class DirectoryServiceTest {
         verify(serviceMock).createOneDirectory(dirname, null);
         verify(serviceMock).getDrive();
         verify(drive).files();
-        verify(files).insert(any(File.class));
+        verify(files).create(any(File.class));
         verify(insert).execute();
 
         verifyNoMoreInteractions(serviceMock);
@@ -80,11 +80,11 @@ public class DirectoryServiceTest {
         File parentDir = mock(File.class);
         File directory = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
-        Drive.Files.Insert insert = mock(Drive.Files.Insert.class);
+        Drive.Files.Create insert = mock(Drive.Files.Create.class);
 
         when(serviceMock.createOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
         when(drive.files()).thenReturn(files);
-        when(files.insert(any(File.class))).thenReturn(insert);
+        when(files.create(any(File.class))).thenReturn(insert);
         when(insert.execute()).thenReturn(directory);
         when(parentDir.getId()).thenReturn("test-parent-dir-id");
 
@@ -96,7 +96,7 @@ public class DirectoryServiceTest {
         verify(serviceMock).createOneDirectory(dirname, parentDir);
         verify(serviceMock).getDrive();
         verify(drive).files();
-        verify(files).insert(any(File.class));
+        verify(files).create(any(File.class));
         verify(insert).execute();
         verify(parentDir).getId();
 
@@ -113,11 +113,11 @@ public class DirectoryServiceTest {
         String dirname = "test-dirname";
         File directory = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
-        Drive.Files.Insert insert = mock(Drive.Files.Insert.class);
+        Drive.Files.Create insert = mock(Drive.Files.Create.class);
 
         when(serviceMock.createOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
         when(drive.files()).thenReturn(files);
-        when(files.insert(any(File.class))).thenReturn(insert);
+        when(files.create(any(File.class))).thenReturn(insert);
         when(insert.execute()).thenThrow(IOException.class);
 
         try {
@@ -126,7 +126,7 @@ public class DirectoryServiceTest {
             verify(serviceMock).createOneDirectory(dirname, null);
             verify(serviceMock).getDrive();
             verify(drive).files();
-            verify(files).insert(any(File.class));
+            verify(files).create(any(File.class));
             verify(insert).execute();
 
             verifyNoMoreInteractions(serviceMock);

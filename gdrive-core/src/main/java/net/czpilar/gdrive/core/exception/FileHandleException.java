@@ -14,9 +14,4 @@ public class FileHandleException extends GDriveException {
     public FileHandleException(String message, Throwable cause) {
         super(message, cause);
     }
-
-    public FileHandleException(Throwable cause) {
-        super(cause);
-    }
-
 }

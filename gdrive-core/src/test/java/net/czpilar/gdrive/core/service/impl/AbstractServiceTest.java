@@ -1,9 +1,5 @@
 package net.czpilar.gdrive.core.service.impl;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
-import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.drive.Drive;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import net.czpilar.gdrive.core.setting.GDriveSetting;
@@ -12,6 +8,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationContext;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author David Pilar (david@czpilar.net)
@@ -25,9 +24,6 @@ public class AbstractServiceTest {
 
     @Mock
     private GDriveSetting gDriveSetting;
-
-    @Mock
-    private Credential credential;
 
     @Mock
     private ApplicationContext applicationContext;

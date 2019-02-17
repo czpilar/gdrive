@@ -1,8 +1,5 @@
 package net.czpilar.gdrive.core.credential.loader;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import com.google.api.client.auth.oauth2.Credential;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import net.czpilar.gdrive.core.exception.NoCredentialFoundException;
@@ -10,6 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
 
 /**
  * @author David Pilar (david@czpilar.net)

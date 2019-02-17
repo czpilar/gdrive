@@ -1,10 +1,5 @@
 package net.czpilar.gdrive.core.listener;
 
-import static com.google.api.client.googleapis.media.MediaHttpUploader.UploadState.*;
-import static org.mockito.Mockito.*;
-
-import java.io.IOException;
-
 import com.google.api.client.googleapis.media.MediaHttpUploader;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +8,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.io.IOException;
+
+import static com.google.api.client.googleapis.media.MediaHttpUploader.UploadState.*;
+import static org.mockito.Mockito.*;
 
 /**
  * @author David Pilar (david@czpilar.net)

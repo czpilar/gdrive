@@ -1,12 +1,12 @@
 package net.czpilar.gdrive.core.util;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Path;
-
 import com.google.api.services.drive.model.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Equal utility class.

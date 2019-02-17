@@ -1,8 +1,5 @@
 package net.czpilar.gdrive.cmd.runner.impl;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.drive.model.File;
 import net.czpilar.gdrive.cmd.credential.PropertiesGDriveCredential;
@@ -12,12 +9,11 @@ import net.czpilar.gdrive.core.service.IAuthorizationService;
 import net.czpilar.gdrive.core.service.IFileService;
 import net.czpilar.gdrive.core.service.ITrashService;
 import net.czpilar.gdrive.core.setting.GDriveSetting;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.*;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Command line runner implementation.
@@ -116,7 +112,7 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
         }
     }
 
-    private void doAuthrizationOption(CommandLine cmd) {
+    private void doAuthorizationOption(CommandLine cmd) {
         if (cmd.hasOption(OPTION_AUTHORIZATION)) {
             Credential credential = authorizationService.authorize(cmd.getOptionValue(OPTION_AUTHORIZATION));
             if (credential != null) {
@@ -170,7 +166,7 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
             doVersionOption(cmd);
             doHelpOption(cmd);
             doLinkOption(cmd);
-            doAuthrizationOption(cmd);
+            doAuthorizationOption(cmd);
             doFileOption(cmd);
             doTrashOption(cmd);
         } catch (CommandLineException e) {

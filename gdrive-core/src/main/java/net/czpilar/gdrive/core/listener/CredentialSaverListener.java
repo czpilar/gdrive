@@ -1,7 +1,5 @@
 package net.czpilar.gdrive.core.listener;
 
-import java.io.IOException;
-
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
@@ -23,7 +21,7 @@ public class CredentialSaverListener implements AuthorizationCodeFlow.Credential
     }
 
     @Override
-    public void onCredentialCreated(Credential credential, TokenResponse tokenResponse) throws IOException {
+    public void onCredentialCreated(Credential credential, TokenResponse tokenResponse) {
         gDriveCredential.saveCredential(credential);
     }
 }

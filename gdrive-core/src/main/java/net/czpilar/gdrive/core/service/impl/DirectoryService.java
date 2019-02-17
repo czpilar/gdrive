@@ -1,16 +1,15 @@
 package net.czpilar.gdrive.core.service.impl;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.ParentReference;
 import net.czpilar.gdrive.core.exception.DirectoryHandleException;
 import net.czpilar.gdrive.core.service.IDirectoryService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
+
+import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Service with methods for handling directories in Google Drive.
@@ -39,13 +38,13 @@ public class DirectoryService extends AbstractFileService implements IDirectoryS
         Assert.notNull(dirname);
 
         File directory = new File();
-        directory.setTitle(dirname);
+        directory.setName(dirname);
         directory.setMimeType(DIRECTORY_MIME_TYPE);
         if (parentDir != null) {
-            directory.setParents(Arrays.asList(new ParentReference().setId(parentDir.getId())));
+            directory.setParents(Arrays.asList(parentDir.getId()));
         }
         try {
-            return getDrive().files().insert(directory).execute();
+            return getDrive().files().create(directory).execute();
         } catch (IOException e) {
             LOG.error("Unable to create directory {}.", dirname);
             throw new DirectoryHandleException("Unable to create directory.", e);

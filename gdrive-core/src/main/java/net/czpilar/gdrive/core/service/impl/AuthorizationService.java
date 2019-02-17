@@ -1,13 +1,13 @@
 package net.czpilar.gdrive.core.service.impl;
 
-import java.io.IOException;
-
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import net.czpilar.gdrive.core.exception.AuthorizationFailedException;
 import net.czpilar.gdrive.core.service.IAuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
 
 /**
  * Authorization service with methods for authorization to Google Drive.
@@ -37,7 +37,7 @@ public class AuthorizationService extends AbstractService implements IAuthorizat
                     .setRedirectUri(getGDriveSetting().getRedirectUri()).execute();
             return authorizationCodeFlow.createAndStoreCredential(response, null);
         } catch (IOException e) {
-            throw new AuthorizationFailedException("Error occures during authorization process.", e);
+            throw new AuthorizationFailedException("Error occurs during authorization process.", e);
         }
     }
 

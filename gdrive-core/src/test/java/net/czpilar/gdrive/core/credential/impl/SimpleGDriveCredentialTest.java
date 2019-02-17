@@ -1,11 +1,12 @@
 package net.czpilar.gdrive.core.credential.impl;
 
-import static org.junit.Assert.*;
-
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author David Pilar (david@czpilar.net)

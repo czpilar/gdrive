@@ -1,7 +1,5 @@
 package net.czpilar.gdrive.core.service.impl;
 
-import java.io.IOException;
-
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
@@ -17,13 +15,15 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationContext;
 
+import java.io.IOException;
+
 import static org.mockito.Mockito.*;
 
 /**
  * @author David Pilar (david@czpilar.net)
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ File.class, Drive.Files.EmptyTrash.class })
+@PrepareForTest({File.class, Drive.Files.EmptyTrash.class, EqualUtils.class})
 public class TrashServiceTest {
 
     private TrashService service = new TrashService();

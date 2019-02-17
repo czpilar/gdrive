@@ -1,8 +1,8 @@
 package net.czpilar.gdrive.core.util;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author David Pilar (david@czpilar.net)

@@ -16,9 +16,4 @@ public class CommandLineException extends GDriveException {
     public CommandLineException(String message, Throwable cause) {
         super(message, cause);
     }
-
-    public CommandLineException(Throwable cause) {
-        super(cause);
-    }
-
 }

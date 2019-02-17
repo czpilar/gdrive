@@ -1,19 +1,10 @@
 package net.czpilar.gdrive.core.service.impl;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveRequest;
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.ParentReference;
 import net.czpilar.gdrive.core.exception.FileHandleException;
 import net.czpilar.gdrive.core.listener.FileUploadProgressListener;
 import net.czpilar.gdrive.core.service.IDirectoryService;
@@ -22,6 +13,14 @@ import net.czpilar.gdrive.core.util.EqualUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Service with methods for handling files in Google Drive.
@@ -72,13 +71,13 @@ public class FileService extends AbstractFileService implements IFileService {
         LOG.info("Uploading new file {}", filename);
 
         File file = new File();
-        file.setTitle(filename);
+        file.setName(filename);
         file.setMimeType(Files.probeContentType(pathToFile));
         if (parentDir != null) {
-            file.setParents(Arrays.asList(new ParentReference().setId(parentDir.getId())));
+            file.setParents(Arrays.asList(parentDir.getId()));
         }
 
-        Drive.Files.Insert insert = getDrive().files().insert(file,
+        Drive.Files.Create insert = getDrive().files().create(file,
                 new FileContent(file.getMimeType(), pathToFile.toFile()));
         insert.getMediaHttpUploader().setDirectUploadEnabled(false)
                 .setProgressListener(new FileUploadProgressListener(filename));
@@ -152,7 +151,7 @@ public class FileService extends AbstractFileService implements IFileService {
 
     @Override
     public List<File> uploadFiles(List<String> filenames, File parentDir) {
-        List<File> files = new ArrayList<File>();
+        List<File> files = new ArrayList<>();
         if (filenames != null) {
             for (String filename : filenames) {
                 try {

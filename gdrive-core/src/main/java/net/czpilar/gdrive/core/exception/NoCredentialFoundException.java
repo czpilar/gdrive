@@ -10,13 +10,4 @@ public class NoCredentialFoundException extends GDriveException {
     public NoCredentialFoundException(String message) {
         super(message);
     }
-
-    public NoCredentialFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public NoCredentialFoundException(Throwable cause) {
-        super(cause);
-    }
-
 }
