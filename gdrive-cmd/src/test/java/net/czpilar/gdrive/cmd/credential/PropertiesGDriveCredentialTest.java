@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * @author David Pilar (david@czpilar.net)
@@ -70,11 +69,6 @@ public class PropertiesGDriveCredentialTest {
     }
 
     @Test
-    public void testGetAccessTokenWherePropertiesNotExist() {
-        assertNull(gDrivePropertiesNotExist.getAccessToken());
-    }
-
-    @Test
     public void testGetAccessTokenWherePropertiesExist() {
         assertEquals("test-access-token", gDrivePropertiesExist.getAccessToken());
     }
@@ -83,11 +77,6 @@ public class PropertiesGDriveCredentialTest {
     public void testSetAccessToken() {
         gDrivePropertiesNotExist.setAccessToken("new-access-token");
         assertEquals("new-access-token", gDrivePropertiesNotExist.getAccessToken());
-    }
-
-    @Test
-    public void testGetRefreshTokenWherePropertiesNotExist() {
-        assertNull(gDrivePropertiesNotExist.getRefreshToken());
     }
 
     @Test
