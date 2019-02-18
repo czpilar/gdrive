@@ -13,6 +13,8 @@ import net.czpilar.gdrive.core.util.EqualUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,6 +29,7 @@ import java.util.List;
  *
  * @author David Pilar (david@czpilar.net)
  */
+@Service
 public class FileService extends AbstractFileService implements IFileService {
 
     private static final Logger LOG = LoggerFactory.getLogger(FileService.class);
@@ -35,7 +38,7 @@ public class FileService extends AbstractFileService implements IFileService {
 
     private IDirectoryService directoryService;
 
-    public FileService(int retries) {
+    public FileService(@Value("${gdrive.file.upload.retries}") int retries) {
         this.retries = retries;
     }
 

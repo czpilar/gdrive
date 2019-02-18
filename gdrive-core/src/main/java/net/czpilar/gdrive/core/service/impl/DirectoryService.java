@@ -6,6 +6,7 @@ import net.czpilar.gdrive.core.service.IDirectoryService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.util.Arrays;
  *
  * @author David Pilar (david@czpilar.net)
  */
+@Service
 public class DirectoryService extends AbstractFileService implements IDirectoryService {
 
     private static final String DIRECTORY_SEPARATOR = "/";

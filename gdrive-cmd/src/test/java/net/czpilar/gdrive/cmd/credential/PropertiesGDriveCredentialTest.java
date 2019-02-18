@@ -1,5 +1,6 @@
 package net.czpilar.gdrive.cmd.credential;
 
+import net.czpilar.gdrive.cmd.context.GDriveCmdContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,11 +16,6 @@ import static org.junit.Assert.assertEquals;
  * @author David Pilar (david@czpilar.net)
  */
 public class PropertiesGDriveCredentialTest {
-
-    private static final String UPLOAD_DIR_PROPERTY_KEY = "gdrive.uploadDir";
-    private static final String ACCESS_TOKEN_PROPERTY_KEY = "accessTokenPropertyKey";
-    private static final String REFRESH_TOKEN_PROPERTY_KEY = "gdrive.refreshToken";
-    private static final String DEFAULT_UPLOAD_DIR = "gdrive-uploads";
 
     private PropertiesGDriveCredential gDrivePropertiesNotExist;
     private PropertiesGDriveCredential gDrivePropertiesExist;
@@ -37,9 +33,9 @@ public class PropertiesGDriveCredentialTest {
         deleteIfExist(propertiesExist);
 
         properties = new Properties();
-        properties.setProperty(UPLOAD_DIR_PROPERTY_KEY, "test-upload-dir");
-        properties.setProperty(ACCESS_TOKEN_PROPERTY_KEY, "test-access-token");
-        properties.setProperty(REFRESH_TOKEN_PROPERTY_KEY, "test-refresh-token");
+        properties.setProperty(GDriveCmdContext.UPLOAD_DIR_PROPERTY_KEY, "test-upload-dir");
+        properties.setProperty(GDriveCmdContext.ACCESS_TOKEN_PROPERTY_KEY, "test-access-token");
+        properties.setProperty(GDriveCmdContext.REFRESH_TOKEN_PROPERTY_KEY, "test-refresh-token");
         properties.store(new FileOutputStream(propertiesExist), "properties created in test");
 
         gDrivePropertiesNotExist = createGDriveCredential(propertiesNotExist.getPath());
@@ -53,11 +49,9 @@ public class PropertiesGDriveCredentialTest {
     }
 
     private PropertiesGDriveCredential createGDriveCredential(String propertyFile) {
-        PropertiesGDriveCredential gDriveCredential = new PropertiesGDriveCredential();
-        gDriveCredential.setUploadDirPropertyKey(UPLOAD_DIR_PROPERTY_KEY);
-        gDriveCredential.setAccessTokenPropertyKey(ACCESS_TOKEN_PROPERTY_KEY);
-        gDriveCredential.setRefreshTokenPropertyKey(REFRESH_TOKEN_PROPERTY_KEY);
-        gDriveCredential.setDefaultUploadDir(DEFAULT_UPLOAD_DIR);
+        PropertiesGDriveCredential gDriveCredential = new PropertiesGDriveCredential(
+                GDriveCmdContext.UPLOAD_DIR_PROPERTY_KEY, GDriveCmdContext.ACCESS_TOKEN_PROPERTY_KEY,
+                GDriveCmdContext.REFRESH_TOKEN_PROPERTY_KEY, GDriveCmdContext.DEFAULT_UPLOAD_DIR);
         gDriveCredential.setPropertyFile(propertyFile);
         return gDriveCredential;
     }
@@ -102,7 +96,7 @@ public class PropertiesGDriveCredentialTest {
 
     @Test
     public void testGetUploadDirWherePropertiesNotExist() {
-        assertEquals(DEFAULT_UPLOAD_DIR, gDrivePropertiesNotExist.getUploadDir());
+        assertEquals(GDriveCmdContext.DEFAULT_UPLOAD_DIR, gDrivePropertiesNotExist.getUploadDir());
     }
 
     @Test

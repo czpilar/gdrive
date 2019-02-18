@@ -6,6 +6,7 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import net.czpilar.gdrive.core.exception.AuthorizationFailedException;
 import net.czpilar.gdrive.core.service.IAuthorizationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
  *
  * @author David Pilar (david@czpilar.net)
  */
+@Service
 public class AuthorizationService extends AbstractService implements IAuthorizationService {
 
     private GoogleAuthorizationCodeFlow authorizationCodeFlow;

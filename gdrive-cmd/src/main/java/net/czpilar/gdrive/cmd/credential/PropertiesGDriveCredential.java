@@ -2,7 +2,6 @@ package net.czpilar.gdrive.cmd.credential;
 
 import net.czpilar.gdrive.cmd.exception.PropertiesFileException;
 import net.czpilar.gdrive.core.credential.impl.AbstractGDriveCredential;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.util.Assert;
 
 import java.io.FileInputStream;
@@ -18,31 +17,18 @@ import java.util.Properties;
  */
 public class PropertiesGDriveCredential extends AbstractGDriveCredential {
 
-    private String uploadDirPropertyKey;
-    private String accessTokenPropertyKey;
-    private String refreshTokenPropertyKey;
-    private String defaultUploadDir;
+    private final String uploadDirPropertyKey;
+    private final String accessTokenPropertyKey;
+    private final String refreshTokenPropertyKey;
+    private final String defaultUploadDir;
 
     private String propertyFile;
     private Properties properties;
 
-    @Required
-    public void setUploadDirPropertyKey(String uploadDirPropertyKey) {
+    public PropertiesGDriveCredential(String uploadDirPropertyKey, String accessTokenPropertyKey, String refreshTokenPropertyKey, String defaultUploadDir) {
         this.uploadDirPropertyKey = uploadDirPropertyKey;
-    }
-
-    @Required
-    public void setAccessTokenPropertyKey(String accessTokenPropertyKey) {
         this.accessTokenPropertyKey = accessTokenPropertyKey;
-    }
-
-    @Required
-    public void setRefreshTokenPropertyKey(String refreshTokenPropertyKey) {
         this.refreshTokenPropertyKey = refreshTokenPropertyKey;
-    }
-
-    @Required
-    public void setDefaultUploadDir(String defaultUploadDir) {
         this.defaultUploadDir = defaultUploadDir;
     }
 

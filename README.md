@@ -53,13 +53,13 @@ gDrive core can be used in any other application to provide ability for uploadin
 2. provide client ID as `gdrive.core.drive.clientId` property in spring context
 3. provide client secret as `gdrive.core.drive.clientSecret` property in spring context
 4. provide redirect URI as `gdrive.core.drive.redirectUri` property in spring context
-5. import gDrive spring context with `<import resource="classpath:gdrive-core-context.xml" />`
+5. import gDrive spring context with `<import resource="classpath:gdrive-core-context.xml" />`or using annotation @Import(net.czpilar.gdrive.core.context.GDriveCoreContext.class)
 6. autowire `IFileService` and use file uploading methods
 
 License
 =======
 
-    Copyright 2014-2015 David Pilar
+    Copyright 2019 David Pilar
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

@@ -5,12 +5,14 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Listener used for saving credential.
  *
  * @author David Pilar (david@czpilar.net)
  */
+@Component
 public class CredentialSaverListener implements AuthorizationCodeFlow.CredentialCreatedListener {
 
     private IGDriveCredential gDriveCredential;
