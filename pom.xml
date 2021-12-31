@@ -35,7 +35,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/czpilar/gdrive.git</connection>
-        <developerConnection>scm:git:https://github.com/czpilar/gdrive.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@github.com/czpilar/gdrive.git</developerConnection>
         <url>https://github.com/czpilar/gdrive</url>
         <tag>HEAD</tag>
     </scm>
@@ -44,26 +44,26 @@
         <java.target>1.8</java.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <version.plugin.maven-assembly-plugin>3.1.1</version.plugin.maven-assembly-plugin>
-        <version.plugin.maven-compiler-plugin>3.8.0</version.plugin.maven-compiler-plugin>
-        <version.plugin.maven-jar-plugin>3.1.1</version.plugin.maven-jar-plugin>
-        <version.plugin.maven-release-plugin>2.5.3</version.plugin.maven-release-plugin>
-        <version.plugin.maven-resources-plugin>2.7</version.plugin.maven-resources-plugin>
-        <version.plugin.maven-surefire-plugin>3.0.0-M3</version.plugin.maven-surefire-plugin>
+        <version.plugin.maven-assembly-plugin>3.3.0</version.plugin.maven-assembly-plugin>
+        <version.plugin.maven-compiler-plugin>3.8.1</version.plugin.maven-compiler-plugin>
+        <version.plugin.maven-jar-plugin>3.2.0</version.plugin.maven-jar-plugin>
+        <version.plugin.maven-release-plugin>3.0.0-M4</version.plugin.maven-release-plugin>
+        <version.plugin.maven-resources-plugin>3.2.0</version.plugin.maven-resources-plugin>
+        <version.plugin.maven-surefire-plugin>3.0.0-M5</version.plugin.maven-surefire-plugin>
 
-        <version.junit>4.12</version.junit>
+        <version.junit>4.13.2</version.junit>
         <version.commons-cli>1.4</version.commons-cli>
-        <version.commons-collections4>4.3</version.commons-collections4>
-        <version.commons-codec>1.12</version.commons-codec>
-        <version.commons-io>2.6</version.commons-io>
+        <version.commons-collections4>4.4</version.commons-collections4>
+        <version.commons-codec>1.15</version.commons-codec>
+        <version.commons-io>2.11.0</version.commons-io>
         <version.commons-lang>2.6</version.commons-lang>
-        <version.google.http-client>1.28.0</version.google.http-client>
-        <version.google.apis>v3-rev20181213-1.28.0</version.google.apis>
-        <version.logback>1.2.3</version.logback>
+        <version.google.http-client>1.40.1</version.google.http-client>
+        <version.google.apis>v3-rev20211107-1.32.1</version.google.apis>
+        <version.logback>1.2.10</version.logback>
         <version.mockito>1.10.19</version.mockito>
         <version.powermock>1.7.4</version.powermock>
-        <version.slf4j>1.7.25</version.slf4j>
-        <version.spring.framework>5.1.5.RELEASE</version.spring.framework>
+        <version.slf4j>1.7.32</version.slf4j>
+        <version.spring.framework>5.3.14</version.spring.framework>
     </properties>
 
     <build>
