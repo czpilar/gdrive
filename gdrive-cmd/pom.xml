@@ -3,14 +3,14 @@
     <parent>
         <groupId>net.czpilar.gdrive</groupId>
         <artifactId>gdrive-parent</artifactId>
-        <version>1.3.3</version>
+        <version>1.3.4-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.czpilar.gdrive</groupId>
     <artifactId>gdrive-cmd</artifactId>
     <packaging>jar</packaging>
-    <version>1.3.3</version>
+    <version>1.3.4-SNAPSHOT</version>
     <name>gdrive-cmd</name>
     <description>Simple java command line application for uploading file(s) to Google Drive.</description>
 
