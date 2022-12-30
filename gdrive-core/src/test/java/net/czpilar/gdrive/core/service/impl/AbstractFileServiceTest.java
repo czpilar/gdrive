@@ -177,12 +177,14 @@ public class AbstractFileServiceTest {
         FileList fileList = mock(FileList.class);
         String query = "test-query-string";
         String filename = "test-filename";
+        String fields = "files(*)";
 
         when(service.findFile(anyString(), any(File.class), anyBoolean())).thenCallRealMethod();
         when(service.buildQuery(anyString(), any(File.class), anyBoolean())).thenReturn(query);
         when(drive.files()).thenReturn(files);
         when(files.list()).thenReturn(list);
         when(list.setQ(anyString())).thenReturn(list);
+        when(list.setFields(fields)).thenReturn(list);
         when(list.execute()).thenReturn(fileList);
         when(fileList.getFiles()).thenReturn(null);
 
@@ -196,6 +198,7 @@ public class AbstractFileServiceTest {
         verify(drive).files();
         verify(files).list();
         verify(list).setQ(query);
+        verify(list).setFields(fields);
         verify(list).execute();
         verify(fileList).getFiles();
 
@@ -216,12 +219,14 @@ public class AbstractFileServiceTest {
         FileList fileList = mock(FileList.class);
         String query = "test-query-string";
         String filename = "test-filename";
+        String fields = "files(*)";
 
         when(service.findFile(anyString(), any(File.class), anyBoolean())).thenCallRealMethod();
         when(service.buildQuery(anyString(), any(File.class), anyBoolean())).thenReturn(query);
         when(drive.files()).thenReturn(files);
         when(files.list()).thenReturn(list);
         when(list.setQ(anyString())).thenReturn(list);
+        when(list.setFields(fields)).thenReturn(list);
         when(list.execute()).thenReturn(fileList);
         when(fileList.getFiles()).thenReturn(new ArrayList<File>());
 
@@ -235,6 +240,7 @@ public class AbstractFileServiceTest {
         verify(drive).files();
         verify(files).list();
         verify(list).setQ(query);
+        verify(list).setFields(fields);
         verify(list).execute();
         verify(fileList).getFiles();
 
@@ -255,6 +261,7 @@ public class AbstractFileServiceTest {
         FileList fileList = mock(FileList.class);
         String query = "test-query-string";
         String filename = "test-filename";
+        String fields = "files(*)";
         File dir1 = mock(File.class);
         File dir2 = mock(File.class);
 
@@ -263,6 +270,7 @@ public class AbstractFileServiceTest {
         when(drive.files()).thenReturn(files);
         when(files.list()).thenReturn(list);
         when(list.setQ(anyString())).thenReturn(list);
+        when(list.setFields(fields)).thenReturn(list);
         when(list.execute()).thenReturn(fileList);
         when(fileList.getFiles()).thenReturn(Arrays.asList(dir1, dir2));
 
@@ -275,6 +283,7 @@ public class AbstractFileServiceTest {
             verify(drive).files();
             verify(files).list();
             verify(list).setQ(query);
+            verify(list).setFields(fields);
             verify(list).execute();
             verify(fileList).getFiles();
 
@@ -299,12 +308,14 @@ public class AbstractFileServiceTest {
         Drive.Files.List list = mock(Drive.Files.List.class);
         String query = "test-query-string";
         String filename = "test-filename";
+        String fields = "files(*)";
 
         when(service.findFile(anyString(), any(File.class), anyBoolean())).thenCallRealMethod();
         when(service.buildQuery(anyString(), any(File.class), anyBoolean())).thenReturn(query);
         when(drive.files()).thenReturn(files);
         when(files.list()).thenReturn(list);
         when(list.setQ(anyString())).thenReturn(list);
+        when(list.setFields(fields)).thenReturn(list);
         when(list.execute()).thenThrow(IOException.class);
 
         try {
@@ -316,6 +327,7 @@ public class AbstractFileServiceTest {
             verify(drive).files();
             verify(files).list();
             verify(list).setQ(query);
+            verify(list).setFields(fields);
             verify(list).execute();
 
             verifyNoMoreInteractions(service);
@@ -338,12 +350,14 @@ public class AbstractFileServiceTest {
         File directory = mock(File.class);
         String query = "test-query-string";
         String filename = "test-filename";
+        String fields = "files(*)";
 
         when(service.findFile(anyString(), any(File.class), anyBoolean())).thenCallRealMethod();
         when(service.buildQuery(anyString(), any(File.class), anyBoolean())).thenReturn(query);
         when(drive.files()).thenReturn(files);
         when(files.list()).thenReturn(list);
         when(list.setQ(anyString())).thenReturn(list);
+        when(list.setFields(fields)).thenReturn(list);
         when(list.execute()).thenReturn(fileList);
         when(fileList.getFiles()).thenReturn(Arrays.asList(directory));
 
@@ -358,6 +372,7 @@ public class AbstractFileServiceTest {
         verify(drive).files();
         verify(files).list();
         verify(list).setQ(query);
+        verify(list).setFields(fields);
         verify(list).execute();
         verify(fileList).getFiles();
 

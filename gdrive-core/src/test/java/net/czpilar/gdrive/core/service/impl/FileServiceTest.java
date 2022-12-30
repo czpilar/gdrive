@@ -258,13 +258,14 @@ public class FileServiceTest {
         verify(serviceMock).getDrive();
         verify(serviceMock).findFile(filename, parentDir, false);
         verify(drive).files();
-        verify(files).update(eq(fileId), eq(file), any(FileContent.class));
+        verify(files).update(eq(fileId), any(File.class), any(FileContent.class));
         verify(update).execute();
         verify(update).getMediaHttpUploader();
         verify(mediaHttpUploader).setDirectUploadEnabled(false);
         verify(mediaHttpUploader).setProgressListener(any(MediaHttpUploaderProgressListener.class));
         verify(file, times(2)).getId();
-        verify(file).getMimeType();
+        verify(file, times(2)).getMimeType();
+        verify(file).getName();
 
         verifyNoMoreInteractions(serviceMock);
         verifyNoMoreInteractions(drive);
