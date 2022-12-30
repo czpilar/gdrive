@@ -44,26 +44,26 @@
         <java.target>1.8</java.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <version.plugin.maven-assembly-plugin>3.3.0</version.plugin.maven-assembly-plugin>
-        <version.plugin.maven-compiler-plugin>3.8.1</version.plugin.maven-compiler-plugin>
-        <version.plugin.maven-jar-plugin>3.2.0</version.plugin.maven-jar-plugin>
-        <version.plugin.maven-release-plugin>3.0.0-M4</version.plugin.maven-release-plugin>
-        <version.plugin.maven-resources-plugin>3.2.0</version.plugin.maven-resources-plugin>
-        <version.plugin.maven-surefire-plugin>3.0.0-M5</version.plugin.maven-surefire-plugin>
+        <version.plugin.maven-assembly-plugin>3.4.2</version.plugin.maven-assembly-plugin>
+        <version.plugin.maven-compiler-plugin>3.10.1</version.plugin.maven-compiler-plugin>
+        <version.plugin.maven-jar-plugin>3.3.0</version.plugin.maven-jar-plugin>
+        <version.plugin.maven-release-plugin>3.0.0-M7</version.plugin.maven-release-plugin>
+        <version.plugin.maven-resources-plugin>3.3.0</version.plugin.maven-resources-plugin>
+        <version.plugin.maven-surefire-plugin>3.0.0-M7</version.plugin.maven-surefire-plugin>
 
         <version.junit>4.13.2</version.junit>
-        <version.commons-cli>1.4</version.commons-cli>
+        <version.commons-cli>1.5.0</version.commons-cli>
         <version.commons-collections4>4.4</version.commons-collections4>
         <version.commons-codec>1.15</version.commons-codec>
         <version.commons-io>2.11.0</version.commons-io>
         <version.commons-lang>2.6</version.commons-lang>
-        <version.google.http-client>1.40.1</version.google.http-client>
-        <version.google.apis>v3-rev20211107-1.32.1</version.google.apis>
-        <version.logback>1.2.10</version.logback>
+        <version.google.http-client>1.42.3</version.google.http-client>
+        <version.google.apis>v3-rev20221219-2.0.0</version.google.apis>
+        <version.logback>1.4.5</version.logback>
         <version.mockito>1.10.19</version.mockito>
         <version.powermock>1.7.4</version.powermock>
-        <version.slf4j>1.7.32</version.slf4j>
-        <version.spring.framework>5.3.14</version.spring.framework>
+        <version.slf4j>1.7.36</version.slf4j>
+        <version.spring.framework>5.3.24</version.spring.framework>
     </properties>
 
     <build>
@@ -164,7 +164,7 @@
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
+            <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -222,7 +222,7 @@
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
+                <artifactId>mockito-core</artifactId>
                 <version>${version.mockito}</version>
                 <scope>test</scope>
             </dependency>
