@@ -59,7 +59,7 @@
         <version.commons-lang>2.6</version.commons-lang>
         <version.google.http-client>1.42.3</version.google.http-client>
         <version.google.apis>v3-rev20221219-2.0.0</version.google.apis>
-        <version.logback>1.4.5</version.logback>
+        <version.logback>1.2.11</version.logback>
         <version.mockito>1.10.19</version.mockito>
         <version.powermock>1.7.4</version.powermock>
         <version.slf4j>1.7.36</version.slf4j>
