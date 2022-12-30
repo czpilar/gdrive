@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Command line runner implementation.
@@ -48,6 +49,8 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
     private GDriveSetting gDriveSetting;
 
     private PropertiesGDriveCredential propertiesGDriveCredential;
+
+    private AuthorizationCodeWaiter codeWaiter;
 
     @Autowired
     public void setCommandLineParser(CommandLineParser commandLineParser) {
@@ -89,6 +92,11 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
         this.propertiesGDriveCredential = propertiesGDriveCredential;
     }
 
+    @Autowired
+    public void setCodeWaiter(AuthorizationCodeWaiter codeWaiter) {
+        this.codeWaiter = codeWaiter;
+    }
+
     private void doPropertiesOption(CommandLine cmd) {
         if (cmd.hasOption(OPTION_PROPERTIES)) {
             propertiesGDriveCredential.setPropertyFile(cmd.getOptionValue(OPTION_PROPERTIES));
@@ -116,10 +124,16 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
 
     private void doAuthorizationOption(CommandLine cmd) {
         if (cmd.hasOption(OPTION_AUTHORIZATION)) {
-            Credential credential = authorizationService.authorize(cmd.getOptionValue(OPTION_AUTHORIZATION));
-            if (credential != null) {
-                System.out.println("Authorization was successful.");
+            Optional<String> optionValue = Optional.ofNullable(cmd.getOptionValue(OPTION_AUTHORIZATION));
+            if (!optionValue.isPresent()) {
+                optionValue = codeWaiter.getCode();
             }
+            optionValue.ifPresent(code -> {
+                Credential credential = authorizationService.authorize(code);
+                if (credential != null) {
+                    System.out.println("Authorization was successful.");
+                }
+            });
         }
     }
 
@@ -176,5 +190,4 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
             printCommandLine();
         }
     }
-
 }

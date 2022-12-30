@@ -18,6 +18,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -48,6 +49,8 @@ public class GDriveCmdRunnerTest {
     private PropertiesGDriveCredential propertiesGDriveCredential;
     @Mock
     private CommandLine commandLine;
+    @Mock
+    private AuthorizationCodeWaiter codeWaiter;
 
     @Before
     public void before() {
@@ -60,6 +63,7 @@ public class GDriveCmdRunnerTest {
         runner.setTrashService(trashService);
         runner.setGDriveSetting(gDriveSetting);
         runner.setPropertiesGDriveCredential(propertiesGDriveCredential);
+        runner.setCodeWaiter(codeWaiter);
     }
 
     @Test
@@ -85,6 +89,7 @@ public class GDriveCmdRunnerTest {
         verifyZeroInteractions(propertiesGDriveCredential);
         verifyZeroInteractions(commandLine);
         verifyZeroInteractions(trashService);
+        verifyZeroInteractions(codeWaiter);
     }
 
     @Test
@@ -113,6 +118,7 @@ public class GDriveCmdRunnerTest {
         verifyZeroInteractions(fileService);
         verifyZeroInteractions(propertiesGDriveCredential);
         verifyZeroInteractions(trashService);
+        verifyZeroInteractions(codeWaiter);
     }
 
     @Test
@@ -143,6 +149,7 @@ public class GDriveCmdRunnerTest {
         verifyZeroInteractions(fileService);
         verifyZeroInteractions(propertiesGDriveCredential);
         verifyZeroInteractions(trashService);
+        verifyZeroInteractions(codeWaiter);
     }
 
     @Test
@@ -188,6 +195,7 @@ public class GDriveCmdRunnerTest {
         verifyZeroInteractions(authorizationService);
         verifyZeroInteractions(fileService);
         verifyZeroInteractions(trashService);
+        verifyZeroInteractions(codeWaiter);
     }
 
     @Test
@@ -234,6 +242,7 @@ public class GDriveCmdRunnerTest {
         verifyZeroInteractions(authorizationService);
         verifyZeroInteractions(fileService);
         verifyZeroInteractions(trashService);
+        verifyZeroInteractions(codeWaiter);
     }
 
     @Test
@@ -278,6 +287,7 @@ public class GDriveCmdRunnerTest {
         verifyZeroInteractions(authorizationService);
         verifyZeroInteractions(fileService);
         verifyZeroInteractions(trashService);
+        verifyZeroInteractions(codeWaiter);
     }
 
     @Test
@@ -325,6 +335,7 @@ public class GDriveCmdRunnerTest {
         verifyZeroInteractions(authorizationService);
         verifyZeroInteractions(fileService);
         verifyZeroInteractions(trashService);
+        verifyZeroInteractions(codeWaiter);
     }
 
     @Test
@@ -367,6 +378,107 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(gDriveSetting);
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
+
+        verifyZeroInteractions(options);
+        verifyZeroInteractions(authorizationService);
+        verifyZeroInteractions(fileService);
+        verifyZeroInteractions(trashService);
+        verifyZeroInteractions(codeWaiter);
+    }
+
+    @Test
+    public void testRunWhereCommandLineHasPropertiesAndAuthorizationOptionsNoValueAndReturnNullCredential() throws ParseException {
+        String propertiesValue = "test-properties-value";
+        String authorizationValue = "test-athorization-value";
+        String[] args = {"arg1", "arg2"};
+        Option[] optionList = {mock(Option.class), mock(Option.class)};
+        when(commandLineParser.parse(any(Options.class), any(String[].class))).thenReturn(commandLine);
+        when(commandLine.getOptions()).thenReturn(optionList);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_PROPERTIES)).thenReturn(true);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_VERSION)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_HELP)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_LINK)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_AUTHORIZATION)).thenReturn(true);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_FILE)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_TRASH)).thenReturn(false);
+        when(commandLine.getOptionValue(GDriveCmdRunner.OPTION_PROPERTIES)).thenReturn(propertiesValue);
+        when(commandLine.getOptionValue(GDriveCmdRunner.OPTION_AUTHORIZATION)).thenReturn(null);
+        when(authorizationService.authorize(authorizationValue)).thenReturn(null);
+        when(codeWaiter.getCode()).thenReturn(Optional.of(authorizationValue));
+
+        runner.run(args);
+
+        verify(commandLineParser).parse(options, args);
+        verify(commandLine).getOptions();
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_PROPERTIES);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_VERSION);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_HELP);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_LINK);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_AUTHORIZATION);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_FILE);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_TRASH);
+        verify(commandLine).getOptionValue(GDriveCmdRunner.OPTION_PROPERTIES);
+        verify(commandLine).getOptionValue(GDriveCmdRunner.OPTION_AUTHORIZATION);
+        verify(propertiesGDriveCredential).setPropertyFile(propertiesValue);
+        verify(authorizationService).authorize(authorizationValue);
+        verify(codeWaiter).getCode();
+
+        verifyNoMoreInteractions(commandLineParser);
+        verifyNoMoreInteractions(helpFormatter);
+        verifyNoMoreInteractions(gDriveSetting);
+        verifyNoMoreInteractions(commandLine);
+        verifyNoMoreInteractions(propertiesGDriveCredential);
+        verifyNoMoreInteractions(codeWaiter);
+
+        verifyZeroInteractions(options);
+        verifyZeroInteractions(authorizationService);
+        verifyZeroInteractions(fileService);
+        verifyZeroInteractions(trashService);
+    }
+
+    @Test
+    public void testRunWhereCommandLineHasPropertiesAndAuthorizationOptionsNoValueAndReturnCredential() throws ParseException {
+        String propertiesValue = "test-properties-value";
+        String authorizationValue = "test-athorization-value";
+        String[] args = {"arg1", "arg2"};
+        Option[] optionList = {mock(Option.class), mock(Option.class)};
+        when(commandLineParser.parse(any(Options.class), any(String[].class))).thenReturn(commandLine);
+        when(commandLine.getOptions()).thenReturn(optionList);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_PROPERTIES)).thenReturn(true);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_VERSION)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_HELP)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_LINK)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_AUTHORIZATION)).thenReturn(true);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_FILE)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_TRASH)).thenReturn(false);
+        when(commandLine.getOptionValue(GDriveCmdRunner.OPTION_PROPERTIES)).thenReturn(propertiesValue);
+        when(commandLine.getOptionValue(GDriveCmdRunner.OPTION_AUTHORIZATION)).thenReturn(null);
+        when(authorizationService.authorize(authorizationValue)).thenReturn(mock(Credential.class));
+        when(codeWaiter.getCode()).thenReturn(Optional.of(authorizationValue));
+
+        runner.run(args);
+
+        verify(commandLineParser).parse(options, args);
+        verify(commandLine).getOptions();
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_PROPERTIES);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_VERSION);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_HELP);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_LINK);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_AUTHORIZATION);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_FILE);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_TRASH);
+        verify(commandLine).getOptionValue(GDriveCmdRunner.OPTION_PROPERTIES);
+        verify(commandLine).getOptionValue(GDriveCmdRunner.OPTION_AUTHORIZATION);
+        verify(propertiesGDriveCredential).setPropertyFile(propertiesValue);
+        verify(authorizationService).authorize(authorizationValue);
+        verify(codeWaiter).getCode();
+
+        verifyNoMoreInteractions(commandLineParser);
+        verifyNoMoreInteractions(helpFormatter);
+        verifyNoMoreInteractions(gDriveSetting);
+        verifyNoMoreInteractions(commandLine);
+        verifyNoMoreInteractions(propertiesGDriveCredential);
+        verifyNoMoreInteractions(codeWaiter);
 
         verifyZeroInteractions(options);
         verifyZeroInteractions(authorizationService);
@@ -422,6 +534,7 @@ public class GDriveCmdRunnerTest {
         verifyZeroInteractions(fileService);
         verifyZeroInteractions(authorizationService);
         verifyZeroInteractions(trashService);
+        verifyZeroInteractions(codeWaiter);
     }
 
     @Test
@@ -484,6 +597,7 @@ public class GDriveCmdRunnerTest {
         verifyZeroInteractions(fileService);
         verifyZeroInteractions(authorizationService);
         verifyZeroInteractions(trashService);
+        verifyZeroInteractions(codeWaiter);
     }
 
     @Test
@@ -529,6 +643,7 @@ public class GDriveCmdRunnerTest {
         verifyZeroInteractions(options);
         verifyZeroInteractions(authorizationService);
         verifyZeroInteractions(fileService);
+        verifyZeroInteractions(codeWaiter);
     }
 
 }

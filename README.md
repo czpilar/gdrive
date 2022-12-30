@@ -19,12 +19,19 @@ usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] [-p <props>] [-t] [-
  `-t` - empty trash<br/>
  `-v` -show gDrive version
 
-### How to authorize application
+### How to authorize application manually
 1. generate authorization URL:<br/>
    `gdrive -p gdrive.properties -l`
 2. copy and paste URL to your browser to receive authorization code
 3. authorize application with received authorization code:<br/>
    `gdrive -p gdrive.properties -a <code>`
+
+### How to authorize application automatically
+1. generate authorization URL:<br/>
+   `gdrive -p gdrive.properties -l -a`
+2. copy and paste URL to your browser to receive authorization code
+3. application waits 5 minutes to receive authorization code
+4. application is authorized automatically with received authorization code
 
 ### How to upload files
 Upload file(s) to google drive:<br/>

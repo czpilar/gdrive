@@ -43,7 +43,7 @@ public class GDriveCmdContext {
                 .addOption(toOption(OPTION_VERSION, "show gDrive version"))
                 .addOption(toOption(OPTION_HELP, "show this help"))
                 .addOption(toOption(OPTION_LINK, "display authorization link"))
-                .addOption(toOption(OPTION_AUTHORIZATION, "process authorization", "code"))
+                .addOption(toOptionOptional(OPTION_AUTHORIZATION, "process authorization", "code"))
                 .addOption(toOptionUnlimited(OPTION_FILE, "upload file(s)", "file"))
                 .addOption(toOption(OPTION_DIRECTORY, "directory for upload; creates new one if no directory exists; default is gdrive-uploads", "dir"))
                 .addOption(toOption(OPTION_PROPERTIES, "path to gDrive properties file", "props"))
@@ -63,6 +63,12 @@ public class GDriveCmdContext {
     private Option toOptionUnlimited(String opt, String description, String argName) {
         Option option = toOption(opt, description, argName);
         option.setArgs(Option.UNLIMITED_VALUES);
+        return option;
+    }
+
+    private Option toOptionOptional(String opt, String description, String argName) {
+        Option option = toOption(opt, description, argName);
+        option.setOptionalArg(true);
         return option;
     }
 }
