@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationContext;
@@ -37,6 +38,7 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({FileList.class, File.class, MediaHttpUploader.class, Drive.Files.Create.class, EqualUtils.class})
+@PowerMockIgnore("jdk.internal.reflect.*")
 public class FileServiceTest {
 
     private FileService service = new FileService(3);

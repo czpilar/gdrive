@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({File.class})
+@PowerMockIgnore("jdk.internal.reflect.*")
 public class GDriveCmdRunnerTest {
 
     private GDriveCmdRunner runner = new GDriveCmdRunner();
@@ -581,9 +583,9 @@ public class GDriveCmdRunnerTest {
         verify(propertiesGDriveCredential).setPropertyFile(propertiesValue);
         verify(fileService).uploadFiles(optionFiles, optionDirectory);
         verify(file1).getId();
-        verify(file1).getOriginalFilename();
+        verify(file1).getName();
         verify(file2).getId();
-        verify(file2).getOriginalFilename();
+        verify(file2).getName();
 
         verifyNoMoreInteractions(commandLineParser);
         verifyNoMoreInteractions(helpFormatter);

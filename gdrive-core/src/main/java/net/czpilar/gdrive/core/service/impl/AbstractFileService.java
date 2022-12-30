@@ -39,7 +39,7 @@ public abstract class AbstractFileService extends AbstractService {
 
         File file = null;
         try {
-            List<File> items = getDrive().files().list().setQ(buildQuery(filename, parent, directory)).execute().getFiles();
+            List<File> items = getDrive().files().list().setQ(buildQuery(filename, parent, directory)).setFields("files(*)").execute().getFiles();
             if (CollectionUtils.isNotEmpty(items)) {
                 if (items.size() > 1) {
                     throw new FileHandleException("Too many items found for filename " + filename + ".");

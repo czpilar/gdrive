@@ -73,9 +73,9 @@ public class FileService extends AbstractFileService implements IFileService {
 
         LOG.info("Uploading new file {}", filename);
 
-        File file = new File();
-        file.setName(filename);
-        file.setMimeType(Files.probeContentType(pathToFile));
+        File file = new File()
+                .setName(filename)
+                .setMimeType(Files.probeContentType(pathToFile));
         if (parentDir != null) {
             file.setParents(Arrays.asList(parentDir.getId()));
         }
@@ -93,7 +93,11 @@ public class FileService extends AbstractFileService implements IFileService {
 
         LOG.info("Uploading updated file {}", filename);
 
-        Drive.Files.Update update = getDrive().files().update(currentFile.getId(), currentFile,
+        File uploadFile = new File()
+                .setName(currentFile.getName())
+                .setMimeType(currentFile.getMimeType());
+
+        Drive.Files.Update update = getDrive().files().update(currentFile.getId(), uploadFile,
                 new FileContent(currentFile.getMimeType(), pathToFile.toFile()));
         update.getMediaHttpUploader().setDirectUploadEnabled(false)
                 .setProgressListener(new FileUploadProgressListener(filename));

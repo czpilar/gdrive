@@ -143,7 +143,7 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
             List<File> files = fileService.uploadFiles(Arrays.asList(cmd.getOptionValues(OPTION_FILE)), dir);
             System.out.println("Uploaded " + files.size() + " file(s)...");
             for (File file : files) {
-                System.out.println("- " + file.getOriginalFilename() + " (remote ID: " + file.getId() + ")");
+                System.out.println("- " + file.getName() + " (remote ID: " + file.getId() + ")");
             }
         }
     }
