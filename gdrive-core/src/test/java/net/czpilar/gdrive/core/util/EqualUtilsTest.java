@@ -1,5 +1,6 @@
 package net.czpilar.gdrive.core.util;
 
+import com.google.api.client.util.DateTime;
 import com.google.api.services.drive.model.File;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -83,10 +84,11 @@ public class EqualUtilsTest {
     }
 
     @Test
-    public void testEqualsWhereFileAndPathIsNotEqual() {
-        File file = mock(File.class);
+    public void testEqualsWhereFileAndPathIsNotEqualWhereLengthIsEqualAndRemoteLastModifiedIsLower() {
         Path path = Paths.get(testFile.getPath());
-        when(file.getMd5Checksum()).thenReturn("some-md5-checksum");
+        File file = mock(File.class);
+        when(file.getModifiedTime()).thenReturn(new DateTime(path.toFile().lastModified() - 1000));
+        when(file.getSize()).thenReturn(path.toFile().length());
 
         boolean result = EqualUtils.equals(file, path);
 
@@ -94,10 +96,35 @@ public class EqualUtilsTest {
     }
 
     @Test
-    public void testEqualsWhereFileAndPathIsEqual() {
-        File file = mock(File.class);
+    public void testEqualsWhereFileAndPathIsNotEqualWhereLengthIsNotEqual() {
         Path path = Paths.get(testFile.getPath());
-        when(file.getMd5Checksum()).thenReturn("d2f949bc807fe828ee442d03c2fc1497");
+        File file = mock(File.class);
+        when(file.getModifiedTime()).thenReturn(new DateTime(path.toFile().lastModified()));
+        when(file.getSize()).thenReturn(path.toFile().length() + 1);
+
+        boolean result = EqualUtils.equals(file, path);
+
+        assertFalse(result);
+    }
+
+    @Test
+    public void testEqualsWhereFileAndPathIsEqualWhereLengthIsEqualAndLastModifiedIsEqual() {
+        Path path = Paths.get(testFile.getPath());
+        File file = mock(File.class);
+        when(file.getModifiedTime()).thenReturn(new DateTime(path.toFile().lastModified()));
+        when(file.getSize()).thenReturn(path.toFile().length());
+
+        boolean result = EqualUtils.equals(file, path);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void testEqualsWhereFileAndPathIsEqualWhereLengthIsEqualAndRemoteLastModifiedIsGreater() {
+        Path path = Paths.get(testFile.getPath());
+        File file = mock(File.class);
+        when(file.getModifiedTime()).thenReturn(new DateTime(path.toFile().lastModified() + 1000));
+        when(file.getSize()).thenReturn(path.toFile().length());
 
         boolean result = EqualUtils.equals(file, path);
 

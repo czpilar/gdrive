@@ -1,11 +1,7 @@
 package net.czpilar.gdrive.core.util;
 
 import com.google.api.services.drive.model.File;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -15,10 +11,8 @@ import java.nio.file.Path;
  */
 public class EqualUtils {
 
-    private static final Logger LOG = LoggerFactory.getLogger(EqualUtils.class);
-
     /**
-     * Returns true if md5 checksum of content of given inputs is equal, otherwise returns false.
+     * Returns true if lengths are equal and remote modified time is greater or equal to local file, otherwise returns false.
      *
      * @param file
      * @param pathToFile
@@ -27,15 +21,23 @@ public class EqualUtils {
     public static boolean equals(File file, Path pathToFile) {
         boolean result = false;
         if (file != null && pathToFile != null) {
-            try {
-                String localMd5Checksum = org.apache.commons.codec.digest.DigestUtils.md5Hex(new FileInputStream(pathToFile.toFile()));
-                result = localMd5Checksum.equals(file.getMd5Checksum());
-            } catch (IOException e) {
-                LOG.error("Failed to calculating MD5 checksum.", e);
-                result = false;
+            java.io.File localFile = pathToFile.toFile();
+            if (localFile.exists()) {
+                result = file.getSize() == localFile.length()
+                        && toSeconds(file.getModifiedTime().getValue()) >= toSeconds(localFile.lastModified());
             }
         }
         return result;
+    }
+
+    /**
+     * This method strips milliseconds and returns seconds.
+     *
+     * @param milliseconds
+     * @return
+     */
+    private static long toSeconds(long milliseconds) {
+        return milliseconds / 1000;
     }
 
     /**
