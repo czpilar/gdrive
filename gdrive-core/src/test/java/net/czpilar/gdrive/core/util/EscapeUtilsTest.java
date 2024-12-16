@@ -1,8 +1,8 @@
 package net.czpilar.gdrive.core.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author David Pilar (david@czpilar.net)
@@ -11,9 +11,7 @@ public class EscapeUtilsTest {
 
     @Test
     public void testEscapeSingleQuoteWhereInputIsNull() {
-        String result = EscapeUtils.escapeSingleQuote(null);
-
-        assertNull(result);
+        assertNull(EscapeUtils.escapeSingleQuote(null));
     }
 
     @Test

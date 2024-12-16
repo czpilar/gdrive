@@ -2,31 +2,24 @@ package net.czpilar.gdrive.core.service.impl;
 
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
 import net.czpilar.gdrive.core.exception.DirectoryHandleException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
  * @author David Pilar (david@czpilar.net)
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({File.class, FileList.class})
-@PowerMockIgnore("jdk.internal.reflect.*")
 public class DirectoryServiceTest {
 
-    private DirectoryService service = new DirectoryService();
+    private final DirectoryService service = new DirectoryService();
 
     @Mock
     private DirectoryService serviceMock;
@@ -34,16 +27,23 @@ public class DirectoryServiceTest {
     @Mock
     private Drive drive;
 
-    @Before
+    private AutoCloseable autoCloseable;
+
+    @BeforeEach
     public void before() {
-        MockitoAnnotations.initMocks(this);
+        autoCloseable = MockitoAnnotations.openMocks(this);
 
         when(serviceMock.getDrive()).thenReturn(drive);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @AfterEach
+    public void after() throws Exception {
+        autoCloseable.close();
+    }
+
+    @Test
     public void testCreateOneDirectoryWhereDirnameIsNullAndParentDirIsNull() {
-        service.createOneDirectory(null, null);
+        assertThrows(IllegalArgumentException.class, () -> service.createOneDirectory(null, null));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class DirectoryServiceTest {
         Drive.Files files = mock(Drive.Files.class);
         Drive.Files.Create insert = mock(Drive.Files.Create.class);
 
-        when(serviceMock.createOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
+        when(serviceMock.createOneDirectory(anyString(), any())).thenCallRealMethod();
         when(drive.files()).thenReturn(files);
         when(files.create(any(File.class))).thenReturn(insert);
         when(insert.execute()).thenReturn(directory);
@@ -73,7 +73,7 @@ public class DirectoryServiceTest {
         verifyNoMoreInteractions(drive);
         verifyNoMoreInteractions(files);
         verifyNoMoreInteractions(insert);
-        verifyZeroInteractions(directory);
+        verifyNoInteractions(directory);
     }
 
     @Test
@@ -107,38 +107,34 @@ public class DirectoryServiceTest {
         verifyNoMoreInteractions(files);
         verifyNoMoreInteractions(insert);
         verifyNoMoreInteractions(parentDir);
-        verifyZeroInteractions(directory);
+        verifyNoInteractions(directory);
     }
 
-    @Test(expected = DirectoryHandleException.class)
+    @Test
     public void testCreateOneDirectoryWhereIOExceptionWatThrown() throws IOException {
         String dirname = "test-dirname";
         File directory = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
         Drive.Files.Create insert = mock(Drive.Files.Create.class);
 
-        when(serviceMock.createOneDirectory(anyString(), any(File.class))).thenCallRealMethod();
+        when(serviceMock.createOneDirectory(anyString(), any())).thenCallRealMethod();
         when(drive.files()).thenReturn(files);
         when(files.create(any(File.class))).thenReturn(insert);
         when(insert.execute()).thenThrow(IOException.class);
 
-        try {
-            serviceMock.createOneDirectory(dirname, null);
-        } catch (DirectoryHandleException e) {
-            verify(serviceMock).createOneDirectory(dirname, null);
-            verify(serviceMock).getDrive();
-            verify(drive).files();
-            verify(files).create(any(File.class));
-            verify(insert).execute();
+        assertThrows(DirectoryHandleException.class, () -> serviceMock.createOneDirectory(dirname, null));
 
-            verifyNoMoreInteractions(serviceMock);
-            verifyNoMoreInteractions(drive);
-            verifyNoMoreInteractions(files);
-            verifyNoMoreInteractions(insert);
-            verifyZeroInteractions(directory);
+        verify(serviceMock).createOneDirectory(dirname, null);
+        verify(serviceMock).getDrive();
+        verify(drive).files();
+        verify(files).create(any(File.class));
+        verify(insert).execute();
 
-            throw e;
-        }
+        verifyNoMoreInteractions(serviceMock);
+        verifyNoMoreInteractions(drive);
+        verifyNoMoreInteractions(files);
+        verifyNoMoreInteractions(insert);
+        verifyNoInteractions(directory);
     }
 
     @Test
@@ -160,8 +156,8 @@ public class DirectoryServiceTest {
 
         verifyNoMoreInteractions(serviceMock);
 
-        verifyZeroInteractions(parentDir);
-        verifyZeroInteractions(directory);
+        verifyNoInteractions(parentDir);
+        verifyNoInteractions(directory);
     }
 
     @Test
@@ -185,8 +181,8 @@ public class DirectoryServiceTest {
 
         verifyNoMoreInteractions(serviceMock);
 
-        verifyZeroInteractions(parentDir);
-        verifyZeroInteractions(directory);
+        verifyNoInteractions(parentDir);
+        verifyNoInteractions(directory);
     }
 
     @Test
@@ -195,7 +191,7 @@ public class DirectoryServiceTest {
         File directory = mock(File.class);
 
         when(serviceMock.findDirectory(anyString())).thenCallRealMethod();
-        when(serviceMock.findDirectory(anyString(), any(File.class))).thenReturn(directory);
+        when(serviceMock.findDirectory(anyString(), any())).thenReturn(directory);
 
         File result = serviceMock.findDirectory(pathname);
 
@@ -240,7 +236,7 @@ public class DirectoryServiceTest {
 
         verifyNoMoreInteractions(serviceMock);
 
-        verifyZeroInteractions(parentDir);
+        verifyNoInteractions(parentDir);
     }
 
     @Test
@@ -262,8 +258,8 @@ public class DirectoryServiceTest {
 
         verifyNoMoreInteractions(serviceMock);
 
-        verifyZeroInteractions(parentDir);
-        verifyZeroInteractions(directory);
+        verifyNoInteractions(parentDir);
+        verifyNoInteractions(directory);
     }
 
     @Test
@@ -294,10 +290,10 @@ public class DirectoryServiceTest {
 
         verifyNoMoreInteractions(serviceMock);
 
-        verifyZeroInteractions(directory1);
-        verifyZeroInteractions(directory2);
-        verifyZeroInteractions(directory3);
-        verifyZeroInteractions(parentDir);
+        verifyNoInteractions(directory1);
+        verifyNoInteractions(directory2);
+        verifyNoInteractions(directory3);
+        verifyNoInteractions(parentDir);
     }
 
     @Test
@@ -306,7 +302,7 @@ public class DirectoryServiceTest {
         File directory = mock(File.class);
 
         when(serviceMock.findOrCreateDirectory(anyString())).thenCallRealMethod();
-        when(serviceMock.findOrCreateDirectory(anyString(), any(File.class))).thenReturn(directory);
+        when(serviceMock.findOrCreateDirectory(anyString(), any())).thenReturn(directory);
 
         File result = serviceMock.findOrCreateDirectory(pathname);
 
@@ -351,8 +347,8 @@ public class DirectoryServiceTest {
 
         verifyNoMoreInteractions(serviceMock);
 
-        verifyZeroInteractions(directory);
-        verifyZeroInteractions(parentDir);
+        verifyNoInteractions(directory);
+        verifyNoInteractions(parentDir);
     }
 
     @Test
@@ -383,9 +379,9 @@ public class DirectoryServiceTest {
 
         verifyNoMoreInteractions(serviceMock);
 
-        verifyZeroInteractions(directory1);
-        verifyZeroInteractions(directory2);
-        verifyZeroInteractions(directory3);
-        verifyZeroInteractions(parentDir);
+        verifyNoInteractions(directory1);
+        verifyNoInteractions(directory2);
+        verifyNoInteractions(directory3);
+        verifyNoInteractions(parentDir);
     }
 }

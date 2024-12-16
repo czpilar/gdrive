@@ -15,10 +15,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class CredentialSaverListener implements AuthorizationCodeFlow.CredentialCreatedListener {
 
-    private IGDriveCredential gDriveCredential;
+    private final IGDriveCredential gDriveCredential;
 
     @Autowired
-    public void setGDriveCredential(IGDriveCredential gDriveCredential) {
+    public CredentialSaverListener(IGDriveCredential gDriveCredential) {
         this.gDriveCredential = gDriveCredential;
     }
 

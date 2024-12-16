@@ -1,12 +1,12 @@
 package net.czpilar.gdrive.core.credential.impl;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author David Pilar (david@czpilar.net)
@@ -18,7 +18,7 @@ public class SimpleGDriveCredentialTest {
     @Mock
     private GoogleCredential.Builder credentialBuilder;
 
-    @Before
+    @BeforeEach
     public void before() {
         credential = new SimpleGDriveCredential();
         credential.setCredentialBuilder(credentialBuilder);

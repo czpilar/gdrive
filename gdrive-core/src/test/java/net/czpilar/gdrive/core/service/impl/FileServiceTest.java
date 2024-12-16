@@ -6,22 +6,18 @@ import com.google.api.client.googleapis.media.MediaHttpUploaderProgressListener;
 import com.google.api.client.http.FileContent;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import net.czpilar.gdrive.core.exception.FileHandleException;
 import net.czpilar.gdrive.core.service.IDirectoryService;
 import net.czpilar.gdrive.core.util.EqualUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
@@ -30,18 +26,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
  * @author David Pilar (david@czpilar.net)
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({FileList.class, File.class, MediaHttpUploader.class, Drive.Files.Create.class, EqualUtils.class})
-@PowerMockIgnore("jdk.internal.reflect.*")
 public class FileServiceTest {
 
-    private FileService service = new FileService(3);
+    private final FileService service = new FileService(3);
 
     @Mock
     private FileService serviceMock;
@@ -58,9 +51,13 @@ public class FileServiceTest {
     @Mock
     private IGDriveCredential gDriveCredential;
 
-    @Before
+    private AutoCloseable autoCloseable;
+
+    private MockedStatic<EqualUtils> equalUtilsMockedStatic;
+
+    @BeforeEach
     public void before() {
-        MockitoAnnotations.initMocks(this);
+        autoCloseable = MockitoAnnotations.openMocks(this);
         service.setApplicationContext(applicationContext);
         service.setGDriveCredential(gDriveCredential);
         service.setDirectoryService(directoryService);
@@ -68,7 +65,13 @@ public class FileServiceTest {
         when(serviceMock.getDirectoryService()).thenReturn(directoryService);
         when(applicationContext.getBean(Drive.class)).thenReturn(drive);
 
-        PowerMockito.mockStatic(EqualUtils.class);
+        equalUtilsMockedStatic = mockStatic(EqualUtils.class);
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        autoCloseable.close();
+        equalUtilsMockedStatic.close();
     }
 
     @Test
@@ -88,7 +91,7 @@ public class FileServiceTest {
         assertNotNull(result);
         assertEquals(uploadDirName, result);
 
-        verifyZeroInteractions(gDriveCredential);
+        verifyNoInteractions(gDriveCredential);
     }
 
     @Test
@@ -113,10 +116,10 @@ public class FileServiceTest {
         File parentDir = null;
         File file = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
-        Drive.Files.Create insert = PowerMockito.mock(Drive.Files.Create.class);
+        Drive.Files.Create insert = mock(Drive.Files.Create.class);
         MediaHttpUploader mediaHttpUploader = mock(MediaHttpUploader.class);
 
-        when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
+        when(serviceMock.uploadFile(anyString(), (File) any())).thenCallRealMethod();
         when(serviceMock.getDrive()).thenReturn(drive);
         when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(null);
         when(drive.files()).thenReturn(files);
@@ -157,7 +160,7 @@ public class FileServiceTest {
         File parentDir = mock(File.class);
         File file = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
-        Drive.Files.Create insert = PowerMockito.mock(Drive.Files.Create.class);
+        Drive.Files.Create insert = mock(Drive.Files.Create.class);
         MediaHttpUploader mediaHttpUploader = mock(MediaHttpUploader.class);
 
         when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
@@ -198,33 +201,29 @@ public class FileServiceTest {
         verifyNoMoreInteractions(parentDir);
     }
 
-    @Test(expected = FileHandleException.class)
+    @Test
     public void testUploadFileWithStringFilenameAndNullParentAndThrownException() throws IOException {
         String filename = "test-filename";
         File parentDir = null;
         Drive.Files files = mock(Drive.Files.class);
 
-        when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
+        when(serviceMock.uploadFile(anyString(), (File) any())).thenCallRealMethod();
         when(serviceMock.getDrive()).thenReturn(drive);
         when(serviceMock.findFile(anyString(), any(File.class), anyBoolean())).thenReturn(null);
         when(drive.files()).thenReturn(files);
         when(files.create(any(File.class), any(FileContent.class))).thenThrow(IOException.class);
 
-        try {
-            serviceMock.uploadFile(filename, parentDir);
-        } catch (FileHandleException e) {
-            verify(serviceMock).uploadFile(filename, parentDir);
-            verify(serviceMock).getDrive();
-            verify(serviceMock).findFile(filename, parentDir, false);
-            verify(drive).files();
-            verify(files).create(any(File.class), any(FileContent.class));
+        assertThrows(FileHandleException.class, () -> serviceMock.uploadFile(filename, parentDir));
 
-            verifyNoMoreInteractions(serviceMock);
-            verifyNoMoreInteractions(drive);
-            verifyNoMoreInteractions(files);
+        verify(serviceMock).uploadFile(filename, parentDir);
+        verify(serviceMock).getDrive();
+        verify(serviceMock).findFile(filename, parentDir, false);
+        verify(drive).files();
+        verify(files).create(any(File.class), any(FileContent.class));
 
-            throw e;
-        }
+        verifyNoMoreInteractions(serviceMock);
+        verifyNoMoreInteractions(drive);
+        verifyNoMoreInteractions(files);
     }
 
     @Test
@@ -234,7 +233,7 @@ public class FileServiceTest {
         String fileId = "some-test-file-id";
         File file = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
-        Drive.Files.Update update = PowerMockito.mock(Drive.Files.Update.class);
+        Drive.Files.Update update = mock(Drive.Files.Update.class);
         MediaHttpUploader mediaHttpUploader = mock(MediaHttpUploader.class);
 
         when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
@@ -308,7 +307,7 @@ public class FileServiceTest {
         File parentDir = mock(File.class);
         final File file = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
-        Drive.Files.Create insert = PowerMockito.mock(Drive.Files.Create.class);
+        Drive.Files.Create insert = mock(Drive.Files.Create.class);
         MediaHttpUploader mediaHttpUploader = mock(MediaHttpUploader.class);
 
         when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
@@ -363,13 +362,13 @@ public class FileServiceTest {
         verifyNoMoreInteractions(parentDir);
     }
 
-    @Test(expected = FileHandleException.class)
+    @Test
     public void testUploadFileWithStringFilenameAndFileParentAndRetryExceeded() throws IOException {
         String filename = "test-filename";
         File parentDir = mock(File.class);
         final File file = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
-        Drive.Files.Create insert = PowerMockito.mock(Drive.Files.Create.class);
+        Drive.Files.Create insert = mock(Drive.Files.Create.class);
         MediaHttpUploader mediaHttpUploader = mock(MediaHttpUploader.class);
 
         when(serviceMock.uploadFile(anyString(), any(File.class))).thenCallRealMethod();
@@ -385,34 +384,29 @@ public class FileServiceTest {
         when(file.getId()).thenReturn("some-test-file-id");
         when(parentDir.getId()).thenReturn("some-test-parent-id");
 
-        try {
-            serviceMock.uploadFile(filename, parentDir);
-        } catch (FileHandleException e) {
+        FileHandleException e = assertThrows(FileHandleException.class, () -> serviceMock.uploadFile(filename, parentDir));
 
-            assertTrue(e.getCause() instanceof GoogleJsonResponseException);
+        assertInstanceOf(GoogleJsonResponseException.class, e.getCause());
 
-            verify(serviceMock).uploadFile(filename, parentDir);
-            verify(serviceMock).getDrive();
-            verify(serviceMock).findFile(filename, parentDir, false);
-            verify(serviceMock, times(4)).getRetries();
-            verify(drive).files();
-            verify(files).create(any(File.class), any(FileContent.class));
-            verify(insert, times(4)).execute();
-            verify(insert).getMediaHttpUploader();
-            verify(mediaHttpUploader).setDirectUploadEnabled(false);
-            verify(mediaHttpUploader).setProgressListener(any(MediaHttpUploaderProgressListener.class));
-            verify(parentDir).getId();
+        verify(serviceMock).uploadFile(filename, parentDir);
+        verify(serviceMock).getDrive();
+        verify(serviceMock).findFile(filename, parentDir, false);
+        verify(serviceMock, times(4)).getRetries();
+        verify(drive).files();
+        verify(files).create(any(File.class), any(FileContent.class));
+        verify(insert, times(4)).execute();
+        verify(insert).getMediaHttpUploader();
+        verify(mediaHttpUploader).setDirectUploadEnabled(false);
+        verify(mediaHttpUploader).setProgressListener(any(MediaHttpUploaderProgressListener.class));
+        verify(parentDir).getId();
 
-            verifyNoMoreInteractions(serviceMock);
-            verifyNoMoreInteractions(drive);
-            verifyNoMoreInteractions(files);
-            verifyNoMoreInteractions(insert);
-            verifyNoMoreInteractions(mediaHttpUploader);
-            verifyNoMoreInteractions(file);
-            verifyNoMoreInteractions(parentDir);
-
-            throw e;
-        }
+        verifyNoMoreInteractions(serviceMock);
+        verifyNoMoreInteractions(drive);
+        verifyNoMoreInteractions(files);
+        verifyNoMoreInteractions(insert);
+        verifyNoMoreInteractions(mediaHttpUploader);
+        verifyNoMoreInteractions(file);
+        verifyNoMoreInteractions(parentDir);
     }
 
     @Test
@@ -439,7 +433,7 @@ public class FileServiceTest {
     public void testUploadFilesWhereUploadFileThrowsException() {
         File parent = mock(File.class);
 
-        when(serviceMock.uploadFiles(anyListOf(String.class), any(File.class))).thenCallRealMethod();
+        when(serviceMock.uploadFiles(anyList(), any(File.class))).thenCallRealMethod();
         when(serviceMock.uploadFile(anyString(), any(File.class))).thenThrow(FileHandleException.class);
 
         List<File> result = serviceMock.uploadFiles(Arrays.asList("filename1", "filename2"), parent);
@@ -447,7 +441,7 @@ public class FileServiceTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
 
-        verify(serviceMock).uploadFiles(anyListOf(String.class), any(File.class));
+        verify(serviceMock).uploadFiles(anyList(), any(File.class));
         verify(serviceMock).uploadFile("filename1", parent);
         verify(serviceMock).uploadFile("filename2", parent);
 
@@ -458,7 +452,7 @@ public class FileServiceTest {
     public void testUploadFilesWithListOfFilenames() {
         File parent = mock(File.class);
 
-        when(serviceMock.uploadFiles(anyListOf(String.class), any(File.class))).thenCallRealMethod();
+        when(serviceMock.uploadFiles(anyList(), any(File.class))).thenCallRealMethod();
         File file1 = mock(File.class);
         File file2 = mock(File.class);
         when(serviceMock.uploadFile(anyString(), any(File.class))).thenReturn(file1, file2);
@@ -470,7 +464,7 @@ public class FileServiceTest {
         assertEquals(file1, result.get(0));
         assertEquals(file2, result.get(1));
 
-        verify(serviceMock).uploadFiles(anyListOf(String.class), any(File.class));
+        verify(serviceMock).uploadFiles(anyList(), any(File.class));
         verify(serviceMock).uploadFile("filename1", parent);
         verify(serviceMock).uploadFile("filename2", parent);
 
@@ -502,8 +496,8 @@ public class FileServiceTest {
 
         verifyNoMoreInteractions(serviceMock);
         verifyNoMoreInteractions(directoryService);
-        verifyZeroInteractions(file);
-        verifyZeroInteractions(parent);
+        verifyNoInteractions(file);
+        verifyNoInteractions(parent);
     }
 
     @Test
@@ -512,7 +506,7 @@ public class FileServiceTest {
         File file = mock(File.class);
 
         when(serviceMock.uploadFile(anyString())).thenCallRealMethod();
-        when(serviceMock.uploadFile(anyString(), any(File.class))).thenReturn(file);
+        when(serviceMock.uploadFile(anyString(), (File) any())).thenReturn(file);
 
         File result = serviceMock.uploadFile(filename);
 
@@ -523,7 +517,7 @@ public class FileServiceTest {
         verify(serviceMock).uploadFile(filename, (File) null);
 
         verifyNoMoreInteractions(serviceMock);
-        verifyZeroInteractions(file);
+        verifyNoInteractions(file);
     }
 
     @Test
@@ -533,8 +527,8 @@ public class FileServiceTest {
         File file2 = mock(File.class);
         List<File> files = Arrays.asList(file1, file2);
 
-        when(serviceMock.uploadFiles(anyListOf(String.class))).thenCallRealMethod();
-        when(serviceMock.uploadFiles(anyListOf(String.class), any(File.class))).thenReturn(files);
+        when(serviceMock.uploadFiles(anyList())).thenCallRealMethod();
+        when(serviceMock.uploadFiles(anyList(), (File) any())).thenReturn(files);
 
         List<File> result = serviceMock.uploadFiles(filenames);
 
@@ -546,8 +540,8 @@ public class FileServiceTest {
         verify(serviceMock).uploadFiles(filenames, (File) null);
 
         verifyNoMoreInteractions(serviceMock);
-        verifyZeroInteractions(file1);
-        verifyZeroInteractions(file2);
+        verifyNoInteractions(file1);
+        verifyNoInteractions(file2);
     }
 
     @Test
@@ -559,8 +553,8 @@ public class FileServiceTest {
         List<File> files = Arrays.asList(file1, file2);
         File parent = mock(File.class);
 
-        when(serviceMock.uploadFiles(anyListOf(String.class), anyString())).thenCallRealMethod();
-        when(serviceMock.uploadFiles(anyListOf(String.class), any(File.class))).thenReturn(files);
+        when(serviceMock.uploadFiles(anyList(), anyString())).thenCallRealMethod();
+        when(serviceMock.uploadFiles(anyList(), any(File.class))).thenReturn(files);
         when(serviceMock.getUploadDir(anyString())).thenReturn(parentDir);
         when(directoryService.findOrCreateDirectory(anyString())).thenReturn(parent);
 
@@ -578,9 +572,9 @@ public class FileServiceTest {
 
         verifyNoMoreInteractions(serviceMock);
         verifyNoMoreInteractions(directoryService);
-        verifyZeroInteractions(file1);
-        verifyZeroInteractions(file2);
-        verifyZeroInteractions(parent);
+        verifyNoInteractions(file1);
+        verifyNoInteractions(file2);
+        verifyNoInteractions(parent);
     }
 
 }

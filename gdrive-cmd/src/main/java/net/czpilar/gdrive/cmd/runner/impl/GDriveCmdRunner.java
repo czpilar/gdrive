@@ -125,7 +125,7 @@ public class GDriveCmdRunner implements IGDriveCmdRunner {
     private void doAuthorizationOption(CommandLine cmd) {
         if (cmd.hasOption(OPTION_AUTHORIZATION)) {
             Optional<String> optionValue = Optional.ofNullable(cmd.getOptionValue(OPTION_AUTHORIZATION));
-            if (!optionValue.isPresent()) {
+            if (optionValue.isEmpty()) {
                 optionValue = codeWaiter.getCode();
             }
             optionValue.ifPresent(code -> {

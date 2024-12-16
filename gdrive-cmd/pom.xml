@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>net.czpilar.gdrive</groupId>
@@ -7,7 +8,6 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.czpilar.gdrive</groupId>
     <artifactId>gdrive-cmd</artifactId>
     <packaging>jar</packaging>
     <version>1.3.6-SNAPSHOT</version>
@@ -17,13 +17,10 @@
     <build>
         <resources>
             <resource>
-                <directory>src/main/java</directory>
+                <directory>${project.basedir}/src/main/resources</directory>
             </resource>
             <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
+                <directory>${project.basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>gdrive.bat</include>
@@ -33,10 +30,27 @@
         </resources>
         <plugins>
             <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>spring-boot</classifier>
+                            <mainClass>net.czpilar.gdrive.cmd.GDrive</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
-                        <descriptor>src/main/assembly/assembly-bin.xml</descriptor>
+                        <descriptor>${project.basedir}/src/main/assembly/assembly-zip.xml</descriptor>
                     </descriptors>
                 </configuration>
                 <executions>
@@ -53,12 +67,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>net.czpilar.gdrive.cmd.GDrive</mainClass>
-                        </manifest>
-                    </archive>
                     <excludes>
                         <exclude>gdrive.bat</exclude>
                         <exclude>gdrive.sh</exclude>

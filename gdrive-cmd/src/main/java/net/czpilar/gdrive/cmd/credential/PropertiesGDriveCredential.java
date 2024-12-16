@@ -56,7 +56,9 @@ public class PropertiesGDriveCredential extends AbstractGDriveCredential {
 
     private void saveProperties() {
         try {
-            getProperties().store(new FileOutputStream(propertyFile), "gdrive properties file");
+            try (FileOutputStream out = new FileOutputStream(propertyFile)) {
+                getProperties().store(out, "gdrive properties file");
+            }
         } catch (IOException e) {
             throw new PropertiesFileException("Cannot save properties file.", e);
         }
@@ -64,7 +66,9 @@ public class PropertiesGDriveCredential extends AbstractGDriveCredential {
 
     private void loadProperties() {
         try {
-            getProperties().load(new FileInputStream(propertyFile));
+            try (FileInputStream is = new FileInputStream(propertyFile)) {
+                getProperties().load(is);
+            }
         } catch (IOException e) {
             throw new PropertiesFileException("Cannot load properties file.", e);
         }

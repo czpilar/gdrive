@@ -4,7 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import net.czpilar.gdrive.cmd.exception.CommandLineException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ public class AuthorizationCodeWaiter {
         } catch (IOException | InterruptedException e) {
             throw new CommandLineException(e);
         } finally {
-            if (!code.isPresent()) {
+            if (code.isEmpty()) {
                 System.out.println("gDrive application was not authorized due to expired waiting time.");
             }
         }
@@ -46,14 +46,14 @@ public class AuthorizationCodeWaiter {
         server.createContext(context, handler);
         server.start();
         long waitTime = System.currentTimeMillis() + WAIT_TIME * 60 * 1000;
-        while (!handler.code.isPresent() && System.currentTimeMillis() < waitTime) {
+        while (handler.code.isEmpty() && System.currentTimeMillis() < waitTime) {
             Thread.sleep(100);
         }
         server.stop(0);
         return handler.code;
     }
 
-    private class AuthorizationCodeWaiterHandler implements HttpHandler {
+    private static class AuthorizationCodeWaiterHandler implements HttpHandler {
 
         private Optional<String> code = Optional.empty();
 

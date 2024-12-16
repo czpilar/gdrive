@@ -3,14 +3,14 @@ package net.czpilar.gdrive.core.service.impl;
 import com.google.api.services.drive.model.File;
 import net.czpilar.gdrive.core.exception.DirectoryHandleException;
 import net.czpilar.gdrive.core.service.IDirectoryService;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * Service with methods for handling directories in Google Drive.
@@ -37,13 +37,13 @@ public class DirectoryService extends AbstractFileService implements IDirectoryS
     }
 
     protected File createOneDirectory(String dirname, File parentDir) {
-        Assert.notNull(dirname);
+        Assert.notNull(dirname, "dirname must not be null");
 
         File directory = new File();
         directory.setName(dirname);
         directory.setMimeType(DIRECTORY_MIME_TYPE);
         if (parentDir != null) {
-            directory.setParents(Arrays.asList(parentDir.getId()));
+            directory.setParents(List.of(parentDir.getId()));
         }
         try {
             return getDrive().files().create(directory).execute();

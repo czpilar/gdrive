@@ -8,31 +8,24 @@ import net.czpilar.gdrive.core.service.IFileService;
 import net.czpilar.gdrive.core.service.ITrashService;
 import net.czpilar.gdrive.core.setting.GDriveSetting;
 import org.apache.commons.cli.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 /**
  * @author David Pilar (david@czpilar.net)
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({File.class})
-@PowerMockIgnore("jdk.internal.reflect.*")
 public class GDriveCmdRunnerTest {
 
-    private GDriveCmdRunner runner = new GDriveCmdRunner();
+    private final GDriveCmdRunner runner = new GDriveCmdRunner();
     @Mock
     private CommandLineParser commandLineParser;
     @Mock
@@ -54,9 +47,11 @@ public class GDriveCmdRunnerTest {
     @Mock
     private AuthorizationCodeWaiter codeWaiter;
 
-    @Before
+    private AutoCloseable autoCloseable;
+
+    @BeforeEach
     public void before() {
-        MockitoAnnotations.initMocks(this);
+        autoCloseable = MockitoAnnotations.openMocks(this);
         runner.setCommandLineParser(commandLineParser);
         runner.setOptions(options);
         runner.setHelpFormatter(helpFormatter);
@@ -66,6 +61,11 @@ public class GDriveCmdRunnerTest {
         runner.setGDriveSetting(gDriveSetting);
         runner.setPropertiesGDriveCredential(propertiesGDriveCredential);
         runner.setCodeWaiter(codeWaiter);
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        autoCloseable.close();
     }
 
     @Test
@@ -85,13 +85,13 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(helpFormatter);
         verifyNoMoreInteractions(gDriveSetting);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(propertiesGDriveCredential);
-        verifyZeroInteractions(commandLine);
-        verifyZeroInteractions(trashService);
-        verifyZeroInteractions(codeWaiter);
+        verifyNoInteractions(options);
+        verifyNoInteractions(authorizationService);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(propertiesGDriveCredential);
+        verifyNoInteractions(commandLine);
+        verifyNoInteractions(trashService);
+        verifyNoInteractions(codeWaiter);
     }
 
     @Test
@@ -115,12 +115,12 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(gDriveSetting);
         verifyNoMoreInteractions(commandLine);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(propertiesGDriveCredential);
-        verifyZeroInteractions(trashService);
-        verifyZeroInteractions(codeWaiter);
+        verifyNoInteractions(options);
+        verifyNoInteractions(authorizationService);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(propertiesGDriveCredential);
+        verifyNoInteractions(trashService);
+        verifyNoInteractions(codeWaiter);
     }
 
     @Test
@@ -146,12 +146,12 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(gDriveSetting);
         verifyNoMoreInteractions(commandLine);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(propertiesGDriveCredential);
-        verifyZeroInteractions(trashService);
-        verifyZeroInteractions(codeWaiter);
+        verifyNoInteractions(options);
+        verifyNoInteractions(authorizationService);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(propertiesGDriveCredential);
+        verifyNoInteractions(trashService);
+        verifyNoInteractions(codeWaiter);
     }
 
     @Test
@@ -193,11 +193,11 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(trashService);
-        verifyZeroInteractions(codeWaiter);
+        verifyNoInteractions(options);
+        verifyNoInteractions(authorizationService);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(trashService);
+        verifyNoInteractions(codeWaiter);
     }
 
     @Test
@@ -240,11 +240,11 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(trashService);
-        verifyZeroInteractions(codeWaiter);
+        verifyNoInteractions(options);
+        verifyNoInteractions(authorizationService);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(trashService);
+        verifyNoInteractions(codeWaiter);
     }
 
     @Test
@@ -284,12 +284,12 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(gDriveSetting);
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
+        verifyNoMoreInteractions(authorizationService);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(trashService);
-        verifyZeroInteractions(codeWaiter);
+        verifyNoInteractions(options);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(trashService);
+        verifyNoInteractions(codeWaiter);
     }
 
     @Test
@@ -332,12 +332,12 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(gDriveSetting);
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
+        verifyNoMoreInteractions(authorizationService);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(trashService);
-        verifyZeroInteractions(codeWaiter);
+        verifyNoInteractions(options);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(trashService);
+        verifyNoInteractions(codeWaiter);
     }
 
     @Test
@@ -380,12 +380,12 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(gDriveSetting);
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
+        verifyNoMoreInteractions(authorizationService);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(trashService);
-        verifyZeroInteractions(codeWaiter);
+        verifyNoInteractions(options);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(trashService);
+        verifyNoInteractions(codeWaiter);
     }
 
     @Test
@@ -431,11 +431,11 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
         verifyNoMoreInteractions(codeWaiter);
+        verifyNoMoreInteractions(authorizationService);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(trashService);
+        verifyNoInteractions(options);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(trashService);
     }
 
     @Test
@@ -481,18 +481,18 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
         verifyNoMoreInteractions(codeWaiter);
+        verifyNoMoreInteractions(authorizationService);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(trashService);
+        verifyNoInteractions(options);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(trashService);
     }
 
     @Test
     public void testRunWhereCommandLineHasPropertiesAndFileOptionsAndNoDirectory() throws ParseException {
         String propertiesValue = "test-properties-value";
         String optionFile = "test-file-value";
-        List<String> optionFiles = Arrays.asList(optionFile);
+        List<String> optionFiles = List.of(optionFile);
         String[] args = {"arg1", "arg2"};
         Option[] optionList = {mock(Option.class), mock(Option.class)};
         when(commandLineParser.parse(any(Options.class), any(String[].class))).thenReturn(commandLine);
@@ -530,13 +530,13 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(gDriveSetting);
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
+        verifyNoMoreInteractions(fileService);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(trashService);
-        verifyZeroInteractions(codeWaiter);
+        verifyNoInteractions(options);
+        verifyNoInteractions(authorizationService);
+        verifyNoInteractions(authorizationService);
+        verifyNoInteractions(trashService);
+        verifyNoInteractions(codeWaiter);
     }
 
     @Test
@@ -544,7 +544,7 @@ public class GDriveCmdRunnerTest {
         String propertiesValue = "test-properties-value";
         String optionFile = "test-file-value";
         String optionDirectory = "test-directory";
-        List<String> optionFiles = Arrays.asList(optionFile);
+        List<String> optionFiles = List.of(optionFile);
         String[] args = {"arg1", "arg2"};
         Option[] optionList = {mock(Option.class), mock(Option.class)};
         File file1 = mock(File.class);
@@ -563,7 +563,7 @@ public class GDriveCmdRunnerTest {
         when(commandLine.getOptionValue(GDriveCmdRunner.OPTION_PROPERTIES)).thenReturn(propertiesValue);
         when(commandLine.getOptionValues(GDriveCmdRunner.OPTION_FILE)).thenReturn(new String[]{optionFile});
         when(commandLine.getOptionValue(GDriveCmdRunner.OPTION_DIRECTORY)).thenReturn(optionDirectory);
-        when(fileService.uploadFiles(anyListOf(String.class), anyString())).thenReturn(files);
+        when(fileService.uploadFiles(anyList(), anyString())).thenReturn(files);
 
         runner.run(args);
 
@@ -593,13 +593,13 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
         verifyNoMoreInteractions(file1, file2);
+        verifyNoMoreInteractions(fileService);
 
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(trashService);
-        verifyZeroInteractions(codeWaiter);
+        verifyNoInteractions(options);
+        verifyNoInteractions(authorizationService);
+        verifyNoInteractions(authorizationService);
+        verifyNoInteractions(trashService);
+        verifyNoInteractions(codeWaiter);
     }
 
     @Test
@@ -641,11 +641,11 @@ public class GDriveCmdRunnerTest {
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
 
-        verifyZeroInteractions(helpFormatter);
-        verifyZeroInteractions(options);
-        verifyZeroInteractions(authorizationService);
-        verifyZeroInteractions(fileService);
-        verifyZeroInteractions(codeWaiter);
+        verifyNoInteractions(helpFormatter);
+        verifyNoInteractions(options);
+        verifyNoInteractions(authorizationService);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(codeWaiter);
     }
 
 }

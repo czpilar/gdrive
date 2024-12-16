@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -77,7 +76,7 @@ public class FileService extends AbstractFileService implements IFileService {
                 .setName(filename)
                 .setMimeType(Files.probeContentType(pathToFile));
         if (parentDir != null) {
-            file.setParents(Arrays.asList(parentDir.getId()));
+            file.setParents(List.of(parentDir.getId()));
         }
 
         Drive.Files.Create insert = getDrive().files().create(file,

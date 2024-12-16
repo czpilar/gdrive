@@ -8,9 +8,9 @@ package net.czpilar.gdrive.cmd.runner;
 public interface IGDriveCmdRunner {
 
     /**
-     * Runs comman line gDrive.
+     * Runs command line gDrive.
      *
-     * @param args
+     * @param args arguments
      */
     void run(String[] args);
 }

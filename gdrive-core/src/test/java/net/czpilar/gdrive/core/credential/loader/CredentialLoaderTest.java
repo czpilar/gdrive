@@ -3,13 +3,13 @@ package net.czpilar.gdrive.core.credential.loader;
 import com.google.api.client.auth.oauth2.Credential;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import net.czpilar.gdrive.core.exception.NoCredentialFoundException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -25,17 +25,22 @@ public class CredentialLoaderTest {
     @Mock
     private Credential credential;
 
-    @Before
+    private AutoCloseable autoCloseable;
+
+    @BeforeEach
     public void before() {
-        MockitoAnnotations.initMocks(this);
-        loader = new CredentialLoader();
-        loader.setGDriveCredential(gDriveCredential);
+        autoCloseable = MockitoAnnotations.openMocks(this);
+        loader = new CredentialLoader(gDriveCredential);
     }
 
-    @Test(expected = NoCredentialFoundException.class)
+    @AfterEach
+    public void after() throws Exception {
+        autoCloseable.close();
+    }
+
+    @Test
     public void testGetCredentialWhereNoCredentialLoaded() {
-        loader.setGDriveCredential(null);
-        loader.getCredential();
+        assertThrows(NoCredentialFoundException.class, () -> new CredentialLoader(null).getCredential());
     }
 
     @Test
@@ -50,6 +55,6 @@ public class CredentialLoaderTest {
         verify(gDriveCredential).getCredential();
 
         verifyNoMoreInteractions(gDriveCredential);
-        verifyZeroInteractions(credential);
+        verifyNoInteractions(credential);
     }
 }

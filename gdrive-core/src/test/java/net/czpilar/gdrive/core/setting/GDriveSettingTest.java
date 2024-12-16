@@ -1,10 +1,10 @@
 package net.czpilar.gdrive.core.setting;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author David Pilar (david@czpilar.net)
@@ -24,6 +24,6 @@ public class GDriveSettingTest {
         assertEquals(clientId, setting.getClientId());
         assertEquals(clientSecret, setting.getClientSecret());
         assertEquals(redirectUri, setting.getRedirectUri());
-        assertEquals(Arrays.asList(GDriveSetting.GOOGLE_SCOPE), setting.getScopes());
+        assertEquals(List.of(GDriveSetting.GOOGLE_SCOPE), setting.getScopes());
     }
 }

@@ -13,7 +13,7 @@ public interface IDirectoryService {
      * Finds directory with give pathname where finding starts with root parent.
      * Pathname supports directory separators "/" or "\".
      *
-     * @param pathname
+     * @param pathname path name
      * @return found directory or null if directory is not found
      */
     File findDirectory(String pathname);
@@ -22,8 +22,8 @@ public interface IDirectoryService {
      * Finds directory with give pathname where finding starts with given parent.
      * Pathname supports directory separators "/" or "\".
      *
-     * @param pathname
-     * @param parentDir
+     * @param pathname  path name
+     * @param parentDir parent directory
      * @return found directory or null if directory is not found
      */
     File findDirectory(String pathname, File parentDir);
@@ -34,7 +34,7 @@ public interface IDirectoryService {
      * Also creates all non-existing directories on pathname.
      * Pathname supports directory separators "/" or "\".
      *
-     * @param pathname
+     * @param pathname path name
      * @return found or created directory
      */
     File findOrCreateDirectory(String pathname);
@@ -45,8 +45,8 @@ public interface IDirectoryService {
      * Also creates all non-existing directories on pathname.
      * Pathname supports directory separators "/" or "\".
      *
-     * @param pathname
-     * @param parentDir
+     * @param pathname  path name
+     * @param parentDir parent directory
      * @return found or created directory
      */
     File findOrCreateDirectory(String pathname, File parentDir);

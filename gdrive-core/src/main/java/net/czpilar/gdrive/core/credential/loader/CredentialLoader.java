@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class CredentialLoader {
 
-    private IGDriveCredential gDriveCredential;
+    private final IGDriveCredential gDriveCredential;
 
     @Autowired
-    public void setGDriveCredential(IGDriveCredential gDriveCredential) {
+    public CredentialLoader(IGDriveCredential gDriveCredential) {
         this.gDriveCredential = gDriveCredential;
     }
 

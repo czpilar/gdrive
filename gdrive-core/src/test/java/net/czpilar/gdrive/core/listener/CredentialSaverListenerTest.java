@@ -3,8 +3,9 @@ package net.czpilar.gdrive.core.listener;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -29,11 +30,17 @@ public class CredentialSaverListenerTest {
     @Mock
     private TokenResponse tokenResponse;
 
-    @Before
+    private AutoCloseable autoCloseable;
+
+    @BeforeEach
     public void before() {
-        MockitoAnnotations.initMocks(this);
-        listener = new CredentialSaverListener();
-        listener.setGDriveCredential(gDriveCredential);
+        autoCloseable = MockitoAnnotations.openMocks(this);
+        listener = new CredentialSaverListener(gDriveCredential);
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        autoCloseable.close();
     }
 
     @Test

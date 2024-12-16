@@ -3,28 +3,23 @@ package net.czpilar.gdrive.core.service.impl;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
-import net.czpilar.gdrive.core.exception.DirectoryHandleException;
 import net.czpilar.gdrive.core.exception.FileHandleException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({File.class, Files.class, FileList.class})
-@PowerMockIgnore("jdk.internal.reflect.*")
+//@RunWith(PowerMockRunner.class)
+//@PrepareForTest({File.class, Files.class, FileList.class})
+//@PowerMockIgnore("jdk.internal.reflect.*")
 public class AbstractFileServiceTest {
 
     @Mock
@@ -33,32 +28,34 @@ public class AbstractFileServiceTest {
     @Mock
     private Drive drive;
 
-    @Before
+    private AutoCloseable autoCloseable;
+
+    @BeforeEach
     public void before() {
-        MockitoAnnotations.initMocks(this);
+        autoCloseable = MockitoAnnotations.openMocks(this);
 
         when(service.getDrive()).thenReturn(drive);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @AfterEach
+    public void after() throws Exception {
+        autoCloseable.close();
+    }
+
+    @Test
     public void testBuildQueryWhereFilenameIsNullAndParentIsNullAndIsFile() {
-        when(service.buildQuery(anyString(), any(File.class), anyBoolean())).thenCallRealMethod();
+        when(service.buildQuery(any(), any(), anyBoolean())).thenCallRealMethod();
 
-        try {
-            service.buildQuery(null, null, false);
-        } catch (IllegalArgumentException e) {
+        assertThrows(IllegalArgumentException.class, () -> service.buildQuery(null, null, false));
 
-            verify(service).buildQuery(anyString(), any(File.class), anyBoolean());
-            verifyNoMoreInteractions(service);
-
-            throw e;
-        }
+        verify(service).buildQuery(any(), any(), anyBoolean());
+        verifyNoMoreInteractions(service);
     }
 
     @Test
     public void testBuildQueryWhereParentIsNullAndMimeTypeAndIsFile() {
         String filename = "test-filename";
-        when(service.buildQuery(anyString(), any(File.class), anyBoolean())).thenCallRealMethod();
+        when(service.buildQuery(anyString(), any(), anyBoolean())).thenCallRealMethod();
 
         String result = service.buildQuery(filename, null, false);
 
@@ -72,7 +69,7 @@ public class AbstractFileServiceTest {
     @Test
     public void testBuildQueryWhereParentIsNullAndIsDir() {
         String filename = "test-filename";
-        when(service.buildQuery(anyString(), any(File.class), anyBoolean())).thenCallRealMethod();
+        when(service.buildQuery(anyString(), any(), anyBoolean())).thenCallRealMethod();
 
         String result = service.buildQuery(filename, null, true);
 
@@ -125,7 +122,7 @@ public class AbstractFileServiceTest {
 
     @Test
     public void testBuildQueryWhereFilenameNeedsEscaping() {
-        when(service.buildQuery(anyString(), any(File.class), anyBoolean())).thenCallRealMethod();
+        when(service.buildQuery(anyString(), any(), anyBoolean())).thenCallRealMethod();
 
         String filename = "test ' test \\' test \\\\' test \\\\\\' test \\\\\\\\' test \\\\\\\\\\' test";
         String result = service.buildQuery(filename, null, false);
@@ -140,7 +137,7 @@ public class AbstractFileServiceTest {
 
     @Test
     public void testBuildQueryWhereFilenameDontNeedEscaping() {
-        when(service.buildQuery(anyString(), any(File.class), anyBoolean())).thenCallRealMethod();
+        when(service.buildQuery(anyString(), any(), anyBoolean())).thenCallRealMethod();
         String filename = "test \" test \" test";
 
         String result = service.buildQuery(filename, null, false);
@@ -153,20 +150,16 @@ public class AbstractFileServiceTest {
         verifyNoMoreInteractions(service);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testFindFileWhereDirnameIsNull() {
         File parent = mock(File.class);
 
-        when(service.findFile(anyString(), any(File.class), anyBoolean())).thenCallRealMethod();
+        when(service.findFile(any(), any(File.class), anyBoolean())).thenCallRealMethod();
 
-        try {
-            service.findFile(null, parent, true);
-        } catch (IllegalArgumentException e) {
-            verify(service).findFile(null, parent, true);
-            verifyNoMoreInteractions(service);
+        assertThrows(IllegalArgumentException.class, () -> service.findFile(null, parent, true));
 
-            throw e;
-        }
+        verify(service).findFile(null, parent, true);
+        verifyNoMoreInteractions(service);
     }
 
     @Test
@@ -208,7 +201,7 @@ public class AbstractFileServiceTest {
         verifyNoMoreInteractions(files);
         verifyNoMoreInteractions(list);
         verifyNoMoreInteractions(fileList);
-        verifyZeroInteractions(parent);
+        verifyNoInteractions(parent);
     }
 
     @Test
@@ -250,10 +243,10 @@ public class AbstractFileServiceTest {
         verifyNoMoreInteractions(files);
         verifyNoMoreInteractions(list);
         verifyNoMoreInteractions(fileList);
-        verifyZeroInteractions(parent);
+        verifyNoInteractions(parent);
     }
 
-    @Test(expected = FileHandleException.class)
+    @Test
     public void testFindFileWhereMoreThanOneItemsFound() throws IOException {
         File parent = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
@@ -274,34 +267,30 @@ public class AbstractFileServiceTest {
         when(list.execute()).thenReturn(fileList);
         when(fileList.getFiles()).thenReturn(Arrays.asList(dir1, dir2));
 
-        try {
-            service.findFile(filename, parent, false);
-        } catch (DirectoryHandleException e) {
-            verify(service).findFile(filename, parent, false);
-            verify(service).getDrive();
-            verify(service).buildQuery(filename, parent, false);
-            verify(drive).files();
-            verify(files).list();
-            verify(list).setQ(query);
-            verify(list).setFields(fields);
-            verify(list).execute();
-            verify(fileList).getFiles();
+        assertThrows(FileHandleException.class, () -> service.findFile(filename, parent, false));
 
-            verifyNoMoreInteractions(service);
-            verifyNoMoreInteractions(drive);
-            verifyNoMoreInteractions(drive);
-            verifyNoMoreInteractions(files);
-            verifyNoMoreInteractions(list);
-            verifyNoMoreInteractions(fileList);
-            verifyZeroInteractions(parent);
-            verifyZeroInteractions(dir1);
-            verifyZeroInteractions(dir2);
+        verify(service).findFile(filename, parent, false);
+        verify(service).getDrive();
+        verify(service).buildQuery(filename, parent, false);
+        verify(drive).files();
+        verify(files).list();
+        verify(list).setQ(query);
+        verify(list).setFields(fields);
+        verify(list).execute();
+        verify(fileList).getFiles();
 
-            throw e;
-        }
+        verifyNoMoreInteractions(service);
+        verifyNoMoreInteractions(drive);
+        verifyNoMoreInteractions(drive);
+        verifyNoMoreInteractions(files);
+        verifyNoMoreInteractions(list);
+        verifyNoMoreInteractions(fileList);
+        verifyNoInteractions(parent);
+        verifyNoInteractions(dir1);
+        verifyNoInteractions(dir2);
     }
 
-    @Test(expected = FileHandleException.class)
+    @Test
     public void testFindFileWhereIOExceptionWasThrown() throws IOException {
         File parent = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
@@ -318,27 +307,23 @@ public class AbstractFileServiceTest {
         when(list.setFields(fields)).thenReturn(list);
         when(list.execute()).thenThrow(IOException.class);
 
-        try {
-            service.findFile(filename, parent, false);
-        } catch (DirectoryHandleException e) {
-            verify(service).findFile(filename, parent, false);
-            verify(service).getDrive();
-            verify(service).buildQuery(filename, parent, false);
-            verify(drive).files();
-            verify(files).list();
-            verify(list).setQ(query);
-            verify(list).setFields(fields);
-            verify(list).execute();
+        assertThrows(FileHandleException.class, () -> service.findFile(filename, parent, false));
 
-            verifyNoMoreInteractions(service);
-            verifyNoMoreInteractions(drive);
-            verifyNoMoreInteractions(drive);
-            verifyNoMoreInteractions(files);
-            verifyNoMoreInteractions(list);
-            verifyZeroInteractions(parent);
+        verify(service).findFile(filename, parent, false);
+        verify(service).getDrive();
+        verify(service).buildQuery(filename, parent, false);
+        verify(drive).files();
+        verify(files).list();
+        verify(list).setQ(query);
+        verify(list).setFields(fields);
+        verify(list).execute();
 
-            throw e;
-        }
+        verifyNoMoreInteractions(service);
+        verifyNoMoreInteractions(drive);
+        verifyNoMoreInteractions(drive);
+        verifyNoMoreInteractions(files);
+        verifyNoMoreInteractions(list);
+        verifyNoInteractions(parent);
     }
 
     @Test
@@ -382,8 +367,8 @@ public class AbstractFileServiceTest {
         verifyNoMoreInteractions(files);
         verifyNoMoreInteractions(list);
         verifyNoMoreInteractions(fileList);
-        verifyZeroInteractions(parent);
-        verifyZeroInteractions(directory);
+        verifyNoInteractions(parent);
+        verifyNoInteractions(directory);
     }
 
 }

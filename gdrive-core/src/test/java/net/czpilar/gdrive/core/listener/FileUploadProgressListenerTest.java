@@ -1,14 +1,11 @@
 package net.czpilar.gdrive.core.listener;
 
 import com.google.api.client.googleapis.media.MediaHttpUploader;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 
@@ -18,19 +15,23 @@ import static org.mockito.Mockito.*;
 /**
  * @author David Pilar (david@czpilar.net)
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(MediaHttpUploader.class)
-@PowerMockIgnore("jdk.internal.reflect.*")
 public class FileUploadProgressListenerTest {
 
-    private FileUploadProgressListener listener = new FileUploadProgressListener("test-file-name");
+    private final FileUploadProgressListener listener = new FileUploadProgressListener("test-file-name");
 
     @Mock
     private MediaHttpUploader uploader;
 
-    @Before
+    private AutoCloseable autoCloseable;
+
+    @BeforeEach
     public void before() {
-        MockitoAnnotations.initMocks(this);
+        autoCloseable = MockitoAnnotations.openMocks(this);
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        autoCloseable.close();
     }
 
     @Test

@@ -27,22 +27,22 @@ public abstract class AbstractGDriveCredential implements IGDriveCredential {
     /**
      * Returns access token.
      *
-     * @return
+     * @return access token
      */
     protected abstract String getAccessToken();
 
     /**
      * Returns refresh token.
      *
-     * @return
+     * @return refresh token
      */
     protected abstract String getRefreshToken();
 
     /**
      * Saves access and refresh tokens.
      *
-     * @param accessToken
-     * @param refreshToken
+     * @param accessToken  access token
+     * @param refreshToken refresh token
      */
     protected abstract void saveTokens(String accessToken, String refreshToken);
 

@@ -1,7 +1,8 @@
 package net.czpilar.gdrive.cmd;
 
+import net.czpilar.gdrive.cmd.context.GDriveCmdContext;
 import net.czpilar.gdrive.cmd.runner.IGDriveCmdRunner;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * Main class for running gDrive from command line.
@@ -11,8 +12,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class GDrive {
 
     public static void main(String[] args) {
-        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:gdrive-cmd-applicationContext.xml");
-        IGDriveCmdRunner runner = context.getBean(IGDriveCmdRunner.class);
-        runner.run(args);
+        new AnnotationConfigApplicationContext(GDriveCmdContext.class)
+                .getBean(IGDriveCmdRunner.class)
+                .run(args);
     }
 }

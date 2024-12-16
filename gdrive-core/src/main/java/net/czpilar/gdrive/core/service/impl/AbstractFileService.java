@@ -26,16 +26,14 @@ public abstract class AbstractFileService extends AbstractService {
     protected String buildQuery(String filename, File parent, boolean directory) {
         Assert.notNull(filename, "Filename must not be null.");
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("name = '").append(escapeSingleQuote(filename)).append("'");
-        sb.append(" and '").append(parent == null ? "root" : parent.getId()).append("' in parents");
-        sb.append(" and trashed = false");
-        sb.append(" and mimeType ").append(directory ? "=" : "!=").append(" '").append(DIRECTORY_MIME_TYPE).append("'");
-        return sb.toString();
+        return "name = '" + escapeSingleQuote(filename) + "'" +
+                " and '" + (parent == null ? "root" : parent.getId()) + "' in parents" +
+                " and trashed = false" +
+                " and mimeType " + (directory ? "=" : "!=") + " '" + DIRECTORY_MIME_TYPE + "'";
     }
 
     protected File findFile(String filename, File parent, boolean directory) {
-        Assert.notNull(filename);
+        Assert.notNull(filename, "Filename must not be null.");
 
         File file = null;
         try {
@@ -44,7 +42,7 @@ public abstract class AbstractFileService extends AbstractService {
                 if (items.size() > 1) {
                     throw new FileHandleException("Too many items found for filename " + filename + ".");
                 }
-                file = items.get(0);
+                file = items.getFirst();
             }
         } catch (IOException e) {
             LOG.error("Unable to find {}.", filename);

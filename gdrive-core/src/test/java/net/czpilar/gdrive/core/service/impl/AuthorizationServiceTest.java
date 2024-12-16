@@ -7,46 +7,45 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeToken
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import net.czpilar.gdrive.core.exception.AuthorizationFailedException;
 import net.czpilar.gdrive.core.setting.GDriveSetting;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
  * @author David Pilar (david@czpilar.net)
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(GoogleAuthorizationCodeRequestUrl.class)
-@PowerMockIgnore("jdk.internal.reflect.*")
 public class AuthorizationServiceTest {
 
-    private AuthorizationService service = new AuthorizationService();
+    private final AuthorizationService service = new AuthorizationService();
 
     @Mock
     private GoogleAuthorizationCodeFlow authorizationCodeFlow;
 
+    @Mock
     private GoogleAuthorizationCodeRequestUrl authorizationCodeRequestUrl;
 
     @Mock
     private GDriveSetting gDriveSetting;
 
-    @Before
+    private AutoCloseable autoCloseable;
+
+    @BeforeEach
     public void before() {
-        MockitoAnnotations.initMocks(this);
-        authorizationCodeRequestUrl = PowerMockito.mock(GoogleAuthorizationCodeRequestUrl.class);
+        autoCloseable = MockitoAnnotations.openMocks(this);
         service.setAuthorizationCodeFlow(authorizationCodeFlow);
         service.setGDriveSetting(gDriveSetting);
+    }
+
+    @AfterEach
+    public void after() throws Exception {
+        autoCloseable.close();
     }
 
     @Test
@@ -101,7 +100,7 @@ public class AuthorizationServiceTest {
         verifyNoMoreInteractions(gDriveSetting);
     }
 
-    @Test(expected = AuthorizationFailedException.class)
+    @Test
     public void testAuthorizeWithExceptionDuringStoringCredential() throws IOException {
         String authorizationCode = "test-authorization-code";
         String redirectURI = "test-redirect-uri";
@@ -115,20 +114,16 @@ public class AuthorizationServiceTest {
         when(gDriveSetting.getRedirectUri()).thenReturn(redirectURI);
         when(authorizationCodeFlow.createAndStoreCredential(tokenResponse, null)).thenThrow(IOException.class);
 
-        try {
-            service.authorize(authorizationCode);
-        } catch (AuthorizationFailedException e) {
-            verify(authorizationCodeFlow).newTokenRequest(authorizationCode);
-            verify(authorizationCodeTokenRequest).setRedirectUri(redirectURI);
-            verify(authorizationCodeTokenRequest).execute();
-            verify(gDriveSetting).getRedirectUri();
-            verify(authorizationCodeFlow).createAndStoreCredential(tokenResponse, null);
+        assertThrows(AuthorizationFailedException.class, () -> service.authorize(authorizationCode));
 
-            verifyNoMoreInteractions(authorizationCodeFlow);
-            verifyNoMoreInteractions(authorizationCodeTokenRequest);
-            verifyNoMoreInteractions(gDriveSetting);
+        verify(authorizationCodeFlow).newTokenRequest(authorizationCode);
+        verify(authorizationCodeTokenRequest).setRedirectUri(redirectURI);
+        verify(authorizationCodeTokenRequest).execute();
+        verify(gDriveSetting).getRedirectUri();
+        verify(authorizationCodeFlow).createAndStoreCredential(tokenResponse, null);
 
-            throw e;
-        }
+        verifyNoMoreInteractions(authorizationCodeFlow);
+        verifyNoMoreInteractions(authorizationCodeTokenRequest);
+        verifyNoMoreInteractions(gDriveSetting);
     }
 }

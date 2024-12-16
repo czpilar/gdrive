@@ -26,18 +26,11 @@ public class FileUploadProgressListener implements MediaHttpUploaderProgressList
     @Override
     public void progressChanged(MediaHttpUploader uploader) throws IOException {
         switch (uploader.getUploadState()) {
-            case INITIATION_STARTED:
-                LOG.info("Started initiation uploading file {}", filename);
-                break;
-            case INITIATION_COMPLETE:
-                LOG.info("Finished initiation uploading file {}", filename);
-                break;
-            case MEDIA_IN_PROGRESS:
-                LOG.info("Uploaded {} of file {}", NumberFormat.getPercentInstance().format(uploader.getProgress()), filename);
-                break;
-            case MEDIA_COMPLETE:
-                LOG.info("Finished uploading file {}", filename);
-                break;
+            case INITIATION_STARTED -> LOG.info("Started initiation uploading file {}", filename);
+            case INITIATION_COMPLETE -> LOG.info("Finished initiation uploading file {}", filename);
+            case MEDIA_IN_PROGRESS ->
+                    LOG.info("Uploaded {} of file {}", NumberFormat.getPercentInstance().format(uploader.getProgress()), filename);
+            case MEDIA_COMPLETE -> LOG.info("Finished uploading file {}", filename);
         }
     }
 }

@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.czpilar.gdrive</groupId>
@@ -11,7 +13,7 @@
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -21,7 +23,7 @@
             <id>czpilar</id>
             <name>David Pilar</name>
             <email>david@czpilar.net</email>
-            <url>http://czpilar.net</url>
+            <url>https://czpilar.net</url>
             <roles>
                 <role>designer</role>
                 <role>developer</role>
@@ -29,7 +31,7 @@
             </roles>
             <timezone>+2</timezone>
             <organization>czpilar.net</organization>
-            <organizationUrl>http://czpilar.net</organizationUrl>
+            <organizationUrl>https://czpilar.net</organizationUrl>
         </developer>
     </developers>
 
@@ -41,35 +43,36 @@
     </scm>
 
     <properties>
-        <java.target>1.8</java.target>
+        <java.target>21</java.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <version.plugin.maven-assembly-plugin>3.4.2</version.plugin.maven-assembly-plugin>
-        <version.plugin.maven-compiler-plugin>3.10.1</version.plugin.maven-compiler-plugin>
-        <version.plugin.maven-jar-plugin>3.3.0</version.plugin.maven-jar-plugin>
-        <version.plugin.maven-release-plugin>3.0.0-M7</version.plugin.maven-release-plugin>
-        <version.plugin.maven-resources-plugin>3.3.0</version.plugin.maven-resources-plugin>
-        <version.plugin.maven-surefire-plugin>3.0.0-M7</version.plugin.maven-surefire-plugin>
+        <version.plugin.maven-assembly-plugin>3.7.1</version.plugin.maven-assembly-plugin>
+        <version.plugin.maven-compiler-plugin>3.13.0</version.plugin.maven-compiler-plugin>
+        <version.plugin.maven-jar-plugin>3.4.2</version.plugin.maven-jar-plugin>
+        <version.plugin.maven-release-plugin>3.1.1</version.plugin.maven-release-plugin>
+        <version.plugin.maven-resources-plugin>3.3.1</version.plugin.maven-resources-plugin>
+        <version.plugin.maven-surefire-plugin>3.5.2</version.plugin.maven-surefire-plugin>
 
-        <version.junit>4.13.2</version.junit>
-        <version.commons-cli>1.5.0</version.commons-cli>
+        <version.junit>5.11.3</version.junit>
+        <version.commons-cli>1.9.0</version.commons-cli>
         <version.commons-collections4>4.4</version.commons-collections4>
-        <version.commons-codec>1.15</version.commons-codec>
-        <version.commons-io>2.11.0</version.commons-io>
-        <version.commons-lang>2.6</version.commons-lang>
+        <version.commons-codec>1.17.1</version.commons-codec>
+        <version.commons-io>2.18.0</version.commons-io>
+        <version.commons-lang3>3.17.0</version.commons-lang3>
         <version.google.http-client>1.42.3</version.google.http-client>
         <version.google.apis>v3-rev20221219-2.0.0</version.google.apis>
-        <version.logback>1.2.11</version.logback>
-        <version.mockito>1.10.19</version.mockito>
-        <version.powermock>1.7.4</version.powermock>
-        <version.slf4j>1.7.36</version.slf4j>
-        <version.spring.framework>5.3.24</version.spring.framework>
+        <version.logback>1.5.12</version.logback>
+        <version.mockito>5.14.2</version.mockito>
+        <version.slf4j>2.0.16</version.slf4j>
+        <version.spring>6.2.1</version.spring>
+        <version.spring-boot>3.4.0</version.spring-boot>
     </properties>
 
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <version>${version.plugin.maven-assembly-plugin}</version>
                 </plugin>
@@ -98,6 +101,11 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${version.plugin.maven-surefire-plugin}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${version.spring-boot}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -105,11 +113,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <compilerVersion>${java.target}</compilerVersion>
                     <source>${java.target}</source>
                     <target>${java.target}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
-                    <optimize>true</optimize>
                     <debug>true</debug>
                 </configuration>
             </plugin>
@@ -158,9 +164,9 @@
 
         <!-- Testing -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${version.junit}</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -168,18 +174,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-api-mockito</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -215,8 +216,8 @@
 
             <!-- Testing -->
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
                 <version>${version.junit}</version>
                 <scope>test</scope>
             </dependency>
@@ -227,21 +228,15 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${version.mockito}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
-                <version>${version.spring.framework}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-module-junit4</artifactId>
-                <version>${version.powermock}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito</artifactId>
-                <version>${version.powermock}</version>
+                <version>${version.spring}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -252,9 +247,9 @@
                 <version>${version.commons-io}</version>
             </dependency>
             <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${version.commons-lang}</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${version.commons-lang3}</version>
             </dependency>
             <dependency>
                 <groupId>commons-cli</groupId>
@@ -288,17 +283,17 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>${version.spring.framework}</version>
+                <version>${version.spring}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
-                <version>${version.spring.framework}</version>
+                <version>${version.spring}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
-                <version>${version.spring.framework}</version>
+                <version>${version.spring}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

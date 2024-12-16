@@ -1,16 +1,17 @@
 package net.czpilar.gdrive.cmd.credential;
 
 import net.czpilar.gdrive.cmd.context.GDriveCmdContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author David Pilar (david@czpilar.net)
@@ -22,9 +23,8 @@ public class PropertiesGDriveCredentialTest {
 
     private File propertiesNotExist;
     private File propertiesExist;
-    private Properties properties;
 
-    @Before
+    @BeforeEach
     public void before() throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
         propertiesNotExist = new File(tempDir + "test-properties-not-exist-file-" + System.currentTimeMillis() + ".properties");
@@ -32,18 +32,20 @@ public class PropertiesGDriveCredentialTest {
         deleteIfExist(propertiesNotExist);
         deleteIfExist(propertiesExist);
 
-        properties = new Properties();
+        Properties properties = new Properties();
         properties.setProperty(GDriveCmdContext.UPLOAD_DIR_PROPERTY_KEY, "test-upload-dir");
         properties.setProperty(GDriveCmdContext.ACCESS_TOKEN_PROPERTY_KEY, "test-access-token");
         properties.setProperty(GDriveCmdContext.REFRESH_TOKEN_PROPERTY_KEY, "test-refresh-token");
-        properties.store(new FileOutputStream(propertiesExist), "properties created in test");
+        try (FileOutputStream out = new FileOutputStream(propertiesExist)) {
+            properties.store(out, "properties created in test");
+        }
 
         gDrivePropertiesNotExist = createGDriveCredential(propertiesNotExist.getPath());
         gDrivePropertiesExist = createGDriveCredential(propertiesExist.getPath());
     }
 
-    @After
-    public void after() {
+    @AfterEach
+    public void after() throws IOException {
         deleteIfExist(propertiesNotExist);
         deleteIfExist(propertiesExist);
     }
@@ -56,10 +58,8 @@ public class PropertiesGDriveCredentialTest {
         return gDriveCredential;
     }
 
-    private void deleteIfExist(File file) {
-        if (file.exists()) {
-            file.delete();
-        }
+    private void deleteIfExist(File file) throws IOException {
+        Files.deleteIfExists(file.toPath());
     }
 
     @Test

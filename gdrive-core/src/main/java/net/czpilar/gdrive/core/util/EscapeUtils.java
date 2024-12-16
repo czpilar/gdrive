@@ -10,8 +10,8 @@ public class EscapeUtils {
     /**
      * Escapes only single quotes in given string.
      *
-     * @param value
-     * @return
+     * @param value value
+     * @return escaped value
      */
     public static String escapeSingleQuote(String value) {
         return value == null ? null : escapeSingleQuoteInternal(value);

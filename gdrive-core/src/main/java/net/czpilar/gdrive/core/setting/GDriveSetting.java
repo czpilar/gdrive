@@ -3,7 +3,6 @@ package net.czpilar.gdrive.core.setting;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,7 +30,7 @@ public class GDriveSetting {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
-        this.scopes = Arrays.asList(GOOGLE_SCOPE);
+        this.scopes = List.of(GOOGLE_SCOPE);
     }
 
     public String getApplicationName() {

@@ -14,7 +14,7 @@ public interface IFileService {
     /**
      * Upload file to root directory.
      *
-     * @param filename
+     * @param filename filename
      * @return uploaded file
      */
     File uploadFile(String filename);
@@ -23,8 +23,8 @@ public interface IFileService {
      * Upload file to directory specified by pathname starting on root level.
      * If no directory is found the whole directory path is created.
      *
-     * @param pathToFile
-     * @param pathname
+     * @param pathToFile path to file
+     * @param pathname   path name
      * @return uploaded file
      */
     File uploadFile(String pathToFile, String pathname);
@@ -34,8 +34,8 @@ public interface IFileService {
      * Inserts new file if remote file does not exist or updates remote file if content
      * was changed or do nothing if remote file has the same content as local file.
      *
-     * @param filename
-     * @param parentDir
+     * @param filename  filename
+     * @param parentDir parent directory
      * @return uploaded file
      */
     File uploadFile(String filename, File parentDir);
@@ -43,7 +43,7 @@ public interface IFileService {
     /**
      * Upload files to root directory.
      *
-     * @param filenames
+     * @param filenames filenames
      * @return uploaded files
      */
     List<File> uploadFiles(List<String> filenames);
@@ -52,8 +52,8 @@ public interface IFileService {
      * Upload files to directory specified by pathname starting on root level.
      * If no directory is found the whole directory path is created.
      *
-     * @param filenames
-     * @param pathname
+     * @param filenames filenames
+     * @param pathname  path name
      * @return uploaded files
      */
     List<File> uploadFiles(List<String> filenames, String pathname);
@@ -61,8 +61,8 @@ public interface IFileService {
     /**
      * Upload files to directory.
      *
-     * @param filenames
-     * @param parentDir
+     * @param filenames filenames
+     * @param parentDir parent directory
      * @return uploaded files
      */
     List<File> uploadFiles(List<String> filenames, File parentDir);

@@ -13,7 +13,7 @@ import static net.czpilar.gdrive.cmd.runner.impl.GDriveCmdRunner.*;
 @Configuration
 @ComponentScan(basePackages = "net.czpilar.gdrive.cmd")
 @Import(GDriveCoreContext.class)
-@PropertySource("gdrive-core.properties")
+@PropertySource("classpath:gdrive-core.properties")
 public class GDriveCmdContext {
 
     public static final String UPLOAD_DIR_PROPERTY_KEY = "gdrive.uploadDir";
@@ -43,8 +43,8 @@ public class GDriveCmdContext {
                 .addOption(toOption(OPTION_VERSION, "show gDrive version"))
                 .addOption(toOption(OPTION_HELP, "show this help"))
                 .addOption(toOption(OPTION_LINK, "display authorization link"))
-                .addOption(toOptionOptional(OPTION_AUTHORIZATION, "process authorization", "code"))
-                .addOption(toOptionUnlimited(OPTION_FILE, "upload file(s)", "file"))
+                .addOption(toOptionOptional(toOption(OPTION_AUTHORIZATION, "process authorization", "code")))
+                .addOption(toUnlimitedOption(toOption(OPTION_FILE, "upload file(s)", "file")))
                 .addOption(toOption(OPTION_DIRECTORY, "directory for upload; creates new one if no directory exists; default is gdrive-uploads", "dir"))
                 .addOption(toOption(OPTION_PROPERTIES, "path to gDrive properties file", "props"))
                 .addOption(toOption(OPTION_TRASH, "empty trash"));
@@ -60,14 +60,12 @@ public class GDriveCmdContext {
         return option;
     }
 
-    private Option toOptionUnlimited(String opt, String description, String argName) {
-        Option option = toOption(opt, description, argName);
+    private Option toUnlimitedOption(Option option) {
         option.setArgs(Option.UNLIMITED_VALUES);
         return option;
     }
 
-    private Option toOptionOptional(String opt, String description, String argName) {
-        Option option = toOption(opt, description, argName);
+    private Option toOptionOptional(Option option) {
         option.setOptionalArg(true);
         return option;
     }
