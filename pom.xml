@@ -59,7 +59,6 @@
         <version.commons-codec>1.17.1</version.commons-codec>
         <version.commons-io>2.18.0</version.commons-io>
         <version.commons-lang3>3.17.0</version.commons-lang3>
-        <version.google.http-client>1.45.3</version.google.http-client>
         <version.google.apis>v3-rev20241027-2.0.0</version.google.apis>
         <version.logback>1.5.12</version.logback>
         <version.mockito>5.14.2</version.mockito>
@@ -272,11 +271,12 @@
                 <groupId>com.google.apis</groupId>
                 <artifactId>google-api-services-drive</artifactId>
                 <version>${version.google.apis}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.http-client</groupId>
-                <artifactId>google-http-client-jackson2</artifactId>
-                <version>${version.google.http-client}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- Spring -->
