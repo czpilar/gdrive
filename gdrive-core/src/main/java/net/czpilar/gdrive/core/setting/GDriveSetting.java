@@ -1,5 +1,6 @@
 package net.czpilar.gdrive.core.setting;
 
+import com.google.api.services.drive.DriveScopes;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,6 @@ import java.util.List;
 public class GDriveSetting {
 
     public static final String APPLICATION_NAME = "gdrive";
-    public static final String GOOGLE_SCOPE = "https://www.googleapis.com/auth/drive";
 
     private final String applicationVersion;
     private final String clientId;
@@ -30,7 +30,7 @@ public class GDriveSetting {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
-        this.scopes = List.of(GOOGLE_SCOPE);
+        this.scopes = List.of(DriveScopes.DRIVE);
     }
 
     public String getApplicationName() {

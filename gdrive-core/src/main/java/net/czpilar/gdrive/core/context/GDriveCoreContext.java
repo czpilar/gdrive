@@ -1,11 +1,12 @@
 package net.czpilar.gdrive.core.context;
 
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
+import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import net.czpilar.gdrive.core.credential.loader.CredentialLoader;
 import net.czpilar.gdrive.core.setting.GDriveSetting;
@@ -16,8 +17,10 @@ import org.springframework.context.annotation.*;
 @PropertySource("classpath:gdrive.properties")
 public class GDriveCoreContext {
 
-    private final NetHttpTransport netHttpTransport;
-    private final JacksonFactory jacksonFactory;
+    private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
+
+    private final NetHttpTransport netHttpTransport = new NetHttpTransport();
+    private final GsonFactory gsonFactory = GsonFactory.getDefaultInstance();
 
     private final GDriveSetting gDriveSetting;
     private final CredentialLoader credentialLoader;
@@ -27,30 +30,29 @@ public class GDriveCoreContext {
         this.gDriveSetting = gDriveSetting;
         this.credentialLoader = credentialLoader;
         this.credentialSaverListener = credentialSaverListener;
-        netHttpTransport = new NetHttpTransport();
-        jacksonFactory = new JacksonFactory();
     }
 
     @Bean
     public GoogleAuthorizationCodeFlow googleAuthorizationCodeFlow() {
-        return new GoogleAuthorizationCodeFlow.Builder(netHttpTransport, jacksonFactory, gDriveSetting.getClientId(),
+        return new GoogleAuthorizationCodeFlow.Builder(netHttpTransport, gsonFactory, gDriveSetting.getClientId(),
                 gDriveSetting.getClientSecret(), gDriveSetting.getScopes())
                 .setCredentialCreatedListener(credentialSaverListener)
                 .build();
     }
 
     @Bean
-    public GoogleCredential.Builder googleCredentialBuilder() {
-        return new GoogleCredential.Builder()
+    public Credential.Builder googleCredentialBuilder() {
+        return new Credential.Builder(BearerToken.authorizationHeaderAccessMethod())
                 .setTransport(netHttpTransport)
-                .setJsonFactory(jacksonFactory)
-                .setClientAuthentication(new ClientParametersAuthentication(gDriveSetting.getClientId(), gDriveSetting.getClientSecret()));
+                .setJsonFactory(gsonFactory)
+                .setClientAuthentication(new ClientParametersAuthentication(gDriveSetting.getClientId(), gDriveSetting.getClientSecret()))
+                .setTokenServerEncodedUrl(TOKEN_URL);
     }
 
     @Bean
     @Scope("prototype")
     public Drive drive() {
-        return new Drive.Builder(netHttpTransport, jacksonFactory, credentialLoader.getCredential())
+        return new Drive.Builder(netHttpTransport, gsonFactory, credentialLoader.getCredential())
                 .setApplicationName(gDriveSetting.getApplicationName())
                 .build();
     }

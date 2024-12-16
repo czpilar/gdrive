@@ -1,7 +1,6 @@
 package net.czpilar.gdrive.core.credential.impl;
 
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,14 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public abstract class AbstractGDriveCredential implements IGDriveCredential {
 
-    private GoogleCredential.Builder credentialBuilder;
+    private Credential.Builder credentialBuilder;
 
-    protected GoogleCredential.Builder getCredentialBuilder() {
+    protected Credential.Builder getCredentialBuilder() {
         return credentialBuilder;
     }
 
     @Autowired
-    public void setCredentialBuilder(GoogleCredential.Builder credentialBuilder) {
+    public void setCredentialBuilder(Credential.Builder credentialBuilder) {
         this.credentialBuilder = credentialBuilder;
     }
 

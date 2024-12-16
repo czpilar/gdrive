@@ -1,5 +1,6 @@
 package net.czpilar.gdrive.core.setting;
 
+import com.google.api.services.drive.DriveScopes;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -24,6 +25,6 @@ public class GDriveSettingTest {
         assertEquals(clientId, setting.getClientId());
         assertEquals(clientSecret, setting.getClientSecret());
         assertEquals(redirectUri, setting.getRedirectUri());
-        assertEquals(List.of(GDriveSetting.GOOGLE_SCOPE), setting.getScopes());
+        assertEquals(List.of(DriveScopes.DRIVE), setting.getScopes());
     }
 }
