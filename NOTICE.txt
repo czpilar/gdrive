@@ -1,6 +1,6 @@
 gDrive
 
-Copyright 2014-2015 David Pilar
+Copyright 2014-2025 David Pilar
 
 Licensed under the Apache License, Version 2.0
 
