@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Auto loader of gDrive credential from Spring context.
+ * Autoloader of gDrive credential from Spring context.
  *
  * @author David Pilar (david@czpilar.net)
  */
