@@ -17,7 +17,7 @@ import static net.czpilar.gdrive.cmd.runner.impl.GDriveCmdRunner.*;
 public class GDriveCmdContext {
 
     public static final String UPLOAD_DIR_PROPERTY_KEY = "gdrive.uploadDir";
-    public static final String ACCESS_TOKEN_PROPERTY_KEY = "accessTokenPropertyKey";
+    public static final String ACCESS_TOKEN_PROPERTY_KEY = "gdrive.accessToken";
     public static final String REFRESH_TOKEN_PROPERTY_KEY = "gdrive.refreshToken";
     public static final String DEFAULT_UPLOAD_DIR = "gdrive-uploads";
 

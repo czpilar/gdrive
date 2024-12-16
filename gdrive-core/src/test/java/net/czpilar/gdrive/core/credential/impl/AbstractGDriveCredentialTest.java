@@ -1,9 +1,11 @@
 package net.czpilar.gdrive.core.credential.impl;
 
+import com.google.api.client.auth.oauth2.BearerToken;
+import com.google.api.client.auth.oauth2.ClientParametersAuthentication;
 import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import net.czpilar.gdrive.core.setting.GDriveSetting;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,9 +41,9 @@ public class AbstractGDriveCredentialTest {
         when(gDriveCredential.getCredential()).thenCallRealMethod();
         when(gDriveCredential.getAccessToken()).thenReturn("access-token");
         when(gDriveCredential.getRefreshToken()).thenReturn("refresh-token");
-        GoogleCredential.Builder googleCredentialBuilder = mock(GoogleCredential.Builder.class);
+        Credential.Builder googleCredentialBuilder = mock(Credential.Builder.class);
         when(gDriveCredential.getCredentialBuilder()).thenReturn(googleCredentialBuilder);
-        GoogleCredential googleCredential = mock(GoogleCredential.class);
+        Credential googleCredential = mock(Credential.class);
         when(googleCredentialBuilder.build()).thenReturn(googleCredential);
         when(googleCredential.setAccessToken(anyString())).thenReturn(googleCredential);
         when(googleCredential.setRefreshToken(anyString())).thenReturn(googleCredential);
@@ -69,10 +71,11 @@ public class AbstractGDriveCredentialTest {
         doCallRealMethod().when(gDriveCredential).saveCredential(any(Credential.class));
         doNothing().when(gDriveCredential).saveTokens(anyString(), anyString());
 
-        Credential credential = new GoogleCredential.Builder()
-                .setJsonFactory(new JacksonFactory())
+        Credential credential = new Credential.Builder(BearerToken.authorizationHeaderAccessMethod())
+                .setJsonFactory(GsonFactory.getDefaultInstance())
                 .setTransport(new NetHttpTransport())
-                .setClientSecrets("client-id", "client-secret")
+                .setClientAuthentication(new ClientParametersAuthentication("client-id", "client-secret"))
+                .setTokenServerEncodedUrl(GDriveSetting.TOKEN_URL)
                 .build();
         credential.setAccessToken("access-token");
         credential.setRefreshToken("refresh-token");

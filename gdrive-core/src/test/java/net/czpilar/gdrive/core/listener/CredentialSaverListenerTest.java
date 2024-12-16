@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
-
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -44,7 +42,7 @@ public class CredentialSaverListenerTest {
     }
 
     @Test
-    public void testOnCredentialCreated() throws IOException {
+    public void testOnCredentialCreated() {
         listener.onCredentialCreated(credential, tokenResponse);
 
         verify(gDriveCredential).saveCredential(credential);

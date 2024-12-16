@@ -39,18 +39,15 @@ public class EqualUtilsTest {
 
     @Test
     public void testEqualsWhereBothParametersAreNull() {
-        File file = null;
-        Path path = null;
-        boolean result = EqualUtils.equals(file, path);
+        boolean result = EqualUtils.equals(null, null);
 
         assertFalse(result);
     }
 
     @Test
     public void testEqualsWhereFileIsNull() {
-        File file = null;
         Path path = mock(Path.class);
-        boolean result = EqualUtils.equals(file, path);
+        boolean result = EqualUtils.equals(null, path);
 
         assertFalse(result);
     }
@@ -58,8 +55,7 @@ public class EqualUtilsTest {
     @Test
     public void testEqualsWherePathIsNull() {
         File file = mock(File.class);
-        Path path = null;
-        boolean result = EqualUtils.equals(file, path);
+        boolean result = EqualUtils.equals(file, null);
 
         assertFalse(result);
     }

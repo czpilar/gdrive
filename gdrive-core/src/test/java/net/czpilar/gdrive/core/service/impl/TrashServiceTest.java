@@ -1,7 +1,6 @@
 package net.czpilar.gdrive.core.service.impl;
 
 import com.google.api.services.drive.Drive;
-import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import net.czpilar.gdrive.core.exception.TrashHandleException;
 import net.czpilar.gdrive.core.util.EqualUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -30,9 +29,6 @@ public class TrashServiceTest {
 
     @Mock
     private Drive drive;
-
-    @Mock
-    private IGDriveCredential gDriveCredential;
 
     private AutoCloseable autoCloseable;
 

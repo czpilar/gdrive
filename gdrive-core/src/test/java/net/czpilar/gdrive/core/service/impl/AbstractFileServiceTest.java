@@ -13,13 +13,11 @@ import org.mockito.MockitoAnnotations;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-//@RunWith(PowerMockRunner.class)
-//@PrepareForTest({File.class, Files.class, FileList.class})
-//@PowerMockIgnore("jdk.internal.reflect.*")
 public class AbstractFileServiceTest {
 
     @Mock
@@ -221,7 +219,7 @@ public class AbstractFileServiceTest {
         when(list.setQ(anyString())).thenReturn(list);
         when(list.setFields(fields)).thenReturn(list);
         when(list.execute()).thenReturn(fileList);
-        when(fileList.getFiles()).thenReturn(new ArrayList<File>());
+        when(fileList.getFiles()).thenReturn(new ArrayList<>());
 
         File result = service.findFile(filename, parent, false);
 
@@ -344,7 +342,7 @@ public class AbstractFileServiceTest {
         when(list.setQ(anyString())).thenReturn(list);
         when(list.setFields(fields)).thenReturn(list);
         when(list.execute()).thenReturn(fileList);
-        when(fileList.getFiles()).thenReturn(Arrays.asList(directory));
+        when(fileList.getFiles()).thenReturn(List.of(directory));
 
         File result = service.findFile(filename, parent, false);
 

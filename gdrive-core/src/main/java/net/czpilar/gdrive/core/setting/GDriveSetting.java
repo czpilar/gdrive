@@ -15,6 +15,7 @@ import java.util.List;
 public class GDriveSetting {
 
     public static final String APPLICATION_NAME = "gdrive";
+    public static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
 
     private final String applicationVersion;
     private final String clientId;

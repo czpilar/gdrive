@@ -22,7 +22,6 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -113,7 +112,6 @@ public class FileServiceTest {
     @Test
     public void testUploadFileWithStringFilenameAndNullParent() throws IOException {
         String filename = "test-filename";
-        File parentDir = null;
         File file = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
         Drive.Files.Create insert = mock(Drive.Files.Create.class);
@@ -130,14 +128,14 @@ public class FileServiceTest {
         when(mediaHttpUploader.setProgressListener(any(MediaHttpUploaderProgressListener.class))).thenReturn(mediaHttpUploader);
         when(file.getId()).thenReturn("some-test-file-id");
 
-        File result = serviceMock.uploadFile(filename, parentDir);
+        File result = serviceMock.uploadFile(filename, (File) null);
 
         assertNotNull(result);
         assertEquals(file, result);
 
-        verify(serviceMock).uploadFile(filename, parentDir);
+        verify(serviceMock).uploadFile(filename, (File) null);
         verify(serviceMock).getDrive();
-        verify(serviceMock).findFile(filename, parentDir, false);
+        verify(serviceMock).findFile(filename, null, false);
         verify(drive).files();
         verify(files).create(any(File.class), any(FileContent.class));
         verify(insert).execute();
@@ -204,7 +202,6 @@ public class FileServiceTest {
     @Test
     public void testUploadFileWithStringFilenameAndNullParentAndThrownException() throws IOException {
         String filename = "test-filename";
-        File parentDir = null;
         Drive.Files files = mock(Drive.Files.class);
 
         when(serviceMock.uploadFile(anyString(), (File) any())).thenCallRealMethod();
@@ -213,11 +210,11 @@ public class FileServiceTest {
         when(drive.files()).thenReturn(files);
         when(files.create(any(File.class), any(FileContent.class))).thenThrow(IOException.class);
 
-        assertThrows(FileHandleException.class, () -> serviceMock.uploadFile(filename, parentDir));
+        assertThrows(FileHandleException.class, () -> serviceMock.uploadFile(filename, (File) null));
 
-        verify(serviceMock).uploadFile(filename, parentDir);
+        verify(serviceMock).uploadFile(filename, (File) null);
         verify(serviceMock).getDrive();
-        verify(serviceMock).findFile(filename, parentDir, false);
+        verify(serviceMock).findFile(filename, null, false);
         verify(drive).files();
         verify(files).create(any(File.class), any(FileContent.class));
 
@@ -276,7 +273,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFileWithStringFilenameAndFileParentWhereNothingToUpdate() throws IOException {
+    public void testUploadFileWithStringFilenameAndFileParentWhereNothingToUpdate() {
         String filename = "test-filename";
         String fileId = "some-test-file-id";
         File parentDir = mock(File.class);
@@ -316,7 +313,7 @@ public class FileServiceTest {
         when(serviceMock.getRetries()).thenReturn(3);
         when(drive.files()).thenReturn(files);
         when(files.create(any(File.class), any(FileContent.class))).thenReturn(insert);
-        Answer<File> answer = new Answer<File>() {
+        Answer<File> answer = new Answer<>() {
             private int retry = 0;
 
             @Override
@@ -423,7 +420,7 @@ public class FileServiceTest {
     public void testUploadFilesWithEmptyListOfFilenames() {
         File parent = mock(File.class);
 
-        List<File> result = service.uploadFiles(new ArrayList<String>(), parent);
+        List<File> result = service.uploadFiles(List.of(), parent);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());

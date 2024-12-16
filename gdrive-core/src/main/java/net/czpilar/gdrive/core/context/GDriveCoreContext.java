@@ -17,8 +17,6 @@ import org.springframework.context.annotation.*;
 @PropertySource("classpath:gdrive.properties")
 public class GDriveCoreContext {
 
-    private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
-
     private final NetHttpTransport netHttpTransport = new NetHttpTransport();
     private final GsonFactory gsonFactory = GsonFactory.getDefaultInstance();
 
@@ -46,7 +44,7 @@ public class GDriveCoreContext {
                 .setTransport(netHttpTransport)
                 .setJsonFactory(gsonFactory)
                 .setClientAuthentication(new ClientParametersAuthentication(gDriveSetting.getClientId(), gDriveSetting.getClientSecret()))
-                .setTokenServerEncodedUrl(TOKEN_URL);
+                .setTokenServerEncodedUrl(GDriveSetting.TOKEN_URL);
     }
 
     @Bean

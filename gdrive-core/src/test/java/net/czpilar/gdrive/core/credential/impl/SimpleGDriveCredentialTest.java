@@ -1,6 +1,6 @@
 package net.czpilar.gdrive.core.credential.impl;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.auth.oauth2.Credential;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -16,7 +16,7 @@ public class SimpleGDriveCredentialTest {
     private SimpleGDriveCredential credential;
 
     @Mock
-    private GoogleCredential.Builder credentialBuilder;
+    private Credential.Builder credentialBuilder;
 
     @BeforeEach
     public void before() {
