@@ -52,18 +52,18 @@
         <version.plugin.maven-resources-plugin>3.3.1</version.plugin.maven-resources-plugin>
         <version.plugin.maven-surefire-plugin>3.5.2</version.plugin.maven-surefire-plugin>
 
-        <version.junit>5.11.3</version.junit>
+        <version.junit>5.11.4</version.junit>
         <version.commons-cli>1.9.0</version.commons-cli>
-        <version.commons-collections4>4.4</version.commons-collections4>
-        <version.commons-codec>1.17.1</version.commons-codec>
+        <version.commons-collections4>4.5.0-M3</version.commons-collections4>
+        <version.commons-codec>1.18.0</version.commons-codec>
         <version.commons-io>2.18.0</version.commons-io>
         <version.commons-lang3>3.17.0</version.commons-lang3>
-        <version.google.apis>v3-rev20241027-2.0.0</version.google.apis>
-        <version.logback>1.5.12</version.logback>
-        <version.mockito>5.14.2</version.mockito>
+        <version.google.apis>v3-rev20250122-2.0.0</version.google.apis>
+        <version.logback>1.5.16</version.logback>
+        <version.mockito>5.15.2</version.mockito>
         <version.slf4j>2.0.16</version.slf4j>
-        <version.spring>6.2.1</version.spring>
-        <version.spring-boot>3.4.0</version.spring-boot>
+        <version.spring>6.2.2</version.spring>
+        <version.spring-boot>3.4.2</version.spring-boot>
     </properties>
 
     <build>
