@@ -3,13 +3,13 @@
     <parent>
         <groupId>net.czpilar.gdrive</groupId>
         <artifactId>gdrive-parent</artifactId>
-        <version>1.4.1-SNAPSHOT</version>
+        <version>1.4.1</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>gdrive-core</artifactId>
     <packaging>jar</packaging>
-    <version>1.4.1-SNAPSHOT</version>
+    <version>1.4.1</version>
     <name>gdrive-core</name>
     <description>Core library which provide ability for uploading file(s) to Google Drive.</description>
 
