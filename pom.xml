@@ -50,6 +50,7 @@
         <version.plugin.maven-jar-plugin>3.4.2</version.plugin.maven-jar-plugin>
         <version.plugin.maven-release-plugin>3.1.1</version.plugin.maven-release-plugin>
         <version.plugin.maven-resources-plugin>3.3.1</version.plugin.maven-resources-plugin>
+        <version.plugin.maven-dependency-plugin>3.8.1</version.plugin.maven-dependency-plugin>
         <version.plugin.maven-surefire-plugin>3.5.2</version.plugin.maven-surefire-plugin>
 
         <version.junit>5.11.4</version.junit>
@@ -96,6 +97,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${version.plugin.maven-dependency-plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${version.plugin.maven-surefire-plugin}</version>
                 </plugin>
@@ -126,12 +132,25 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludes>
                         <exclude>**/integration/**</exclude>
                         <exclude>**/*IntegrationTest*</exclude>
                     </excludes>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <argLine>-javaagent:${org.mockito:mockito-core:jar} -Xshare:off</argLine>
                 </configuration>
             </plugin>
         </plugins>
