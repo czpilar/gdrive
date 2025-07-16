@@ -51,20 +51,20 @@
         <version.plugin.maven-release-plugin>3.1.1</version.plugin.maven-release-plugin>
         <version.plugin.maven-resources-plugin>3.3.1</version.plugin.maven-resources-plugin>
         <version.plugin.maven-dependency-plugin>3.8.1</version.plugin.maven-dependency-plugin>
-        <version.plugin.maven-surefire-plugin>3.5.2</version.plugin.maven-surefire-plugin>
+        <version.plugin.maven-surefire-plugin>3.5.3</version.plugin.maven-surefire-plugin>
 
-        <version.junit>5.12.1</version.junit>
+        <version.junit>5.13.3</version.junit>
         <version.commons-cli>1.9.0</version.commons-cli>
-        <version.commons-collections4>4.5.0-M3</version.commons-collections4>
+        <version.commons-collections4>4.5.0</version.commons-collections4>
         <version.commons-codec>1.18.0</version.commons-codec>
-        <version.commons-io>2.18.0</version.commons-io>
-        <version.commons-lang3>3.17.0</version.commons-lang3>
-        <version.google.apis>v3-rev20250220-2.0.0</version.google.apis>
-        <version.logback>1.5.17</version.logback>
-        <version.mockito>5.16.0</version.mockito>
+        <version.commons-io>2.19.0</version.commons-io>
+        <version.commons-lang3>3.18.0</version.commons-lang3>
+        <version.google.apis>v3-rev20250701-2.0.0</version.google.apis>
+        <version.logback>1.5.18</version.logback>
+        <version.mockito>5.18.0</version.mockito>
         <version.slf4j>2.0.16</version.slf4j>
-        <version.spring>6.2.4</version.spring>
-        <version.spring-boot>3.4.3</version.spring-boot>
+        <version.spring>6.2.8</version.spring>
+        <version.spring-boot>3.5.3</version.spring-boot>
     </properties>
 
     <build>
