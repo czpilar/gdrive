@@ -5,7 +5,7 @@
     <groupId>net.czpilar.gdrive</groupId>
     <artifactId>gdrive-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.4.2</version>
+    <version>1.4.3-SNAPSHOT</version>
     <name>gdrive-parent</name>
     <description>Simple java application for uploading file(s) to Google Drive.</description>
 
@@ -38,7 +38,7 @@
         <connection>scm:git:https://github.com/czpilar/gdrive.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/czpilar/gdrive.git</developerConnection>
         <url>https://github.com/czpilar/gdrive</url>
-        <tag>gdrive-parent-1.4.2</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
