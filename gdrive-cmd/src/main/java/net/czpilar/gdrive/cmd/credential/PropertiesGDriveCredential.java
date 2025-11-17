@@ -11,7 +11,7 @@ import java.util.Properties;
 
 /**
  * Implementation of gDrive credential using
- * properties file to store tokens and upload dir name.
+ * a properties file to store tokens and upload dir name.
  *
  * @author David Pilar (david@czpilar.net)
  */

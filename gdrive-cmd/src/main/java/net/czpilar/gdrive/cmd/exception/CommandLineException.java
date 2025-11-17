@@ -3,7 +3,7 @@ package net.czpilar.gdrive.cmd.exception;
 import net.czpilar.gdrive.core.exception.GDriveException;
 
 /**
- * Exception used for error during work with command line.
+ * Exception used for error during work with the command line.
  *
  * @author David Pilar (david@czpilar.net)
  */

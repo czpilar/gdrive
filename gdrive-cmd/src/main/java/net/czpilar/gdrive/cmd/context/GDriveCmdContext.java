@@ -3,7 +3,7 @@ package net.czpilar.gdrive.cmd.context;
 import net.czpilar.gdrive.cmd.credential.PropertiesGDriveCredential;
 import net.czpilar.gdrive.core.context.GDriveCoreContext;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.help.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.springframework.context.annotation.*;
@@ -29,7 +29,7 @@ public class GDriveCmdContext {
 
     @Bean
     public HelpFormatter helpFormatter() {
-        return new HelpFormatter();
+        return HelpFormatter.builder().setShowSince(false).get();
     }
 
     @Bean

@@ -3,7 +3,7 @@ package net.czpilar.gdrive.cmd.exception;
 import net.czpilar.gdrive.core.exception.GDriveException;
 
 /**
- * Exception used for error during work with properties file.
+ * Exception used for error during work with a properties file.
  *
  * @author David Pilar (david@czpilar.net)
  */

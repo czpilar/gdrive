@@ -8,7 +8,7 @@ package net.czpilar.gdrive.core.util;
 public class EscapeUtils {
 
     /**
-     * Escapes only single quotes in given string.
+     * Escapes only single quotes in a given string.
      *
      * @param value value
      * @return escaped value

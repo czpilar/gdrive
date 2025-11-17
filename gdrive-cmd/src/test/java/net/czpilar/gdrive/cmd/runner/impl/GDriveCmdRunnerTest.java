@@ -8,12 +8,14 @@ import net.czpilar.gdrive.core.service.IFileService;
 import net.czpilar.gdrive.core.service.ITrashService;
 import net.czpilar.gdrive.core.setting.GDriveSetting;
 import org.apache.commons.cli.*;
+import org.apache.commons.cli.help.HelpFormatter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +71,7 @@ public class GDriveCmdRunnerTest {
     }
 
     @Test
-    public void testRunWhereCommandLineParsingFails() throws ParseException {
+    public void testRunWhereCommandLineParsingFails() throws ParseException, IOException {
         String appName = "application-name";
         String[] args = {"arg1", "arg2"};
         when(commandLineParser.parse(any(Options.class), any(String[].class))).thenThrow(ParseException.class);
@@ -78,7 +80,7 @@ public class GDriveCmdRunnerTest {
         runner.run(args);
 
         verify(commandLineParser).parse(options, args);
-        verify(helpFormatter).printHelp(appName, options, true);
+        verify(helpFormatter).printHelp(appName, null, options, null, true);
         verify(gDriveSetting).getApplicationName();
 
         verifyNoMoreInteractions(commandLineParser);
@@ -95,7 +97,7 @@ public class GDriveCmdRunnerTest {
     }
 
     @Test
-    public void testRunWhereCommandLineHasEmptyOptions() throws ParseException {
+    public void testRunWhereCommandLineHasEmptyOptions() throws ParseException, IOException {
         String appName = "application-name";
         String[] args = {"arg1", "arg2"};
         Option[] optionList = {};
@@ -106,7 +108,7 @@ public class GDriveCmdRunnerTest {
         runner.run(args);
 
         verify(commandLineParser).parse(options, args);
-        verify(helpFormatter).printHelp(appName, options, true);
+        verify(helpFormatter).printHelp(appName, null, options, null, true);
         verify(commandLine).getOptions();
         verify(gDriveSetting).getApplicationName();
 
@@ -124,7 +126,7 @@ public class GDriveCmdRunnerTest {
     }
 
     @Test
-    public void testRunWhereCommandLineHasOnlyPropertiesOption() throws ParseException {
+    public void testRunWhereCommandLineHasOnlyPropertiesOption() throws ParseException, IOException {
         String appName = "application-name";
         String[] args = {"arg1", "arg2"};
         Option[] optionList = {mock(Option.class)};
@@ -136,7 +138,7 @@ public class GDriveCmdRunnerTest {
         runner.run(args);
 
         verify(commandLineParser).parse(options, args);
-        verify(helpFormatter).printHelp(appName, options, true);
+        verify(helpFormatter).printHelp(appName, null, options, null, true);
         verify(commandLine).getOptions();
         verify(commandLine).hasOption(GDriveCmdRunner.OPTION_PROPERTIES);
         verify(gDriveSetting).getApplicationName();
@@ -201,7 +203,7 @@ public class GDriveCmdRunnerTest {
     }
 
     @Test
-    public void testRunWhereCommandLineHasPropertiesAndHelpOptions() throws ParseException {
+    public void testRunWhereCommandLineHasPropertiesAndHelpOptions() throws ParseException, IOException {
         String appName = "application-name";
         String propertiesValue = "test-properties-value";
         String[] args = {"arg1", "arg2"};
@@ -221,7 +223,7 @@ public class GDriveCmdRunnerTest {
         runner.run(args);
 
         verify(commandLineParser).parse(options, args);
-        verify(helpFormatter).printHelp(appName, options, true);
+        verify(helpFormatter).printHelp(appName, null, options, null, true);
         verify(commandLine).getOptions();
         verify(commandLine).hasOption(GDriveCmdRunner.OPTION_PROPERTIES);
         verify(commandLine).hasOption(GDriveCmdRunner.OPTION_VERSION);

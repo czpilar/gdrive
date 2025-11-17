@@ -4,6 +4,7 @@ import com.google.api.services.drive.model.File;
 import net.czpilar.gdrive.core.exception.DirectoryHandleException;
 import net.czpilar.gdrive.core.service.IDirectoryService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class DirectoryService extends AbstractFileService implements IDirectoryS
     private static final Logger LOG = LoggerFactory.getLogger(DirectoryService.class);
 
     private static String normalizePathname(String pathname) {
-        return StringUtils.replace(pathname, "\\", DIRECTORY_SEPARATOR);
+        return Strings.CS.replace(pathname, "\\", DIRECTORY_SEPARATOR);
     }
 
     private static String getCurrentDirname(String pathname) {

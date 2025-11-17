@@ -5,7 +5,7 @@ import net.czpilar.gdrive.cmd.runner.IGDriveCmdRunner;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
- * Main class for running gDrive from command line.
+ * Main class for running gDrive from the command line.
  *
  * @author David Pilar (david@czpilar.net)
  */
