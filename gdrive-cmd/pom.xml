@@ -9,7 +9,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>gdrive-cmd</artifactId>
     <packaging>jar</packaging>
-    <version>1.5.1-SNAPSHOT</version>
     <name>gdrive-cmd</name>
     <description>Simple java command line application for uploading file(s) to Google Drive.</description>
 
