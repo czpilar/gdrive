@@ -64,7 +64,7 @@
         <version.mockito>5.21.0</version.mockito>
         <version.slf4j>2.0.17</version.slf4j>
         <version.spring>7.0.2</version.spring>
-        <version.spring-boot>4.0.0</version.spring-boot>
+        <version.spring-boot>4.0.1</version.spring-boot>
     </properties>
 
     <build>
