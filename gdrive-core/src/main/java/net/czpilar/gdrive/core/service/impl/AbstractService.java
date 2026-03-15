@@ -4,6 +4,7 @@ import com.google.api.services.drive.Drive;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import net.czpilar.gdrive.core.setting.GDriveSetting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 /**
  * Template service.
@@ -38,6 +39,7 @@ public abstract class AbstractService {
         return drive;
     }
 
+    @Lazy
     @Autowired
     public void setDrive(Drive drive) {
         this.drive = drive;
