@@ -1,10 +1,12 @@
 package net.czpilar.gdrive.cmd;
 
+import com.google.api.client.googleapis.media.MediaHttpUploader;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.charset.Charset;
 
 /**
@@ -56,6 +58,15 @@ public class GDriveIntegrationTest {
         }
     }
 
+    private void createLargeFileIfNotExist(String filename, long size) throws IOException {
+        File file = new File(filename);
+        if (!file.exists()) {
+            try (RandomAccessFile raf = new RandomAccessFile(file, "rw")) {
+                raf.setLength(size);
+            }
+        }
+    }
+
     @Test
     public void testUploadFiles() throws IOException {
         String filename1 = "target/test1.txt";
@@ -72,6 +83,29 @@ public class GDriveIntegrationTest {
         String filename = "target/test1.txt";
         createFileIfNotExist(filename);
         GDrive.main(new String[]{"-f", filename, "-d", "gdrive-test-backup/gdrive-subdir/gdrive-last-dir", "-p", PROPERTIES});
+    }
+
+    @Test
+    public void testUploadLargeFile() throws IOException {
+        String filename = "target/test-large-file.bin";
+        createLargeFileIfNotExist(filename, MediaHttpUploader.DEFAULT_CHUNK_SIZE + 1);
+        GDrive.main(new String[]{"-f", filename, "-d", "gdrive-test-backup", "-p", PROPERTIES});
+    }
+
+    @Test
+    public void testUploadLargeFileMultipleChunks() throws IOException {
+        String filename = "target/test-large-file-multi-chunk.bin";
+        createLargeFileIfNotExist(filename, MediaHttpUploader.DEFAULT_CHUNK_SIZE * 3L + 1);
+        GDrive.main(new String[]{"-f", filename, "-d", "gdrive-test-backup", "-p", PROPERTIES});
+    }
+
+    @Test
+    public void testUploadSmallAndLargeFiles() throws IOException {
+        String smallFilename = "target/test-small.txt";
+        String largeFilename = "target/test-large-file-mixed.bin";
+        createFileIfNotExist(smallFilename);
+        createLargeFileIfNotExist(largeFilename, MediaHttpUploader.DEFAULT_CHUNK_SIZE + 1);
+        GDrive.main(new String[]{"-f", smallFilename, largeFilename, "-d", "gdrive-test-backup", "-p", PROPERTIES});
     }
 
     @Test
