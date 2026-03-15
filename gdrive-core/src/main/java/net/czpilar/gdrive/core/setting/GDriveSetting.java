@@ -20,6 +20,7 @@ public class GDriveSetting {
     private final String applicationVersion;
     private final String clientId;
     private final String clientSecret;
+    private final String redirectUri;
     private final int redirectUriPort;
     private final String redirectUriContext;
     private final List<String> scopes;
@@ -27,11 +28,13 @@ public class GDriveSetting {
     public GDriveSetting(@Value("${gdrive.version}") String applicationVersion,
                          @Value("${gdrive.core.drive.clientId}") String clientId,
                          @Value("${gdrive.core.drive.clientSecret}") String clientSecret,
-                         @Value("${gdrive.core.drive.redirectUri.port:8783}") int redirectUriPort,
-                         @Value("${gdrive.core.drive.redirectUri.context:/gdrive}") String redirectUriContext) {
+                         @Value("${gdrive.core.drive.redirectUri}") String redirectUri,
+                         @Value("${gdrive.core.drive.redirectUri.port}") int redirectUriPort,
+                         @Value("${gdrive.core.drive.redirectUri.context}") String redirectUriContext) {
         this.applicationVersion = applicationVersion;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.redirectUri = redirectUri;
         this.redirectUriPort = redirectUriPort;
         this.redirectUriContext = redirectUriContext;
         this.scopes = List.of(DriveScopes.DRIVE);
@@ -62,7 +65,7 @@ public class GDriveSetting {
     }
 
     public String getRedirectUri() {
-        return "http://127.0.0.1:" + redirectUriPort + redirectUriContext;
+        return redirectUri;
     }
 
     public List<String> getScopes() {

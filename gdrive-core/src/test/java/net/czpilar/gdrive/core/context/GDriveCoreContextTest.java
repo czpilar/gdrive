@@ -18,7 +18,7 @@ public class GDriveCoreContextTest {
 
     @BeforeEach
     public void before() {
-        GDriveSetting gDriveSetting = new GDriveSetting("1.0.0", "test-client-id", "test-client-secret", 8783, "/gdrive");
+        GDriveSetting gDriveSetting = new GDriveSetting("1.0.0", "test-client-id", "test-client-secret", "http://127.0.0.1:8783/gdrive", 8783, "/gdrive");
         CredentialLoader credentialLoader = mock(CredentialLoader.class);
         when(credentialLoader.getRefreshToken()).thenReturn("test-refresh-token");
         AuthorizationCodeFlow.CredentialCreatedListener credentialSaverListener = mock(AuthorizationCodeFlow.CredentialCreatedListener.class);
