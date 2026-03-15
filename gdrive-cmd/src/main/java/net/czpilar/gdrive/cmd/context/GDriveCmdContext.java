@@ -3,9 +3,10 @@ package net.czpilar.gdrive.cmd.context;
 import net.czpilar.gdrive.cmd.credential.PropertiesGDriveCredential;
 import net.czpilar.gdrive.core.context.GDriveCoreContext;
 import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.help.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.help.HelpFormatter;
+import org.apache.commons.cli.help.OptionFormatter;
 import org.springframework.context.annotation.*;
 
 import static net.czpilar.gdrive.cmd.runner.impl.GDriveCmdRunner.*;
@@ -28,7 +29,10 @@ public class GDriveCmdContext {
 
     @Bean
     public HelpFormatter helpFormatter() {
-        return HelpFormatter.builder().setShowSince(false).get();
+        return HelpFormatter.builder()
+                .setShowSince(false)
+                .setOptionFormatBuilder(OptionFormatter.builder().setArgumentNameDelimiters("", ""))
+                .get();
     }
 
     @Bean
@@ -42,10 +46,10 @@ public class GDriveCmdContext {
                 .addOption(toOption(OPTION_VERSION, "show gDrive version"))
                 .addOption(toOption(OPTION_HELP, "show this help"))
                 .addOption(toOption(OPTION_LINK, "display authorization link"))
-                .addOption(toOptionOptional(toOption(OPTION_AUTHORIZATION, "process authorization", "code")))
-                .addOption(toUnlimitedOption(toOption(OPTION_FILE, "upload file(s)", "file")))
-                .addOption(toOption(OPTION_DIRECTORY, "directory for upload; creates new one if no directory exists; default is gdrive-uploads", "dir"))
-                .addOption(toOption(OPTION_PROPERTIES, "path to gDrive properties file", "props"))
+                .addOption(toOptionalOption(OPTION_AUTHORIZATION, "process authorization; waits for code if not provided", "[code]"))
+                .addOption(toUnlimitedOption(toOption(OPTION_FILE, "upload file(s)", "<file>")))
+                .addOption(toOption(OPTION_DIRECTORY, "directory for upload; creates new one if no directory exists; default is gdrive-uploads", "<dir>"))
+                .addOption(toOption(OPTION_PROPERTIES, "path to gDrive properties file", "<props>"))
                 .addOption(toOption(OPTION_TRASH, "empty trash"));
     }
 
@@ -59,13 +63,15 @@ public class GDriveCmdContext {
         return option;
     }
 
-    private Option toUnlimitedOption(Option option) {
-        option.setArgs(Option.UNLIMITED_VALUES);
+    private Option toOptionalOption(String opt, String description, String argName) {
+        Option option = new Option(opt, true, description);
+        option.setArgName(argName);
+        option.setOptionalArg(true);
         return option;
     }
 
-    private Option toOptionOptional(Option option) {
-        option.setOptionalArg(true);
+    private Option toUnlimitedOption(Option option) {
+        option.setArgs(Option.UNLIMITED_VALUES);
         return option;
     }
 }

@@ -8,16 +8,16 @@ gDrive as command line application
 ----------------------------------
 
 ### Usage
-usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] [-p <props>] [-t] [-v]`
+usage: `gdrive [-a [code]] [-d <dir>] [-f <file>] [-h] [-l] [-p <props>] [-t] [-v]`
 
- `-a <code>` - process authorization<br/>
+ `-a [code]` - process authorization; waits for code if not provided<br/>
  `-d <dir>` - directory for upload; creates new one if no directory exists; default is gdrive-uploads<br/>
- `-f <file>` - upload files<br/>
+ `-f <file>` - upload file(s)<br/>
  `-h` - show this help<br/>
  `-l` - display authorization link<br/>
  `-p <props>` - path to gDrive properties file<br/>
  `-t` - empty trash<br/>
- `-v` -show gDrive version
+ `-v` - show gDrive version
 
 ### How to authorize application manually
 1. generate authorization URL:<br/>
@@ -27,14 +27,14 @@ usage: `gdrive [-a <code>] [-d <dir>] [-f <file>] [-h] [-l] [-p <props>] [-t] [-
    `gdrive -p gdrive.properties -a <code>`
 
 ### How to authorize application automatically
-1. generate authorization URL:<br/>
+1. generate authorization URL and wait for authorization code:<br/>
    `gdrive -p gdrive.properties -l -a`
 2. copy and paste URL to your browser to receive authorization code
 3. application waits 5 minutes to receive authorization code
 4. application is authorized automatically with received authorization code
 
 ### How to upload files
-Upload file(s) to google drive:<br/>
+Upload file(s) to Google Drive:<br/>
    `gdrive -p gdrive.properties -f <file1> <file2> <file3>`
 
 Files are uploaded to `gdrive-uploads` directory by default.

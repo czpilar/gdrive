@@ -122,8 +122,8 @@ class GDriveCmdContextTest {
 
         assertTrue(option.hasArg());
         assertTrue(option.hasOptionalArg());
-        assertEquals("code", option.getArgName());
-        assertEquals("process authorization", option.getDescription());
+        assertEquals("[code]", option.getArgName());
+        assertEquals("process authorization; waits for code if not provided", option.getDescription());
     }
 
     @Test
@@ -132,7 +132,7 @@ class GDriveCmdContextTest {
 
         assertTrue(option.hasArg());
         assertEquals(Option.UNLIMITED_VALUES, option.getArgs());
-        assertEquals("file", option.getArgName());
+        assertEquals("<file>", option.getArgName());
         assertEquals("upload file(s)", option.getDescription());
     }
 
@@ -141,7 +141,7 @@ class GDriveCmdContextTest {
         Option option = context.options().getOption(OPTION_DIRECTORY);
 
         assertTrue(option.hasArg());
-        assertEquals("dir", option.getArgName());
+        assertEquals("<dir>", option.getArgName());
         assertEquals("directory for upload; creates new one if no directory exists; default is gdrive-uploads", option.getDescription());
     }
 
@@ -150,7 +150,7 @@ class GDriveCmdContextTest {
         Option option = context.options().getOption(OPTION_PROPERTIES);
 
         assertTrue(option.hasArg());
-        assertEquals("props", option.getArgName());
+        assertEquals("<props>", option.getArgName());
         assertEquals("path to gDrive properties file", option.getDescription());
     }
 
