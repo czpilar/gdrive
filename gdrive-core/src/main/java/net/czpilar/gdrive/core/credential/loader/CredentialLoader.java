@@ -17,13 +17,13 @@ public class CredentialLoader {
 
     @Autowired
     public CredentialLoader(IGDriveCredential gDriveCredential) {
+        if (gDriveCredential == null) {
+            throw new NoCredentialFoundException("No credential found.");
+        }
         this.gDriveCredential = gDriveCredential;
     }
 
     public String getRefreshToken() {
-        if (gDriveCredential == null) {
-            throw new NoCredentialFoundException("No credential found.");
-        }
         return gDriveCredential.getRefreshToken();
     }
 }

@@ -36,7 +36,7 @@ public class CredentialLoaderTest {
 
     @Test
     public void testGetRefreshTokenWhereNoCredentialLoaded() {
-        assertThrows(NoCredentialFoundException.class, () -> new CredentialLoader(null).getRefreshToken());
+        assertThrows(NoCredentialFoundException.class, () -> new CredentialLoader(null));
     }
 
     @Test
