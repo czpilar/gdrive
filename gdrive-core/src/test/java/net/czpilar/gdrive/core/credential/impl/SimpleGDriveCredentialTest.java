@@ -9,17 +9,17 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * @author David Pilar (david@czpilar.net)
  */
-public class SimpleGDriveCredentialTest {
+class SimpleGDriveCredentialTest {
 
     private SimpleGDriveCredential credential;
 
     @BeforeEach
-    public void before() {
+    void before() {
         credential = new SimpleGDriveCredential();
     }
 
     @Test
-    public void testSetAndGetRefreshToken() {
+    void testSetAndGetRefreshToken() {
         assertNull(credential.getRefreshToken());
 
         String refreshToken = "test-refresh-token";
@@ -29,7 +29,7 @@ public class SimpleGDriveCredentialTest {
     }
 
     @Test
-    public void testSaveRefreshToken() {
+    void testSaveRefreshToken() {
         assertNull(credential.getRefreshToken());
 
         String refreshToken = "test-refresh-token";
@@ -39,7 +39,7 @@ public class SimpleGDriveCredentialTest {
     }
 
     @Test
-    public void testSetAndGetUploadDir() {
+    void testSetAndGetUploadDir() {
         assertNull(credential.getUploadDir());
 
         String uploadDir = "test-upload-dir";

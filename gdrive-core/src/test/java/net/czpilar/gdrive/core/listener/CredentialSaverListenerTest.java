@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author David Pilar (david@czpilar.net)
  */
-public class CredentialSaverListenerTest {
+class CredentialSaverListenerTest {
 
     private CredentialSaverListener listener;
 
@@ -30,18 +30,18 @@ public class CredentialSaverListenerTest {
     private AutoCloseable autoCloseable;
 
     @BeforeEach
-    public void before() {
+    void before() {
         autoCloseable = MockitoAnnotations.openMocks(this);
         listener = new CredentialSaverListener(gDriveCredential);
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         autoCloseable.close();
     }
 
     @Test
-    public void testOnCredentialCreated() {
+    void testOnCredentialCreated() {
         when(credential.getRefreshToken()).thenReturn("test-refresh-token");
 
         listener.onCredentialCreated(credential, tokenResponse);

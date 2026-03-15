@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author David Pilar (david@czpilar.net)
  */
-public class TrashServiceTest {
+class TrashServiceTest {
 
     @Mock
     private TrashService serviceMock;
@@ -30,19 +30,19 @@ public class TrashServiceTest {
     private MockedStatic<EqualUtils> equalUtilsMockedStatic;
 
     @BeforeEach
-    public void before() {
+    void before() {
         autoCloseable = MockitoAnnotations.openMocks(this);
         equalUtilsMockedStatic = mockStatic(EqualUtils.class);
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         autoCloseable.close();
         equalUtilsMockedStatic.close();
     }
 
     @Test
-    public void testEmpty() throws IOException {
+    void testEmpty() throws IOException {
         Drive.Files files = mock(Drive.Files.class);
         Drive.Files.EmptyTrash emptyTrash = mock(Drive.Files.EmptyTrash.class);
 
@@ -66,7 +66,7 @@ public class TrashServiceTest {
     }
 
     @Test
-    public void testEmptyWithException() {
+    void testEmptyWithException() {
         doCallRealMethod().when(serviceMock).empty();
         when(serviceMock.getDrive()).thenReturn(drive);
         when(drive.files()).thenAnswer(invocationOnMock -> {

@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author David Pilar (david@czpilar.net)
  */
-public class FileServiceTest {
+class FileServiceTest {
 
     private final FileService service = new FileService(3);
 
@@ -50,7 +50,7 @@ public class FileServiceTest {
     private MockedStatic<EqualUtils> equalUtilsMockedStatic;
 
     @BeforeEach
-    public void before() {
+    void before() {
         autoCloseable = MockitoAnnotations.openMocks(this);
         service.setDrive(drive);
         service.setGDriveCredential(gDriveCredential);
@@ -62,13 +62,13 @@ public class FileServiceTest {
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         autoCloseable.close();
         equalUtilsMockedStatic.close();
     }
 
     @Test
-    public void testGetDirectoryService() {
+    void testGetDirectoryService() {
         IDirectoryService result = service.getDirectoryService();
 
         assertNotNull(result);
@@ -76,7 +76,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testGetUploadDir() {
+    void testGetUploadDir() {
         String uploadDirName = "test-upload-dir";
 
         String result = service.getUploadDir(uploadDirName);
@@ -88,7 +88,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testGetUploadDirWithNullUploadDir() {
+    void testGetUploadDirWithNullUploadDir() {
         String uploadDirName = "test-default-upload-dir";
 
         when(gDriveCredential.getUploadDir()).thenReturn(uploadDirName);
@@ -104,7 +104,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFileWithStringFilenameAndNullParent() throws IOException {
+    void testUploadFileWithStringFilenameAndNullParent() throws IOException {
         String filename = "test-filename";
         File file = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
@@ -147,7 +147,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFileWithStringFilenameAndFileParent() throws IOException {
+    void testUploadFileWithStringFilenameAndFileParent() throws IOException {
         String filename = "test-filename";
         File parentDir = mock(File.class);
         File file = mock(File.class);
@@ -194,7 +194,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFileWithStringFilenameAndNullParentAndThrownException() throws IOException {
+    void testUploadFileWithStringFilenameAndNullParentAndThrownException() throws IOException {
         String filename = "test-filename";
         Drive.Files files = mock(Drive.Files.class);
 
@@ -218,7 +218,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFileWithStringFilenameAndFileParentWhereUpdateOnlyContent() throws IOException {
+    void testUploadFileWithStringFilenameAndFileParentWhereUpdateOnlyContent() throws IOException {
         String filename = "test-filename";
         File parentDir = mock(File.class);
         String fileId = "some-test-file-id";
@@ -267,7 +267,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFileWithStringFilenameAndFileParentWhereNothingToUpdate() {
+    void testUploadFileWithStringFilenameAndFileParentWhereNothingToUpdate() {
         String filename = "test-filename";
         String fileId = "some-test-file-id";
         File parentDir = mock(File.class);
@@ -293,7 +293,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFileWithStringFilenameAndFileParentAndRetryApplied() throws IOException {
+    void testUploadFileWithStringFilenameAndFileParentAndRetryApplied() throws IOException {
         String filename = "test-filename";
         File parentDir = mock(File.class);
         final File file = mock(File.class);
@@ -354,7 +354,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFileWithStringFilenameAndFileParentAndRetryExceeded() throws IOException {
+    void testUploadFileWithStringFilenameAndFileParentAndRetryExceeded() throws IOException {
         String filename = "test-filename";
         File parentDir = mock(File.class);
         final File file = mock(File.class);
@@ -401,7 +401,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFilesWithNullFilenames() {
+    void testUploadFilesWithNullFilenames() {
         File parent = mock(File.class);
 
         List<File> result = service.uploadFiles(null, parent);
@@ -411,7 +411,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFilesWithEmptyListOfFilenames() {
+    void testUploadFilesWithEmptyListOfFilenames() {
         File parent = mock(File.class);
 
         List<File> result = service.uploadFiles(List.of(), parent);
@@ -421,7 +421,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFilesWhereUploadFileThrowsException() {
+    void testUploadFilesWhereUploadFileThrowsException() {
         File parent = mock(File.class);
 
         when(serviceMock.uploadFiles(anyList(), any(File.class))).thenCallRealMethod();
@@ -440,7 +440,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFilesWithListOfFilenames() {
+    void testUploadFilesWithListOfFilenames() {
         File parent = mock(File.class);
 
         when(serviceMock.uploadFiles(anyList(), any(File.class))).thenCallRealMethod();
@@ -463,7 +463,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFileWithStringFilenameAndStringParentDir() {
+    void testUploadFileWithStringFilenameAndStringParentDir() {
         String pathname = "test-parent-dir";
         String filename = "test-filename";
         File file = mock(File.class);
@@ -492,7 +492,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFileWithStringFilename() {
+    void testUploadFileWithStringFilename() {
         String filename = "test-filename";
         File file = mock(File.class);
 
@@ -512,7 +512,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFilesWithStringFilenames() {
+    void testUploadFilesWithStringFilenames() {
         List<String> filenames = Arrays.asList("test-filename1", "test-filename2");
         File file1 = mock(File.class);
         File file2 = mock(File.class);
@@ -536,7 +536,7 @@ public class FileServiceTest {
     }
 
     @Test
-    public void testUploadFilesWithStringFilenamesAndStringParentDir() {
+    void testUploadFilesWithStringFilenamesAndStringParentDir() {
         String parentDir = "test-parent-dir";
         List<String> filenames = Arrays.asList("test-filename1", "test-filename2");
         File file1 = mock(File.class);

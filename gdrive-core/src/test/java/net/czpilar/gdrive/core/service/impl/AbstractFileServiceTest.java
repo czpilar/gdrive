@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class AbstractFileServiceTest {
+class AbstractFileServiceTest {
 
     @Mock
     private AbstractFileService service;
@@ -29,19 +29,19 @@ public class AbstractFileServiceTest {
     private AutoCloseable autoCloseable;
 
     @BeforeEach
-    public void before() {
+    void before() {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
         when(service.getDrive()).thenReturn(drive);
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         autoCloseable.close();
     }
 
     @Test
-    public void testBuildQueryWhereFilenameIsNullAndParentIsNullAndIsFile() {
+    void testBuildQueryWhereFilenameIsNullAndParentIsNullAndIsFile() {
         when(service.buildQuery(any(), any(), anyBoolean())).thenCallRealMethod();
 
         assertThrows(IllegalArgumentException.class, () -> service.buildQuery(null, null, false));
@@ -51,7 +51,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testBuildQueryWhereParentIsNullAndMimeTypeAndIsFile() {
+    void testBuildQueryWhereParentIsNullAndMimeTypeAndIsFile() {
         String filename = "test-filename";
         when(service.buildQuery(anyString(), any(), anyBoolean())).thenCallRealMethod();
 
@@ -65,7 +65,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testBuildQueryWhereParentIsNullAndIsDir() {
+    void testBuildQueryWhereParentIsNullAndIsDir() {
         String filename = "test-filename";
         when(service.buildQuery(anyString(), any(), anyBoolean())).thenCallRealMethod();
 
@@ -79,7 +79,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testBuildQueryWhereParentExistsAndIsFile() {
+    void testBuildQueryWhereParentExistsAndIsFile() {
         File parent = mock(File.class);
         String parentId = "test-id-parent-dir";
         String filename = "test-filename";
@@ -99,7 +99,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testBuildQueryWhereParentExistsAndIsDir() {
+    void testBuildQueryWhereParentExistsAndIsDir() {
         File parent = mock(File.class);
         String parentId = "test-id-parent-dir";
         String filename = "test-filename";
@@ -119,7 +119,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testBuildQueryWhereFilenameNeedsEscaping() {
+    void testBuildQueryWhereFilenameNeedsEscaping() {
         when(service.buildQuery(anyString(), any(), anyBoolean())).thenCallRealMethod();
 
         String filename = "test ' test \\' test \\\\' test \\\\\\' test \\\\\\\\' test \\\\\\\\\\' test";
@@ -134,7 +134,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testBuildQueryWhereFilenameDontNeedEscaping() {
+    void testBuildQueryWhereFilenameDontNeedEscaping() {
         when(service.buildQuery(anyString(), any(), anyBoolean())).thenCallRealMethod();
         String filename = "test \" test \" test";
 
@@ -149,7 +149,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testFindFileWhereDirnameIsNull() {
+    void testFindFileWhereDirnameIsNull() {
         File parent = mock(File.class);
 
         when(service.findFile(any(), any(File.class), anyBoolean())).thenCallRealMethod();
@@ -161,7 +161,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testFindFileWhereNoItemsFound() throws IOException {
+    void testFindFileWhereNoItemsFound() throws IOException {
         File parent = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
         Drive.Files.List list = mock(Drive.Files.List.class);
@@ -203,7 +203,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testFindFileWhereEmptyItemsFound() throws IOException {
+    void testFindFileWhereEmptyItemsFound() throws IOException {
         File parent = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
         Drive.Files.List list = mock(Drive.Files.List.class);
@@ -245,7 +245,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testFindFileWhereMoreThanOneItemsFound() throws IOException {
+    void testFindFileWhereMoreThanOneItemsFound() throws IOException {
         File parent = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
         Drive.Files.List list = mock(Drive.Files.List.class);
@@ -289,7 +289,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testFindFileWhereIOExceptionWasThrown() throws IOException {
+    void testFindFileWhereIOExceptionWasThrown() throws IOException {
         File parent = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
         Drive.Files.List list = mock(Drive.Files.List.class);
@@ -325,7 +325,7 @@ public class AbstractFileServiceTest {
     }
 
     @Test
-    public void testFindFile() throws IOException {
+    void testFindFile() throws IOException {
         File parent = mock(File.class);
         Drive.Files files = mock(Drive.Files.class);
         Drive.Files.List list = mock(Drive.Files.List.class);

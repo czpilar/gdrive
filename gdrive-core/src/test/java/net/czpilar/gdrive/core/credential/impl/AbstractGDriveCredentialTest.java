@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * @author David Pilar (david@czpilar.net)
  */
-public class AbstractGDriveCredentialTest {
+class AbstractGDriveCredentialTest {
 
     @Test
-    public void testCanBeSubclassed() {
+    void testCanBeSubclassed() {
         AbstractGDriveCredential credential = new AbstractGDriveCredential() {
             @Override
             public String getRefreshToken() {

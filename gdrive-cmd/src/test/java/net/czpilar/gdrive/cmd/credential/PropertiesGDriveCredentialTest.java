@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * @author David Pilar (david@czpilar.net)
  */
-public class PropertiesGDriveCredentialTest {
+class PropertiesGDriveCredentialTest {
 
     private PropertiesGDriveCredential gDrivePropertiesNotExist;
     private PropertiesGDriveCredential gDrivePropertiesExist;
@@ -26,7 +26,7 @@ public class PropertiesGDriveCredentialTest {
     private File propertiesExist;
 
     @BeforeEach
-    public void before() throws IOException {
+    void before() throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
         propertiesNotExist = new File(tempDir + "test-properties-not-exist-file-" + System.currentTimeMillis() + ".properties");
         propertiesExist = new File(tempDir + "test-properties-exist-file-" + System.currentTimeMillis() + ".properties");
@@ -45,7 +45,7 @@ public class PropertiesGDriveCredentialTest {
     }
 
     @AfterEach
-    public void after() throws IOException {
+    void after() throws IOException {
         deleteIfExist(propertiesNotExist);
         deleteIfExist(propertiesExist);
     }
@@ -63,23 +63,23 @@ public class PropertiesGDriveCredentialTest {
     }
 
     @Test
-    public void testGetRefreshTokenWherePropertiesExist() {
+    void testGetRefreshTokenWherePropertiesExist() {
         assertEquals("test-refresh-token", gDrivePropertiesExist.getRefreshToken());
     }
 
     @Test
-    public void testSetRefreshToken() {
+    void testSetRefreshToken() {
         gDrivePropertiesNotExist.setRefreshToken("new-refresh-token");
         assertEquals("new-refresh-token", gDrivePropertiesNotExist.getRefreshToken());
     }
 
     @Test
-    public void testGetRefreshTokenWherePropertiesNotExist() {
+    void testGetRefreshTokenWherePropertiesNotExist() {
         assertNull(gDrivePropertiesNotExist.getRefreshToken());
     }
 
     @Test
-    public void testSaveRefreshToken() {
+    void testSaveRefreshToken() {
         gDrivePropertiesNotExist.saveRefreshToken("new-refresh-token-to-save");
 
         PropertiesGDriveCredential gDrivePropertiesInTest = createGDriveCredential(propertiesNotExist.getPath());
@@ -88,17 +88,17 @@ public class PropertiesGDriveCredentialTest {
     }
 
     @Test
-    public void testGetUploadDirWherePropertiesNotExist() {
+    void testGetUploadDirWherePropertiesNotExist() {
         assertEquals(GDriveCmdContext.DEFAULT_UPLOAD_DIR, gDrivePropertiesNotExist.getUploadDir());
     }
 
     @Test
-    public void testGetUploadDirWherePropertiesExist() {
+    void testGetUploadDirWherePropertiesExist() {
         assertEquals("test-upload-dir", gDrivePropertiesExist.getUploadDir());
     }
 
     @Test
-    public void testSetUploadDir() {
+    void testSetUploadDir() {
         gDrivePropertiesNotExist.setUploadDir("new-upload-dir");
         assertEquals("new-upload-dir", gDrivePropertiesNotExist.getUploadDir());
     }

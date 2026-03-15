@@ -12,12 +12,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class GDriveCoreContextTest {
+class GDriveCoreContextTest {
 
     private GDriveCoreContext context;
 
     @BeforeEach
-    public void before() {
+    void before() {
         GDriveSetting gDriveSetting = new GDriveSetting("1.0.0", "test-client-id", "test-client-secret", "http://127.0.0.1:8783/gdrive", 8783, "/gdrive");
         CredentialLoader credentialLoader = mock(CredentialLoader.class);
         when(credentialLoader.getRefreshToken()).thenReturn("test-refresh-token");
@@ -27,14 +27,14 @@ public class GDriveCoreContextTest {
     }
 
     @Test
-    public void testGoogleAuthorizationCodeFlow() {
+    void testGoogleAuthorizationCodeFlow() {
         GoogleAuthorizationCodeFlow flow = context.googleAuthorizationCodeFlow();
 
         assertNotNull(flow);
     }
 
     @Test
-    public void testDrive() {
+    void testDrive() {
         Drive drive = context.drive();
 
         assertNotNull(drive);

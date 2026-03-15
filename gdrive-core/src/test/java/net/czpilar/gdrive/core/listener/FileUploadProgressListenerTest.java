@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author David Pilar (david@czpilar.net)
  */
-public class FileUploadProgressListenerTest {
+class FileUploadProgressListenerTest {
 
     private final FileUploadProgressListener listener = new FileUploadProgressListener("test-file-name");
 
@@ -25,17 +25,17 @@ public class FileUploadProgressListenerTest {
     private AutoCloseable autoCloseable;
 
     @BeforeEach
-    public void before() {
+    void before() {
         autoCloseable = MockitoAnnotations.openMocks(this);
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         autoCloseable.close();
     }
 
     @Test
-    public void testProgressChangedInitiationStarted() throws IOException {
+    void testProgressChangedInitiationStarted() throws IOException {
         when(uploader.getUploadState()).thenReturn(INITIATION_STARTED);
 
         listener.progressChanged(uploader);
@@ -46,7 +46,7 @@ public class FileUploadProgressListenerTest {
     }
 
     @Test
-    public void testProgressChangedInitiationComplete() throws IOException {
+    void testProgressChangedInitiationComplete() throws IOException {
         when(uploader.getUploadState()).thenReturn(INITIATION_COMPLETE);
 
         listener.progressChanged(uploader);
@@ -57,7 +57,7 @@ public class FileUploadProgressListenerTest {
     }
 
     @Test
-    public void testProgressChangedMediaInComplete() throws IOException {
+    void testProgressChangedMediaInComplete() throws IOException {
         when(uploader.getUploadState()).thenReturn(MEDIA_IN_PROGRESS);
         when(uploader.getProgress()).thenReturn(0.23);
 
@@ -70,7 +70,7 @@ public class FileUploadProgressListenerTest {
     }
 
     @Test
-    public void testProgressChangedMediaComplete() throws IOException {
+    void testProgressChangedMediaComplete() throws IOException {
         when(uploader.getUploadState()).thenReturn(MEDIA_COMPLETE);
 
         listener.progressChanged(uploader);
@@ -81,7 +81,7 @@ public class FileUploadProgressListenerTest {
     }
 
     @Test
-    public void testProgressChangedNotStarted() throws IOException {
+    void testProgressChangedNotStarted() throws IOException {
         when(uploader.getUploadState()).thenReturn(NOT_STARTED);
 
         listener.progressChanged(uploader);

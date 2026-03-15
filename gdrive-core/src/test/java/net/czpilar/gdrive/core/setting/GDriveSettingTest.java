@@ -10,10 +10,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author David Pilar (david@czpilar.net)
  */
-public class GDriveSettingTest {
+class GDriveSettingTest {
 
     @Test
-    public void testGDriveSetting() {
+    void testGDriveSetting() {
         String applicationVersion = "test-application-version";
         String clientId = "test-client-id";
         String clientSecret = "test-client-secret";

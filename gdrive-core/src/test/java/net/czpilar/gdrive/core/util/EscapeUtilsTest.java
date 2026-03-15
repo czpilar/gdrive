@@ -7,15 +7,15 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author David Pilar (david@czpilar.net)
  */
-public class EscapeUtilsTest {
+class EscapeUtilsTest {
 
     @Test
-    public void testEscapeSingleQuoteWhereInputIsNull() {
+    void testEscapeSingleQuoteWhereInputIsNull() {
         assertNull(EscapeUtils.escapeSingleQuote(null));
     }
 
     @Test
-    public void testEscapeSingleQuote() {
+    void testEscapeSingleQuote() {
         String value = "test ' test \\' test \\\\' test \\\\\\' test \\\\\\\\' test \\\\\\\\\\' test";
 
         String result = EscapeUtils.escapeSingleQuote(value);

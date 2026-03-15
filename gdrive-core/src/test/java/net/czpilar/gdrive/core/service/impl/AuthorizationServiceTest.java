@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author David Pilar (david@czpilar.net)
  */
-public class AuthorizationServiceTest {
+class AuthorizationServiceTest {
 
     private final AuthorizationService service = new AuthorizationService();
 
@@ -37,19 +37,19 @@ public class AuthorizationServiceTest {
     private AutoCloseable autoCloseable;
 
     @BeforeEach
-    public void before() {
+    void before() {
         autoCloseable = MockitoAnnotations.openMocks(this);
         service.setAuthorizationCodeFlow(authorizationCodeFlow);
         service.setGDriveSetting(gDriveSetting);
     }
 
     @AfterEach
-    public void after() throws Exception {
+    void after() throws Exception {
         autoCloseable.close();
     }
 
     @Test
-    public void testGetAuthorizationURL() {
+    void testGetAuthorizationURL() {
         when(authorizationCodeFlow.newAuthorizationUrl()).thenReturn(authorizationCodeRequestUrl);
         when(authorizationCodeRequestUrl.setRedirectUri(anyString())).thenReturn(authorizationCodeRequestUrl);
         when(authorizationCodeRequestUrl.build()).thenReturn("authorization-request-url");
@@ -70,7 +70,7 @@ public class AuthorizationServiceTest {
     }
 
     @Test
-    public void testAuthorize() throws IOException {
+    void testAuthorize() throws IOException {
         String authorizationCode = "test-authorization-code";
         String redirectURI = "test-redirect-uri";
 
@@ -101,7 +101,7 @@ public class AuthorizationServiceTest {
     }
 
     @Test
-    public void testAuthorizeWithExceptionDuringStoringCredential() throws IOException {
+    void testAuthorizeWithExceptionDuringStoringCredential() throws IOException {
         String authorizationCode = "test-authorization-code";
         String redirectURI = "test-redirect-uri";
 
