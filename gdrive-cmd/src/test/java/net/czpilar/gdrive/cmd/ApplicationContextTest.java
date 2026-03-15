@@ -14,6 +14,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 public class ApplicationContextTest {
 
     @Test
-    public void test() {
+    void test() {
     }
 }
