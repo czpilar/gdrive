@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Listener used for printing progress of uploading file.
@@ -29,7 +30,7 @@ public class FileUploadProgressListener implements MediaHttpUploaderProgressList
             case INITIATION_STARTED -> LOG.info("Started initiation uploading file {}", filename);
             case INITIATION_COMPLETE -> LOG.info("Finished initiation uploading file {}", filename);
             case MEDIA_IN_PROGRESS ->
-                    LOG.info("Uploaded {} of file {}", NumberFormat.getPercentInstance().format(uploader.getProgress()), filename);
+                    LOG.info("Uploaded {} of file {}", NumberFormat.getPercentInstance(Locale.US).format(uploader.getProgress()), filename);
             case MEDIA_COMPLETE -> LOG.info("Finished uploading file {}", filename);
         }
     }
