@@ -17,14 +17,17 @@ public class GDriveSettingTest {
         String applicationVersion = "test-application-version";
         String clientId = "test-client-id";
         String clientSecret = "test-client-secret";
-        String redirectUri = "test-redirect-uri";
-        GDriveSetting setting = new GDriveSetting(applicationVersion, clientId, clientSecret, redirectUri);
+        int redirectUriPort = 8783;
+        String redirectUriContext = "/gdrive";
+        GDriveSetting setting = new GDriveSetting(applicationVersion, clientId, clientSecret, redirectUriPort, redirectUriContext);
 
         assertEquals(GDriveSetting.APPLICATION_NAME, setting.getApplicationName());
         assertEquals(applicationVersion, setting.getApplicationVersion());
         assertEquals(clientId, setting.getClientId());
         assertEquals(clientSecret, setting.getClientSecret());
-        assertEquals(redirectUri, setting.getRedirectUri());
+        assertEquals(redirectUriPort, setting.getRedirectUriPort());
+        assertEquals(redirectUriContext, setting.getRedirectUriContext());
+        assertEquals("http://127.0.0.1:8783/gdrive", setting.getRedirectUri());
         assertEquals(List.of(DriveScopes.DRIVE), setting.getScopes());
     }
 }
