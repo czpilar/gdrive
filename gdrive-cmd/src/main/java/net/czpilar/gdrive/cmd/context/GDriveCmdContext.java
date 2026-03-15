@@ -17,13 +17,12 @@ import static net.czpilar.gdrive.cmd.runner.impl.GDriveCmdRunner.*;
 public class GDriveCmdContext {
 
     public static final String UPLOAD_DIR_PROPERTY_KEY = "gdrive.uploadDir";
-    public static final String ACCESS_TOKEN_PROPERTY_KEY = "gdrive.accessToken";
     public static final String REFRESH_TOKEN_PROPERTY_KEY = "gdrive.refreshToken";
     public static final String DEFAULT_UPLOAD_DIR = "gdrive-uploads";
 
     @Bean
     public PropertiesGDriveCredential propertiesGDriveCredential() {
-        return new PropertiesGDriveCredential(GDriveCmdContext.UPLOAD_DIR_PROPERTY_KEY, GDriveCmdContext.ACCESS_TOKEN_PROPERTY_KEY,
+        return new PropertiesGDriveCredential(GDriveCmdContext.UPLOAD_DIR_PROPERTY_KEY,
                 GDriveCmdContext.REFRESH_TOKEN_PROPERTY_KEY, GDriveCmdContext.DEFAULT_UPLOAD_DIR);
     }
 

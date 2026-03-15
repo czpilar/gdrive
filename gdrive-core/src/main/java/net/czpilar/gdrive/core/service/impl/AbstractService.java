@@ -4,7 +4,6 @@ import com.google.api.services.drive.Drive;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import net.czpilar.gdrive.core.setting.GDriveSetting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 /**
  * Template service.
@@ -13,14 +12,9 @@ import org.springframework.context.ApplicationContext;
  */
 public abstract class AbstractService {
 
-    private ApplicationContext applicationContext;
+    private Drive drive;
     private GDriveSetting gDriveSetting;
     private IGDriveCredential gDriveCredential;
-
-    @Autowired
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
 
     protected GDriveSetting getGDriveSetting() {
         return gDriveSetting;
@@ -41,7 +35,12 @@ public abstract class AbstractService {
     }
 
     protected Drive getDrive() {
-        return applicationContext.getBean(Drive.class);
+        return drive;
+    }
+
+    @Autowired
+    public void setDrive(Drive drive) {
+        this.drive = drive;
     }
 
 }

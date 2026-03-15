@@ -9,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
 
 /**
  * @author David Pilar (david@czpilar.net)
@@ -43,10 +42,14 @@ public class CredentialSaverListenerTest {
 
     @Test
     public void testOnCredentialCreated() {
+        when(credential.getRefreshToken()).thenReturn("test-refresh-token");
+
         listener.onCredentialCreated(credential, tokenResponse);
 
-        verify(gDriveCredential).saveCredential(credential);
+        verify(credential).getRefreshToken();
+        verify(gDriveCredential).saveRefreshToken("test-refresh-token");
 
         verifyNoMoreInteractions(gDriveCredential);
+        verifyNoMoreInteractions(credential);
     }
 }

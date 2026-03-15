@@ -8,10 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.ApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 /**
  * @author David Pilar (david@czpilar.net)
@@ -27,9 +25,6 @@ public class AbstractServiceTest {
     private GDriveSetting gDriveSetting;
 
     @Mock
-    private ApplicationContext applicationContext;
-
-    @Mock
     private Drive drive;
 
     private AutoCloseable autoCloseable;
@@ -39,9 +34,6 @@ public class AbstractServiceTest {
         autoCloseable = MockitoAnnotations.openMocks(this);
         service = new AbstractService() {
         };
-        service.setApplicationContext(applicationContext);
-
-        when(applicationContext.getBean(Drive.class)).thenReturn(drive);
     }
 
     @AfterEach
@@ -68,14 +60,11 @@ public class AbstractServiceTest {
     }
 
     @Test
-    public void testGetDrive() {
-        Drive result = service.getDrive();
+    public void testSetAndGetDrive() {
+        assertNull(service.getDrive());
 
-        assertNotNull(result);
-        assertEquals(drive, result);
+        service.setDrive(drive);
 
-        verify(applicationContext).getBean(Drive.class);
-
-        verifyNoMoreInteractions(applicationContext);
+        assertEquals(drive, service.getDrive());
     }
 }

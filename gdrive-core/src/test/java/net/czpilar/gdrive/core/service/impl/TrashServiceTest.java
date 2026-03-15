@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.ApplicationContext;
-
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,9 +23,6 @@ public class TrashServiceTest {
     private TrashService serviceMock;
 
     @Mock
-    private ApplicationContext applicationContext;
-
-    @Mock
     private Drive drive;
 
     private AutoCloseable autoCloseable;
@@ -37,7 +32,6 @@ public class TrashServiceTest {
     @BeforeEach
     public void before() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        when(applicationContext.getBean(Drive.class)).thenReturn(drive);
         equalUtilsMockedStatic = mockStatic(EqualUtils.class);
     }
 

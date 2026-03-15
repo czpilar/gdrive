@@ -46,7 +46,6 @@ If you want to change upload directory:
    `gdrive -p gdrive.properties -f <file> -d <path>/<to>/<dir>`
 
 ### How to use properties file
-- `gdrive.accessToken` - Google Drive access token; this property is updated automatically by gDrive
 - `gdrive.refreshToken` - Google Drive refresh token; this property is updated automatically by gDrive
 - `gdrive.uploadDir` - path to dir where files will be uploaded: `<path>/<to>/<dir>`
 

@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author David Pilar (david@czpilar.net)
@@ -34,7 +35,6 @@ public class PropertiesGDriveCredentialTest {
 
         Properties properties = new Properties();
         properties.setProperty(GDriveCmdContext.UPLOAD_DIR_PROPERTY_KEY, "test-upload-dir");
-        properties.setProperty(GDriveCmdContext.ACCESS_TOKEN_PROPERTY_KEY, "test-access-token");
         properties.setProperty(GDriveCmdContext.REFRESH_TOKEN_PROPERTY_KEY, "test-refresh-token");
         try (FileOutputStream out = new FileOutputStream(propertiesExist)) {
             properties.store(out, "properties created in test");
@@ -52,7 +52,7 @@ public class PropertiesGDriveCredentialTest {
 
     private PropertiesGDriveCredential createGDriveCredential(String propertyFile) {
         PropertiesGDriveCredential gDriveCredential = new PropertiesGDriveCredential(
-                GDriveCmdContext.UPLOAD_DIR_PROPERTY_KEY, GDriveCmdContext.ACCESS_TOKEN_PROPERTY_KEY,
+                GDriveCmdContext.UPLOAD_DIR_PROPERTY_KEY,
                 GDriveCmdContext.REFRESH_TOKEN_PROPERTY_KEY, GDriveCmdContext.DEFAULT_UPLOAD_DIR);
         gDriveCredential.setPropertyFile(propertyFile);
         return gDriveCredential;
@@ -60,17 +60,6 @@ public class PropertiesGDriveCredentialTest {
 
     private void deleteIfExist(File file) throws IOException {
         Files.deleteIfExists(file.toPath());
-    }
-
-    @Test
-    public void testGetAccessTokenWherePropertiesExist() {
-        assertEquals("test-access-token", gDrivePropertiesExist.getAccessToken());
-    }
-
-    @Test
-    public void testSetAccessToken() {
-        gDrivePropertiesNotExist.setAccessToken("new-access-token");
-        assertEquals("new-access-token", gDrivePropertiesNotExist.getAccessToken());
     }
 
     @Test
@@ -85,12 +74,16 @@ public class PropertiesGDriveCredentialTest {
     }
 
     @Test
-    public void testSaveTokens() {
-        gDrivePropertiesNotExist.saveTokens("new-access-token-to-save", "new-refresh-token-to-save");
+    public void testGetRefreshTokenWherePropertiesNotExist() {
+        assertNull(gDrivePropertiesNotExist.getRefreshToken());
+    }
+
+    @Test
+    public void testSaveRefreshToken() {
+        gDrivePropertiesNotExist.saveRefreshToken("new-refresh-token-to-save");
 
         PropertiesGDriveCredential gDrivePropertiesInTest = createGDriveCredential(propertiesNotExist.getPath());
 
-        assertEquals("new-access-token-to-save", gDrivePropertiesInTest.getAccessToken());
         assertEquals("new-refresh-token-to-save", gDrivePropertiesInTest.getRefreshToken());
     }
 

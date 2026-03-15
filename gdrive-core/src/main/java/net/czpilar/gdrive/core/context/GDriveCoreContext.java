@@ -39,18 +39,16 @@ public class GDriveCoreContext {
     }
 
     @Bean
-    public Credential.Builder googleCredentialBuilder() {
-        return new Credential.Builder(BearerToken.authorizationHeaderAccessMethod())
+    @Lazy
+    public Drive drive() {
+        Credential credential = new Credential.Builder(BearerToken.authorizationHeaderAccessMethod())
                 .setTransport(netHttpTransport)
                 .setJsonFactory(gsonFactory)
                 .setClientAuthentication(new ClientParametersAuthentication(gDriveSetting.getClientId(), gDriveSetting.getClientSecret()))
-                .setTokenServerEncodedUrl(GDriveSetting.TOKEN_URL);
-    }
-
-    @Bean
-    @Scope("prototype")
-    public Drive drive() {
-        return new Drive.Builder(netHttpTransport, gsonFactory, credentialLoader.getCredential())
+                .setTokenServerEncodedUrl(GDriveSetting.TOKEN_URL)
+                .build()
+                .setRefreshToken(credentialLoader.getRefreshToken());
+        return new Drive.Builder(netHttpTransport, gsonFactory, credential)
                 .setApplicationName(gDriveSetting.getApplicationName())
                 .build();
     }

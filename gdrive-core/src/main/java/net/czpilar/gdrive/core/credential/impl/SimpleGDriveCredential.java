@@ -8,21 +8,11 @@ package net.czpilar.gdrive.core.credential.impl;
  */
 public class SimpleGDriveCredential extends AbstractGDriveCredential {
 
-    private String accessToken;
     private String refreshToken;
     private String uploadDir;
 
     @Override
-    protected String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    @Override
-    protected String getRefreshToken() {
+    public String getRefreshToken() {
         return refreshToken;
     }
 
@@ -31,8 +21,7 @@ public class SimpleGDriveCredential extends AbstractGDriveCredential {
     }
 
     @Override
-    protected void saveTokens(String accessToken, String refreshToken) {
-        setAccessToken(accessToken);
+    public void saveRefreshToken(String refreshToken) {
         setRefreshToken(refreshToken);
     }
 

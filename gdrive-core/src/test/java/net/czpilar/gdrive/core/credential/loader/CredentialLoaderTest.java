@@ -1,6 +1,5 @@
 package net.czpilar.gdrive.core.credential.loader;
 
-import com.google.api.client.auth.oauth2.Credential;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import net.czpilar.gdrive.core.exception.NoCredentialFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -22,9 +21,6 @@ public class CredentialLoaderTest {
     @Mock
     private IGDriveCredential gDriveCredential;
 
-    @Mock
-    private Credential credential;
-
     private AutoCloseable autoCloseable;
 
     @BeforeEach
@@ -39,22 +35,34 @@ public class CredentialLoaderTest {
     }
 
     @Test
-    public void testGetCredentialWhereNoCredentialLoaded() {
-        assertThrows(NoCredentialFoundException.class, () -> new CredentialLoader(null).getCredential());
+    public void testGetRefreshTokenWhereNoCredentialLoaded() {
+        assertThrows(NoCredentialFoundException.class, () -> new CredentialLoader(null).getRefreshToken());
     }
 
     @Test
-    public void testGetCredential() {
-        when(gDriveCredential.getCredential()).thenReturn(credential);
+    public void testGetRefreshToken() {
+        when(gDriveCredential.getRefreshToken()).thenReturn("test-refresh-token");
 
-        Credential result = loader.getCredential();
+        String result = loader.getRefreshToken();
 
         assertNotNull(result);
-        assertEquals(credential, result);
+        assertEquals("test-refresh-token", result);
 
-        verify(gDriveCredential).getCredential();
+        verify(gDriveCredential).getRefreshToken();
 
         verifyNoMoreInteractions(gDriveCredential);
-        verifyNoInteractions(credential);
+    }
+
+    @Test
+    public void testGetRefreshTokenReturnsNull() {
+        when(gDriveCredential.getRefreshToken()).thenReturn(null);
+
+        String result = loader.getRefreshToken();
+
+        assertNull(result);
+
+        verify(gDriveCredential).getRefreshToken();
+
+        verifyNoMoreInteractions(gDriveCredential);
     }
 }

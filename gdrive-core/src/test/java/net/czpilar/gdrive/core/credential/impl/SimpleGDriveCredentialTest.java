@@ -1,9 +1,7 @@
 package net.czpilar.gdrive.core.credential.impl;
 
-import com.google.api.client.auth.oauth2.Credential;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -15,28 +13,9 @@ public class SimpleGDriveCredentialTest {
 
     private SimpleGDriveCredential credential;
 
-    @Mock
-    private Credential.Builder credentialBuilder;
-
     @BeforeEach
     public void before() {
         credential = new SimpleGDriveCredential();
-        credential.setCredentialBuilder(credentialBuilder);
-    }
-
-    @Test
-    public void testGetCredentialBuilder() {
-        assertEquals(credentialBuilder, credential.getCredentialBuilder());
-    }
-
-    @Test
-    public void testSetAndGetAccessToken() {
-        assertNull(credential.getAccessToken());
-
-        String accessToken = "test-access-token";
-        credential.setAccessToken(accessToken);
-
-        assertEquals(accessToken, credential.getAccessToken());
     }
 
     @Test
@@ -50,16 +29,12 @@ public class SimpleGDriveCredentialTest {
     }
 
     @Test
-    public void testSaveTokens() {
-        assertNull(credential.getAccessToken());
+    public void testSaveRefreshToken() {
         assertNull(credential.getRefreshToken());
 
-        String accessToken = "test-access-token";
         String refreshToken = "test-refresh-token";
+        credential.saveRefreshToken(refreshToken);
 
-        credential.saveTokens(accessToken, refreshToken);
-
-        assertEquals(accessToken, credential.getAccessToken());
         assertEquals(refreshToken, credential.getRefreshToken());
     }
 

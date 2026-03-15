@@ -1,7 +1,5 @@
 package net.czpilar.gdrive.core.credential;
 
-import com.google.api.client.auth.oauth2.Credential;
-
 /**
  * gDrive credential interface.
  *
@@ -10,18 +8,18 @@ import com.google.api.client.auth.oauth2.Credential;
 public interface IGDriveCredential {
 
     /**
-     * Returns credential.
+     * Returns refresh token.
      *
-     * @return credential
+     * @return refresh token
      */
-    Credential getCredential();
+    String getRefreshToken();
 
     /**
-     * Saves credential.
+     * Saves refresh token.
      *
-     * @param credential credential
+     * @param refreshToken refresh token
      */
-    void saveCredential(Credential credential);
+    void saveRefreshToken(String refreshToken);
 
     /**
      * Returns upload dir.

@@ -18,16 +18,14 @@ import java.util.Properties;
 public class PropertiesGDriveCredential extends AbstractGDriveCredential {
 
     private final String uploadDirPropertyKey;
-    private final String accessTokenPropertyKey;
     private final String refreshTokenPropertyKey;
     private final String defaultUploadDir;
 
     private String propertyFile;
     private Properties properties;
 
-    public PropertiesGDriveCredential(String uploadDirPropertyKey, String accessTokenPropertyKey, String refreshTokenPropertyKey, String defaultUploadDir) {
+    public PropertiesGDriveCredential(String uploadDirPropertyKey, String refreshTokenPropertyKey, String defaultUploadDir) {
         this.uploadDirPropertyKey = uploadDirPropertyKey;
-        this.accessTokenPropertyKey = accessTokenPropertyKey;
         this.refreshTokenPropertyKey = refreshTokenPropertyKey;
         this.defaultUploadDir = defaultUploadDir;
     }
@@ -75,15 +73,6 @@ public class PropertiesGDriveCredential extends AbstractGDriveCredential {
     }
 
     @Override
-    public String getAccessToken() {
-        return getProperties().getProperty(accessTokenPropertyKey);
-    }
-
-    public void setAccessToken(String accessToken) {
-        getProperties().setProperty(accessTokenPropertyKey, accessToken);
-    }
-
-    @Override
     public String getRefreshToken() {
         return getProperties().getProperty(refreshTokenPropertyKey);
     }
@@ -93,8 +82,7 @@ public class PropertiesGDriveCredential extends AbstractGDriveCredential {
     }
 
     @Override
-    public void saveTokens(String accessToken, String refreshToken) {
-        setAccessToken(accessToken);
+    public void saveRefreshToken(String refreshToken) {
         setRefreshToken(refreshToken);
         saveProperties();
     }

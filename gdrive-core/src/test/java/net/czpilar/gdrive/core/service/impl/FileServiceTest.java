@@ -18,8 +18,6 @@ import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.context.ApplicationContext;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -42,9 +40,6 @@ public class FileServiceTest {
     private IDirectoryService directoryService;
 
     @Mock
-    private ApplicationContext applicationContext;
-
-    @Mock
     private Drive drive;
 
     @Mock
@@ -57,12 +52,11 @@ public class FileServiceTest {
     @BeforeEach
     public void before() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        service.setApplicationContext(applicationContext);
+        service.setDrive(drive);
         service.setGDriveCredential(gDriveCredential);
         service.setDirectoryService(directoryService);
 
         when(serviceMock.getDirectoryService()).thenReturn(directoryService);
-        when(applicationContext.getBean(Drive.class)).thenReturn(drive);
 
         equalUtilsMockedStatic = mockStatic(EqualUtils.class);
     }

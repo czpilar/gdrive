@@ -24,6 +24,6 @@ public class CredentialSaverListener implements AuthorizationCodeFlow.Credential
 
     @Override
     public void onCredentialCreated(Credential credential, TokenResponse tokenResponse) {
-        gDriveCredential.saveCredential(credential);
+        gDriveCredential.saveRefreshToken(credential.getRefreshToken());
     }
 }

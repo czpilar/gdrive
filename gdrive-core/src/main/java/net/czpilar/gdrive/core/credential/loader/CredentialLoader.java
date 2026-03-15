@@ -1,6 +1,5 @@
 package net.czpilar.gdrive.core.credential.loader;
 
-import com.google.api.client.auth.oauth2.Credential;
 import net.czpilar.gdrive.core.credential.IGDriveCredential;
 import net.czpilar.gdrive.core.exception.NoCredentialFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +20,10 @@ public class CredentialLoader {
         this.gDriveCredential = gDriveCredential;
     }
 
-    public Credential getCredential() {
+    public String getRefreshToken() {
         if (gDriveCredential == null) {
             throw new NoCredentialFoundException("No credential found.");
         }
-        return gDriveCredential.getCredential();
+        return gDriveCredential.getRefreshToken();
     }
 }
