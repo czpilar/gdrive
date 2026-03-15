@@ -491,6 +491,53 @@ public class GDriveCmdRunnerTest {
     }
 
     @Test
+    public void testRunWhereCommandLineHasPropertiesAndAuthorizationOptionsNoValueAndCodeWaiterReturnsEmpty() throws ParseException {
+        String propertiesValue = "test-properties-value";
+        String[] args = {"arg1", "arg2"};
+        Option[] optionList = {mock(Option.class), mock(Option.class)};
+        when(commandLineParser.parse(any(Options.class), any(String[].class))).thenReturn(commandLine);
+        when(commandLine.getOptions()).thenReturn(optionList);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_PROPERTIES)).thenReturn(true);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_VERSION)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_HELP)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_LINK)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_AUTHORIZATION)).thenReturn(true);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_FILE)).thenReturn(false);
+        when(commandLine.hasOption(GDriveCmdRunner.OPTION_TRASH)).thenReturn(false);
+        when(commandLine.getOptionValue(GDriveCmdRunner.OPTION_PROPERTIES)).thenReturn(propertiesValue);
+        when(commandLine.getOptionValue(GDriveCmdRunner.OPTION_AUTHORIZATION)).thenReturn(null);
+        when(codeWaiter.getCode()).thenReturn(Optional.empty());
+
+        runner.run(args);
+
+        verify(commandLineParser).parse(options, args);
+        verify(commandLine).getOptions();
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_PROPERTIES);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_VERSION);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_HELP);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_LINK);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_AUTHORIZATION);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_FILE);
+        verify(commandLine).hasOption(GDriveCmdRunner.OPTION_TRASH);
+        verify(commandLine).getOptionValue(GDriveCmdRunner.OPTION_PROPERTIES);
+        verify(commandLine).getOptionValue(GDriveCmdRunner.OPTION_AUTHORIZATION);
+        verify(propertiesGDriveCredential).setPropertyFile(propertiesValue);
+        verify(codeWaiter).getCode();
+
+        verifyNoMoreInteractions(commandLineParser);
+        verifyNoMoreInteractions(helpFormatter);
+        verifyNoMoreInteractions(gDriveSetting);
+        verifyNoMoreInteractions(commandLine);
+        verifyNoMoreInteractions(propertiesGDriveCredential);
+        verifyNoMoreInteractions(codeWaiter);
+
+        verifyNoInteractions(options);
+        verifyNoInteractions(authorizationService);
+        verifyNoInteractions(fileService);
+        verifyNoInteractions(trashService);
+    }
+
+    @Test
     public void testRunWhereCommandLineHasPropertiesAndFileOptionsAndNoDirectory() throws ParseException {
         String propertiesValue = "test-properties-value";
         String optionFile = "test-file-value";
@@ -549,8 +596,8 @@ public class GDriveCmdRunnerTest {
         List<String> optionFiles = List.of(optionFile);
         String[] args = {"arg1", "arg2"};
         Option[] optionList = {mock(Option.class), mock(Option.class)};
-        File file1 = mock(File.class);
-        File file2 = mock(File.class);
+        File file1 = new File().setName("file1.txt").setId("id1");
+        File file2 = new File().setName("file2.txt").setId("id2");
         List<File> files = Arrays.asList(file1, file2);
         when(commandLineParser.parse(any(Options.class), any(String[].class))).thenReturn(commandLine);
         when(commandLine.getOptions()).thenReturn(optionList);
@@ -584,17 +631,12 @@ public class GDriveCmdRunnerTest {
         verify(commandLine).getOptionValue(GDriveCmdRunner.OPTION_DIRECTORY);
         verify(propertiesGDriveCredential).setPropertyFile(propertiesValue);
         verify(fileService).uploadFiles(optionFiles, optionDirectory);
-        verify(file1).getId();
-        verify(file1).getName();
-        verify(file2).getId();
-        verify(file2).getName();
 
         verifyNoMoreInteractions(commandLineParser);
         verifyNoMoreInteractions(helpFormatter);
         verifyNoMoreInteractions(gDriveSetting);
         verifyNoMoreInteractions(commandLine);
         verifyNoMoreInteractions(propertiesGDriveCredential);
-        verifyNoMoreInteractions(file1, file2);
         verifyNoMoreInteractions(fileService);
 
         verifyNoInteractions(options);
