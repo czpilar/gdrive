@@ -59,8 +59,11 @@ gDrive core can be used in any other application to provide ability for uploadin
 2. provide client ID as `gdrive.core.drive.clientId` property in spring context
 3. provide client secret as `gdrive.core.drive.clientSecret` property in spring context
 4. provide redirect URI as `gdrive.core.drive.redirectUri` property in spring context
-5. import gDrive spring context with annotation @Import(net.czpilar.gdrive.core.context.GDriveCoreContext.class)
-6. autowire `IFileService` and use file uploading methods
+5. provide redirect URI port as `gdrive.core.drive.redirectUri.port` property in spring context
+6. provide redirect URI context path as `gdrive.core.drive.redirectUri.context` property in spring context
+7. provide application version as `gdrive.version` property in spring context
+8. import gDrive spring context with annotation @Import(net.czpilar.gdrive.core.context.GDriveCoreContext.class)
+9. autowire `IFileService` and use file uploading methods
 
 License
 =======
