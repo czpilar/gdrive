@@ -51,7 +51,7 @@
         <version.plugin.maven-release-plugin>3.3.1</version.plugin.maven-release-plugin>
         <version.plugin.maven-resources-plugin>3.5.0</version.plugin.maven-resources-plugin>
         <version.plugin.maven-dependency-plugin>3.11.0</version.plugin.maven-dependency-plugin>
-        <version.plugin.maven-surefire-plugin>3.6.0</version.plugin.maven-surefire-plugin>
+        <version.plugin.maven-surefire-plugin>3.6.1</version.plugin.maven-surefire-plugin>
 
         <version.junit>6.1.3</version.junit>
         <version.commons-cli>1.11.0</version.commons-cli>
@@ -59,8 +59,8 @@
         <version.commons-codec>1.23.0</version.commons-codec>
         <version.commons-io>2.22.0</version.commons-io>
         <version.commons-lang3>3.21.0</version.commons-lang3>
-        <version.google.apis>v3-rev20261011-2.0.0</version.google.apis>
-        <version.logback>1.6.5</version.logback>
+        <version.google.apis>v3-rev20261023-2.9.2</version.google.apis>
+        <version.logback>1.6.6</version.logback>
         <version.mockito>5.24.0</version.mockito>
         <version.slf4j>2.0.20</version.slf4j>
         <version.spring>7.0.10</version.spring>
